@@ -14,6 +14,7 @@ const Container = (props) => {
   return (
     <div className={`w-full flex flex-col items-center p-3`}>
       <Head>
+        <link rel="icon" href="/favicon.ico" />
         <title>{meta.title}</title>
         <meta content={meta.description} name="description" />
         <meta property="og:site_name" content={meta.author} />
