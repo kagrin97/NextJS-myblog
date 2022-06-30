@@ -26,7 +26,7 @@ const Container = (props) => {
       <header
         className={`w-full max-w-3xl flex flex-row justify-between items-center my-1`}
       >
-        <div className={`flex flex-row items-center`}>
+        <div className={`hidden md:flex md:flex-row md:items-center`}>
           <Image
             src={`/round.webp`}
             alt="로고"
@@ -35,8 +35,8 @@ const Container = (props) => {
             objectFit={`cover`}
             className={`rounded-full`}
           />
-          <span className={`mx-2 font-semibold text-lg text-green-400`}>
-            강씨 개발노트
+          <span className={`mx-2 font-semibold italic text-lg text-green-400`}>
+            Kang blog
           </span>
         </div>
         <Nav />
