@@ -17,6 +17,10 @@ const Container = (props) => {
         <title>{meta.title}</title>
         <meta content={meta.description} name="description" />
         <meta property="og:site_name" content={meta.author} />
+        <meta
+          name="google-site-verification"
+          content="tHzgblVRtM5UJi1BBTUouxZXp_txiBpb0KwUytGz0rI"
+        />
       </Head>
       <header
         className={`w-full max-w-3xl flex flex-row justify-between items-center my-1`}
