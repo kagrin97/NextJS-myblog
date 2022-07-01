@@ -24,9 +24,9 @@ const Container = (props) => {
         />
       </Head>
       <header
-        className={`w-full max-w-3xl flex flex-row justify-between items-center my-1`}
+        className={`w-full max-w-3xl flex flex-row justify-between items-center my-1 relative`}
       >
-        <div className={`hidden md:flex md:flex-row md:items-center`}>
+        <div className={`flex flex-row items-center`}>
           <Image
             src={`/round.webp`}
             alt="로고"
@@ -36,7 +36,7 @@ const Container = (props) => {
             className={`rounded-full`}
           />
           <span className={`mx-2 font-semibold italic text-lg text-green-400`}>
-            Kang blog
+            Kang's blog
           </span>
         </div>
         <Nav />
