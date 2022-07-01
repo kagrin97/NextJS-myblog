@@ -22,9 +22,9 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             className={`rounded-3xl`}
           />
           <span
-            className={`absolute top-14 font-extrabold italic text-white text-4xl md:text-6xl text flex justify-center w-full drop-shadow-lg`}
+            className={`absolute top-14 font-extrabold italic text-white text-base md:text-3xl text flex justify-center w-full drop-shadow-lg`}
           >
-            개발에 진심
+            MinGyu-Kang Development Blog
           </span>
           <footer className={`absolute bottom-5 left-5 animate-pulse`}>
             <Link href="https://github.com/kagrin97">
