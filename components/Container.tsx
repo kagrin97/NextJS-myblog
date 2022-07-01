@@ -36,7 +36,7 @@ const Container = (props) => {
             className={`rounded-full`}
           />
           <span className={`mx-2 font-semibold italic text-lg text-green-400`}>
-            Kang's blog
+            Kang blog
           </span>
         </div>
         <Nav />
