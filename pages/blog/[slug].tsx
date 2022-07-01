@@ -1,11 +1,12 @@
 import Container from "components/Container";
+import Comments from "components/Comments";
 import { allPosts } from "contentlayer/generated";
 import { InferGetStaticPropsType } from "next";
 import { useMDXComponent } from "next-contentlayer/hooks";
 
 const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const MDXComponent = useMDXComponent(post.body.code);
-  console.log(MDXComponent);
+  console.log(Comments);
   const customMeta = {
     title: post.title,
     description: post.description,
@@ -20,6 +21,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
           <MDXComponent />
         </div>
       </div>
+      <Comments />
     </Container>
   );
 };

@@ -23,7 +23,7 @@ const Nav = () => {
         {theme === "light" ? (
           <Image
             src={`/달.png`}
-            alt="다크 모드"
+            alt={""}
             width={50}
             height={50}
             className={`rounded-3xl hover:cursor-pointer`}
@@ -31,7 +31,7 @@ const Nav = () => {
         ) : (
           <Image
             src={`/해.png`}
-            alt="라이트 모드"
+            alt={""}
             width={50}
             height={50}
             className={`rounded-3xl hover:cursor-pointer`}
