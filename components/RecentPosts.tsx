@@ -15,7 +15,11 @@ const RecentPosts = ({ posts }) => {
                 className={`flex justify-between border-b-2 border-green-200 pb-3`}
               >
                 <div className={`flex flex-col`}>
-                  <div className={`font-semibold text-xl`}>{post.title}</div>
+                  <div
+                    className={`font-semibold text-xl line-clamp-1 md:line-clamp-none`}
+                  >
+                    {post.title}
+                  </div>
                   <div
                     className={`font-light text-sm opacity-70 line-clamp-1 md:line-clamp-none`}
                   >

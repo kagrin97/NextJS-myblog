@@ -7,11 +7,11 @@ import { InferGetStaticPropsType } from "next";
 const javaScript = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const pythons = posts.filter((post) => post.category === "js");
+  const javaScript = posts.filter((post) => post.category === "js");
   return (
     <Container>
       <div className={`mt-10 flex flex-col`}>
-        {pythons.map((post) => (
+        {javaScript.map((post) => (
           <BlogPost
             date={post.date.slice(0, 10)}
             title={post.title}

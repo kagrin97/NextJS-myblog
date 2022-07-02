@@ -1,0 +1,139 @@
+---
+title: NextJS 블로그 다크모드 적용하기
+date: 2022-07-02
+description: NextJS로만든 블로그에 dark모드를 적용하자
+category: nextjs
+---
+
+참고로 저는 css를 tailwind로 적용했기 때문에 tailwind 방식입니다.  
+tailwind환경에서 dark모드를 적용하기 위해서는 우선  
+tailwind.config.js를수정할 필요가있습니다.
+
+---
+
+<h2 className={`dark:text-white`}>1. tailwind.config.js 수정</h2>
+
+```
+// tailwind.config.js
+module.exports = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: "class", // 이 설정을 추가 해준다
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+---
+
+<h2 className={`dark:text-white`}>2. _document.tsx 생성</h2>
+
+\_document파일은 \_app파일 다음에 실행되며 폰트를 추가하거나  
+다크모드를 설정하거나 공통적으로 적용할 HTML 마크업을 다룹니다.
+
+```
+// pages/_document.tsx
+import Document, { Html, Head, Main, NextScript } from "next/document";
+
+class MyDocument extends Document {
+  render() {
+    return (
+      <Html> // 여기의 className이 "light"와 "dark"로 바뀌면 모드가 바뀜
+        <Head></Head>
+        <body className="bg-neutral-100 dark:bg-neutral-800 text-black  dark:text-white">
+				// dark가접두어로 붙은 속성만 dark모드에서 작동함 안붙은 속성은 light모드
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+
+export default MyDocument;
+```
+
+---
+
+<h2 className={`dark:text-white`}>3. next-themes 패키지 사용</h2>
+
+\_document파일의 Html 태그의 className을 "light"와  
+"dark"로 바꿔주는 패키지가 있습니다. next-themes라는 이름이죠
+
+```
+npm install next-themes
+```
+
+next-themes 패키지 적용 방법을 알아보겠습니다.  
+먼저 \_app.tsx파일을 다음과 같이 수정합니다.
+
+```
+// _app.tsx
+import "tailwindcss/tailwind.css";
+import "~/styles/globals.css";
+import { ThemeProvider }from "next-themes";
+
+functionMyApp({ Component, pageProps }) {
+return (
+    <ThemeProvider attribute="class">
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
+}
+
+exportdefault MyApp;
+```
+
+ThemeProvider를 attribute를 "class"로 지정해서 추가했습니다.
+
+---
+
+<h2 className={`dark:text-white`}>4. 다크 모드로 전환 버튼 추가</h2>
+
+```
+// Nav.tsx
+..
+const { theme, setTheme } = useTheme();
+..
+<button
+  type="button"
+  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+// 클릭시 다크모드면 라이트로 바꿈
+  className={`mr-3 animate-pulse`}
+>
+  {theme === "light" ? (
+    <Image
+      src={`/달.png`}
+      alt={""}
+      width={50}
+      height={50}
+      className={`rounded-3xl hover:cursor-pointer`}
+    />
+  ) : (
+    <Image
+      src={`/해.png`}
+      alt={""}
+      width={50}
+      height={50}
+      className={`rounded-3xl hover:cursor-pointer`}
+    />
+  )}
+</button>
+..
+..
+```
+
+이렇게 하면 next-themes 패키지가 자동으로 \_documents.tsx 파일의  
+Html 태그에서 className을 "light"와 "dark"로 바꿔주게 되는 거죠.
+
+---
+
+<h2 className={`dark:text-white`}>5. 완성!</h2>
+
+<img src="/next-darkmode/darkmode.gif" className={`max-w-full h-auto`}></img>
+현재 이 블로그의 nav를 보시면 해 or 달 img가 있습니다. 해당 이미지를 클릭하면
+라이트모드와 다크모드를 전환할수 있습니다.
