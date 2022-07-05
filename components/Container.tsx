@@ -12,7 +12,7 @@ const Container = (props) => {
   };
 
   return (
-    <div className={`w-full flex flex-col items-center p-3`}>
+    <div className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>{meta.title}</title>
@@ -24,7 +24,7 @@ const Container = (props) => {
         />
       </Head>
       <header
-        className={`w-full max-w-3xl flex flex-row justify-between items-center my-1 relative`}
+        className={`w-full max-w-3xl flex flex-row justify-between items-center pt-3 fixed top-0 bg-neutral-100 dark:bg-neutral-800`}
       >
         <div className={`flex flex-row items-center`}>
           <Image
@@ -41,7 +41,7 @@ const Container = (props) => {
         </div>
         <Nav />
       </header>
-      <main className={`w-full max-w-3xl`}>{props.children}</main>
+      <main className={`w-full max-w-3xl mt-10`}>{props.children}</main>
     </div>
   );
 };
