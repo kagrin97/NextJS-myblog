@@ -1,0 +1,76 @@
+---
+title: npm 패키지 모듈 만들고 배포하는법
+date: 2022-07-05
+description: npm 패키지 모듈을 만들고 사이트에 배포
+category: other
+---
+
+<h2 className={`dark:text-white`}>1. npm 사이트 회원가입 하기!</h2>
+
+npm사이트에 자신이 만든 패키지를 만들려면 당연히 회원가입이 먼저죠
+
+<img src="/other-npmModule/1.PNG" className={`max-w-full h-auto`}></img>
+
+회원가입을 완료하면 vsc코드를 열어요.
+
+---
+
+<h2 className={`dark:text-white`}>2. npm init</h2>
+
+```
+npm init
+```
+
+npm init을 하고 모두 enter를 누르고 나면 packge.json파일이 생겨나게  
+됩니다. 이곳에서 여러 정보들을 수정할수가 있는데 중요한 태그만 설명 하겠습니다.
+
+<img src="/other-npmModule/2.png" className={`max-w-full h-auto`}></img>
+
+name : 패키지 이름입니다.  
+version : 버전입니다. 수정가능  
+description : 패키지의 설명입니다.  
+main : 패키지를 사람들이 import할때 참조할 파일 입니다.  
+type : module을 설정하게되면 import로 받아올수있습니다.  
+repository : 해당 패키지 저장소를 링크 걸수 있습니다.  
+keyword : 인스타 태그와 같은 기능을 합니다.
+
+---
+
+<h2 className={`dark:text-white`}>3. 패키지 기능 만들기</h2>
+
+<img src="/other-npmModule/3.png" className={`max-w-full h-auto`}></img>
+
+저 같은 경우는 정수를 입력 받아서 1을 제외한  
+소수를 찾은 다음에 배열로 리턴하는 간단한 기능을 만들었습니다.  
+export와 return은 필수입니다.
+
+---
+
+<h2 className={`dark:text-white`}>4. 배포하기</h2>
+
+```
+npm publish --access public
+```
+
+위 명령어를 입력했는데 오류가 뜬다면 패키지 이름이 중복
+된 것이니 이름을 package.json에가서 이름을 바꿔야합니다.
+
+배포가 완료되면 npm사이트의 packages에 패키지가 나타납니다.
+
+<img src="/other-npmModule/4.PNG" className={`max-w-full h-auto`}></img>
+
+저 같은 경우는 README.MD를 마크다운으로 작성해서 밑에
+코드 사용법이 나와있는 모습입니다.
+
+---
+
+<h2 className={`dark:text-white`}>5. 패키지 업데이트하기</h2>
+
+패키지 파일 내용이나 설명을 변경하고 싶다면
+
+```
+npm version patch
+npm publish
+```
+
+위 명령어를 입력하면 패키지 버전이 업데이트 됩니다.
