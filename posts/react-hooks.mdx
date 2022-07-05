@@ -1,0 +1,88 @@
+---
+title: React 상태관리 hooks
+date: 2022-07-05
+description: useState, useReduce, useContext
+category: react
+---
+
+<h3 className={`dark:text-white`}>
+  React의 상태관리 hook은 크게 3가지가 있다.
+</h3>
+
+1. useState
+2. useReduce
+3. useContext(전역관리)
+
+<h2 className={`dark:text-white`}>1. useState</h2>
+
+useState는 리액트에서 데이터(state)가 갱신이 되면 자동으로
+페이지 전체가 리렌더링되는 마법을 일으키는 hook이다.
+
+<img src="/react-hook1/1.png" className={`max-w-full h-auto`}></img>
+
+const [state, setState] = React.useState(state 초기값)  
+이런 구성으로 이루어져 있는데 state 현재 변수 이고 setState는 state를
+변화 시킬수있는 함수라고 보면 된다. 그리고 초기값을 설정해줄수도 있다.
+
+어떤값을 부여하던 setCounter 함수는 그 값으로 state를  
+업데이트하고 리렌더링 일으킨다. 보통 함수앞에 set를 붙인다.
+
+<img src="/react-hook1/2.png" className={`max-w-full h-auto`}></img>
+
+위 코드는 버튼을 누를때마다 onTime 함수가 실행되고 그 안에 setCounter  
+함수가 실행이되서 counter가 1증가하고 클릭할때마다 페이지가  
+렌더링되는 코드이다.
+
+---
+
+<h2 className={`dark:text-white`}>2. useReduce</h2>
+
+<h3 className={`dark:text-white`}>useReducer는 3가지로 이루어져 있다.</h3>
+
+1. reducer - state를 업데이트 하는 역할
+2. dispatch - state 업데이를 위한 요구
+3. action - 요구의 내용
+
+<img src="/react-hook1/3.png" className={`max-w-full h-auto`}></img>
+
+기본적으로 dispatch가 실행이되면 인자값을 객체 형태로 reducer함수로
+보내주게 된다. 위의 예제는 인자값으로 state와 객체안 값 들을 보내준다.
+
+useReducer는 useState와 매우 흡사하지만 좀더 복잡한 코드를 요할때
+사용이된다.
+
+---
+
+<h2 className={`dark:text-white`}>3. useContext(전역관리)</h2>
+
+useContext는 리덕스와 같이 전역적으로 사용할수있는 값을 선언하는  
+기능을 가진 hooks이다. 하지만 리덕스를 대체할정도 좋지는 않고  
+가벼운 hook으로 간단한 프로젝트에 사용할수가 있다.
+
+<img src="/react-hook1/4.PNG" className={`max-w-full h-auto`}></img>
+
+App이라는 최상위 컴포넌트에서 E라는 컴포넌트까지 데이터를 props형태로  
+데이터를 보내주게 되면 중간에 오류가 생길 가능성이 매우 농후하다.  
+이 같은 현상을 react prop drilling이라고 한다.
+따라서 E한테만 데이터를 전달 해주기 위해서 사용하는 HOOK이다
+
+<h3 className={`dark:text-white`}>주의할점</h3>
+
+- conText를 사용하면 컴포넌트를 재사용하기 어려우 질 수있다.
+- prop drlling을 피하기 위한 목적이라면 컴포넌트 합성을 먼저 고려하자
+
+---
+
+<h3 className={`dark:text-white`}>사용 순서</h3>
+
+1. 먼저 context 생성해준다.
+
+<img src="/react-hook1/5.png" className={`max-w-full h-auto`}></img>
+
+2. 부모 컴포넌트에서 전역변수를 선언한다.
+
+<img src="/react-hook1/6.png" className={`max-w-full h-auto`}></img>
+
+3. 자식 컴포넌에서 전역변수를 가져와서 사용한다.
+
+<img src="/react-hook1/7.png" className={`max-w-full h-auto`}></img>
