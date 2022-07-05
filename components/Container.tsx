@@ -24,7 +24,7 @@ const Container = (props) => {
         />
       </Head>
       <header
-        className={`w-full max-w-3xl flex flex-row justify-between items-center pt-3 fixed top-0 bg-neutral-100 dark:bg-neutral-800`}
+        className={`w-full max-w-3xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10 bg-neutral-100 dark:bg-neutral-800`}
       >
         <div className={`flex flex-row items-center`}>
           <Image
