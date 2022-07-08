@@ -1,0 +1,79 @@
+---
+title: regex 문법정리, javaScript메서드
+date: 2022-07-08
+description: regex의 문법과 js에서 실제 실행 방법을 알려줌
+category: other
+---
+
+<h3>
+  <a className={`dark:text-white`} href="https://regexr.com/5mhou">
+    regexr : regex 연습 사이트
+  </a>
+</h3>
+regexr은 연습할수 있는 사이트로 여러가지 연습을 해볼수 있다.
+<h3>
+  <a className={`dark:text-white`} href="https://regexone.com/">
+    RexgexOne : regex 퀴즈 사이트
+  </a>
+</h3>
+
+RexgexOne은 퀴즈 사이트로 match, Skip, Capture 으로 나뉘어져있다.
+
+- match : 말 그대로 이문자열을 찾아야함
+- skip : 이 문자열은 피해서 찾아야함
+- capture : 그룹형태로 여러개를 따로 따로 가져와야함
+
+  정 모르겠으면 밑에 solution을 누르면 정답이 나온다.
+
+<h2 className={`dark:text-white`}>1. 그룹과 범위</h2>
+
+<img src="/other-regex/1.PNG" className={`max-w-full h-auto`}></img>
+
+그룹과 범위 파트로 regex내에서 그룹으로 묶어서 어떤 그룹은 값을  
+가져오고 어떤값은 검색하기위한 용도로만 사용할수 있다.
+
+---
+
+<h2 className={`dark:text-white`}>2. 갯수</h2>
+<img src="/other-regex/2.PNG" className={`max-w-full h-auto`}></img>
+
+갯수를 검사해주는 문법으로 보통 문자열 중간에 어떤 문자가 있는지  
+없는지 모르고 몇개 있는지도 모를떄 사용하면 좋은 문법이다
+
+---
+
+<h2 className={`dark:text-white`}>3. 경계</h2>
+<img src="/other-regex/3.PNG" className={`max-w-full h-auto`}></img>
+
+단어의 경계를 검사해주는 문법으로 단어의 끝에 있거나 맨 앞에 있거나  
+그 반대의 경우를 가져오는 문법도 존재한다.
+
+---
+
+<h2 className={`dark:text-white`}>4. 특수 문자</h2>
+<img src="/other-regex/4.PNG" className={`max-w-full h-auto`}></img>
+
+예를들어 이메일을 검사하거나 url주소를 검사할때 유용하게 쓰이는 문법
+
+---
+
+<h2 className={`dark:text-white`}>5. Flg</h2>
+<img src="/other-regex/5.PNG" className={`max-w-full h-auto`}></img>
+
+정규표현식을 사용할 때 Flag 라는 것이 존재하는데 Flag를 사용하지 않으면 문자열에 대해서 검색을 한번만 처리하고 종료하게 된다.
+
+---
+
+<h2 className={`dark:text-white`}>6. js 메서드</h2>
+<img src="/other-regex/6.PNG" className={`max-w-full h-auto`}></img>
+
+js에서 실제로 정규표현식을 사용할떄 쓰는 메서드이다.
+
+---
+
+이 블로그를 만들때 contentlayer라는 nextjs의 패키지를 사용했는데  
+포스터 파일 확장자를 mdx로 사용해야 하는 바람에 포스터를 html 형식으로  
+작성해야했다. 그래서 그런지 표를 html table로 작성하려 했지만  
+특수 문자와 쉼표 때문에 에러가 나서 표를 사이트에서 만들어서  
+캡처한다음에 img로 보여주는 방식을 사용할수 밖에 없었다.  
+복사 불여넣기가 안되도 이해해주시길 바랍니다. ㅠ^ㅠ
