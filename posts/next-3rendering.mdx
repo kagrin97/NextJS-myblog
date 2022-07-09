@@ -1,0 +1,69 @@
+---
+title: NextJS의 getStaticProps, getStaticPaths, getServerSideProps
+date: 2022-06-30
+description: nextJS의 3개의 렌더링 메서드
+category: nextjs
+---
+
+Next.js에서는 SSG와 SSR를 사용 렌더링 해주는 메서드가 3개 있습니다.
+
+1. getStaticProps : 정적 웹사이트
+
+2. getStaticPaths : 동적 라우팅 기능
+
+3. getServerSideProps : 서버 사이드 렌더링
+
+<h4 className={`dark:text-white`}>
+  하지만 그전에 Pre-rendering을 알아야 합니다
+</h4>
+
+SSG, SSR 둘다 Pre-rendering 방식입니다. Pre-rendering 방식이란 사전에 만들어진 HTML
+파일을 보여주고 이후 자바스크립트가 로드되면 그떄서야 완전한 페이지를 보여줍니다.
+CSR은 Pre-rendering 사용하지 않기 때문에 초기에 렌더링 되지 않다가 자바스크립트가 로드되면
+그때서야 페이지를 보여주기 때문에 사용자가 느끼기에 느리다고 생각할수 있습니다. Pre-rendering은
+SERVER가 일을 하기때문에 SERVER 부담이 커지죠 또 HTML에 많은 정보가 담겨있기 때문에
+SEO 즉 데이터 크롤링이나 웹사이트 노출이 더 많아집니다.
+
+---
+
+<h2 className={`dark:text-white`}>1. getStaticProps 정적 웹사이트</h2>
+
+getStaticProps는 대표적인 SSG메서드입니다.
+빌드할때 데이터를 가져와 html을 생성합니다. 그리고 렌더링하죠
+데이터 자체가 실시간으로 바뀌지 않는 정적인 웹사이트를 사용할때
+자주 사용하는 메서드 입니다. 지금 제가 글을 쓰고있는  
+블로그도 getStaticProps를 이용해서 데이터를 가져오고있습니다.
+
+<img src="/next-3rendering/1.png" className={`max-w-full h-auto`}></img>
+
+위 코드에서 getStaticProps로 데이터를 가져온다음 BlogPost에 props  
+를 보내주는 모습입니다.
+
+---
+
+<h2 className={`dark:text-white`}>2. getStaticPaths 동적 라우팅 기능</h2>
+
+getStaticProps같은 경우에는 렌더링할 페이지가 딱 한가지 경우일 떄만  
+사용이 가능합니다. 하지만 그렇지 않고 수 많은 블로그 포스터 데이터가 있다면  
+컴포넌트를 따로 만드는 방법 대신 [].js 파일과 getStaticPaths를  
+사용하면 동적 라우팅 기능으로 경로를 설정 해줄수가 있습니다.
+
+<img src="/next-3rendering/2.png" className={`max-w-full h-auto`}></img>
+
+위 코드는 실제 제 블로그 코드 입니다. params객체의 slug값을 설정 한다음  
+리턴합니다. 그러면 getStaticProps 에서는 flattenedPath값과 slug값을  
+비교한다음 포스트를 불러오고 그 포스트를 Post에 props로 넘겨줍니다.
+
+---
+
+<h2 className={`dark:text-white`}>3. getServerSideProps 서버 사이드 렌더링</h2>
+
+getServerSideProps은 실시간으로 데이터를 가져와야할때 사용합니다.  
+정적인 웹사이트를 사용할때는 지양해야할 메서드 입니다.  
+위의 2개의 다른 방식과 다르게 SSR방식은 매 요청마다 HTML이 새롭게 만들어집니다.
+그래서 웹페이지는 항상 최신정보를 가져옵니다
+
+<img src="/next-3rendering/3.png" className={`max-w-full h-auto`}></img>
+
+위 코드를 보면 getStaticProps와 매우 흡사하게 생겼습니다.  
+가져온 데이터를 results라는 props로 보내주는 모습입니다.
