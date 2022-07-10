@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const BlogPost = ({ date, title, des, slug, category }) => {
+const BlogPost = ({ date, title, des, slug }) => {
   return (
     <Link href={`/blog/${slug}`} passHref>
       <a className="w-full my-7 transition ease-in-out hover:-translate-x-1.5 hover:text-green-400/80">

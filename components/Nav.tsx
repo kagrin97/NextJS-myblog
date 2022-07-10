@@ -13,7 +13,7 @@ const Nav = () => {
   };
   const { theme, setTheme } = useTheme();
   return (
-    <div className={`flex flex-row items-center`}>
+    <div className={`flex flex-row items-center mr-5`}>
       <button
         type="button"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

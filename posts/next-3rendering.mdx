@@ -42,7 +42,7 @@ getStaticProps는 대표적인 SSG메서드입니다.
 자주 사용하는 메서드 입니다. 지금 제가 글을 쓰고있는  
 블로그도 getStaticProps를 이용해서 데이터를 가져오고있습니다.
 
-<img src="/next-3rendering/1.png" className={`max-w-full h-auto`}></img>
+<img src="/next/next-3rendering/1.png" className={`max-w-full h-auto`}></img>
 
 위 코드에서 getStaticProps로 데이터를 가져온다음 BlogPost에 props  
 를 보내주는 모습입니다.
@@ -58,7 +58,7 @@ getStaticProps같은 경우에는 렌더링할 페이지가 딱 한가지 경우
 컴포넌트를 따로 만드는 방법 대신 [].js 파일과 getStaticPaths를  
 사용하면 동적 라우팅 기능으로 경로를 설정 해줄수가 있습니다.
 
-<img src="/next-3rendering/2.png" className={`max-w-full h-auto`}></img>
+<img src="/next/next-3rendering/2.png" className={`max-w-full h-auto`}></img>
 
 위 코드는 실제 제 블로그 코드 입니다. params객체의 slug값을 설정 한다음  
 리턴합니다. 그러면 getStaticProps 에서는 flattenedPath값과 slug값을  
@@ -75,7 +75,7 @@ getServerSideProps은 실시간으로 데이터를 가져와야할때 사용합�
 위의 2개의 다른 방식과 다르게 SSR방식은 매 요청마다 HTML이 새롭게 만들어집니다.
 그래서 웹페이지는 항상 최신정보를 가져옵니다
 
-<img src="/next-3rendering/3.png" className={`max-w-full h-auto`}></img>
+<img src="/next/next-3rendering/3.png" className={`max-w-full h-auto`}></img>
 
 위 코드를 보면 getStaticProps와 매우 흡사하게 생겼습니다.  
 가져온 데이터를 results라는 props로 보내주는 모습입니다.
