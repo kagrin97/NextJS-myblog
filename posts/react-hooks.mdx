@@ -9,11 +9,19 @@ category: react
   React의 상태관리 hook은 크게 3가지가 있다.
 </h3>
 
-1. useState
-2. useReduce
-3. useContext(전역관리)
+1. <a href="#useState" className={`dark:text-white`}>
+     useState
+   </a>
+2. <a href="#useReduce" className={`dark:text-white`}>
+     useReduce
+   </a>
+3. <a href="#useContext" className={`dark:text-white`}>
+     useContext(전역관리)
+   </a>
 
-<h2 className={`dark:text-white`}>1. useState</h2>
+<h2 id="useState" className={`dark:text-white`}>
+  1. useState
+</h2>
 
 useState는 리액트에서 데이터(state)가 갱신이 되면 자동으로
 페이지 전체가 리렌더링되는 마법을 일으키는 hook이다.
@@ -35,7 +43,9 @@ const [state, setState] = React.useState(state 초기값)
 
 ---
 
-<h2 className={`dark:text-white`}>2. useReduce</h2>
+<h2 id="useReduce" className={`dark:text-white`}>
+  2. useReduce
+</h2>
 
 <h3 className={`dark:text-white`}>useReducer는 3가지로 이루어져 있다.</h3>
 
@@ -53,7 +63,9 @@ useReducer는 useState와 매우 흡사하지만 좀더 복잡한 코드를 요�
 
 ---
 
-<h2 className={`dark:text-white`}>3. useContext(전역관리)</h2>
+<h2 id="useContext" className={`dark:text-white`}>
+  3. useContext(전역관리)
+</h2>
 
 useContext는 리덕스와 같이 전역적으로 사용할수있는 값을 선언하는  
 기능을 가진 hooks이다. 하지만 리덕스를 대체할정도 좋지는 않고  

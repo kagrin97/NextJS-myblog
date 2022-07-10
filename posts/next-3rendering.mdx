@@ -7,11 +7,17 @@ category: nextjs
 
 Next.js에서는 SSG와 SSR를 사용 렌더링 해주는 메서드가 3개 있습니다.
 
-1. getStaticProps : 정적 웹사이트
+1. <a href="#getStaticProps" className={`dark:text-white`}>
+     getStaticProps : 정적 웹사이트
+   </a>
 
-2. getStaticPaths : 동적 라우팅 기능
+2. <a href="#getStaticPaths" className={`dark:text-white`}>
+     getStaticPaths : 동적 라우팅 기능
+   </a>
 
-3. getServerSideProps : 서버 사이드 렌더링
+3. <a href="#getServerSideProps" className={`dark:text-white`}>
+     getServerSideProps : 서버 사이드 렌더링
+   </a>
 
 <h4 className={`dark:text-white`}>
   하지만 그전에 Pre-rendering을 알아야 합니다
@@ -26,7 +32,9 @@ SEO 즉 데이터 크롤링이나 웹사이트 노출이 더 많아집니다.
 
 ---
 
-<h2 className={`dark:text-white`}>1. getStaticProps 정적 웹사이트</h2>
+<h2 id="getStaticProps" className={`dark:text-white`}>
+  1. getStaticProps 정적 웹사이트
+</h2>
 
 getStaticProps는 대표적인 SSG메서드입니다.
 빌드할때 데이터를 가져와 html을 생성합니다. 그리고 렌더링하죠
@@ -41,7 +49,9 @@ getStaticProps는 대표적인 SSG메서드입니다.
 
 ---
 
-<h2 className={`dark:text-white`}>2. getStaticPaths 동적 라우팅 기능</h2>
+<h2 id="getStaticPaths" className={`dark:text-white`}>
+  2. getStaticPaths 동적 라우팅 기능
+</h2>
 
 getStaticProps같은 경우에는 렌더링할 페이지가 딱 한가지 경우일 떄만  
 사용이 가능합니다. 하지만 그렇지 않고 수 많은 블로그 포스터 데이터가 있다면  
@@ -56,7 +66,9 @@ getStaticProps같은 경우에는 렌더링할 페이지가 딱 한가지 경우
 
 ---
 
-<h2 className={`dark:text-white`}>3. getServerSideProps 서버 사이드 렌더링</h2>
+<h2 id="getServerSideProps" className={`dark:text-white`}>
+  3. getServerSideProps 서버 사이드 렌더링
+</h2>
 
 getServerSideProps은 실시간으로 데이터를 가져와야할때 사용합니다.  
 정적인 웹사이트를 사용할때는 지양해야할 메서드 입니다.  
