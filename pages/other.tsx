@@ -15,7 +15,6 @@ const Other = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             title={post.title}
             des={post.description}
             slug={post._raw.flattenedPath}
-            category={post.category}
             key={post._id}
           />
         ))}

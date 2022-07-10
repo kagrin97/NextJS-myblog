@@ -17,7 +17,6 @@ const javaScript = ({
             title={post.title}
             des={post.description}
             slug={post._raw.flattenedPath}
-            category={post.category}
             key={post._id}
           />
         ))}
