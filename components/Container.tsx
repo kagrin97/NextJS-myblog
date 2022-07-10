@@ -5,9 +5,11 @@ import Nav from "./Nav";
 
 const Container = (props) => {
   const meta = {
+    type: metadata.type,
     title: metadata.title,
     description: metadata.description,
     author: metadata.author,
+    url: metadata.url,
     ...props.customMeta,
   };
 
@@ -16,8 +18,12 @@ const Container = (props) => {
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>{meta.title}</title>
-        <meta content={meta.description} name="description" />
+        <meta property="og:type" content={meta.type} />
+        <meta property="og:title" content={meta.title} />
+        <meta property="og:description" content={meta.description} />
+        <meta name="description" content={meta.description} />
         <meta property="og:site_name" content={meta.author} />
+        <meta property="og:url" content={meta.url} />
         <meta
           name="naver-site-verification"
           content="da98b9d3244abed109afb03767f0adf1a713f595"
