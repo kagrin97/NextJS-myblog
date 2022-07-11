@@ -1,0 +1,78 @@
+---
+title: javaScript의 원시타입과 참조타입
+date: 2022-07-11
+description: javaScript의 원시타입과 참조타입
+category: js
+---
+
+이 포스터는 <a className={`dark:text-white`} href="https://poiemaweb.com/js-immutability">poiemaweb</a> 에서 공부하면서 기록하는 포스터이다.
+
+1. <a href="#won" className={`dark:text-white`}>
+     원시 타입
+   </a>
+2. <a href="#cham" className={`dark:text-white`}>
+     참조 타입
+   </a>
+
+<h2 id="won" className={`dark:text-white`}>
+  1. 원시 타입 : Immutability(변경불가성)
+</h2>
+
+Javascript의 원시 타입(primitive data type)은 변경 불가능한 값(immutable value)이다.
+
+- Boolean
+- null
+- undefined
+- Number
+- String
+- Symbol (New in ECMAScript 6)
+
+원시 타입 이외의 모든 값은 객체(Object) 타입이며 객체 타입은 변경 가능한 값(mutable value)이다. 즉, 객체는 새로운 값을 다시 만들 필요없이 직접 변경이 가능하다는 것이다
+
+<img src="/js/js-원시참조타입/1.png" className={`max-w-full h-auto`}></img>
+
+위 코드를 보면 str는 문자열로 변경이 불가능한 값이다.
+하지만 두번쨰 줄을보면 str을 world로 변경 한것처럼 보인다.  
+하지만 사실은 메모리에 존재하는 Hello값을 변경한 것이아닌 word라는
+문자열을 스택영역에 따로 재할당을하고 str을 world를 가르키게 포인터 역할을 쥐어준 것이다.
+따라서 스택 영역에는 hello와 world 값 두값 모두 존재하고 있다.
+
+<img src="/js/js-원시참조타입/2.png" className={`max-w-full h-auto`}></img>
+
+위 코드를 보면 a는 1이 할당 되었고 b는 a의 값을 그대로 받았다.
+참조타입일 경우 b = a는 b와 a가 바라보고 있는 곳이 같아서 a값을 변경해도
+b값도 같이 바뀐다. 하지만 정수는 원시타입 이기 때문에 b = a를 할경우
+고정된 스택영역에 b가 가리킬 값의 메모리 주소가 새로 생성되게된다.
+따라서 위 코드에서 b값을 변경해도 a의 값은 변경되지 않는다.
+
+---
+
+<h2 id="cham" className={`dark:text-white`}>
+  2. 참조 타입 : mutable(변경가능)
+</h2>
+
+Javascript의 참조 타입은 변경 가능한 값(mutable)이다.
+
+- object
+- Array
+- Function
+- Date
+- RegExp
+- Set, WeekSet, Map, WeekMat(New in ECMAScripRegExp 6)
+
+자바스크립트에서 원시 타입을 제외한 나머지는 참조타입이라 할 수 있다.  
+배열과 객체, 그리고 함수가 대표적이며, 원시타입과 가장 큰 차이점은 변수의  
+크기가 동적으로 변한다는 것이다. 이러한 특징 때문에 Object의 데이터 자체는  
+별도의 메모리 공간(heap)에 저장되며, 변수에 할당 시 데이터에 대한 주소 ( 힙(Heap) 메모리의 주소값)가 저장되기 때문에 자바스크립트 엔진이 변수가  
+가지고 있는 메모리 주소를 이용해서 변수의 값에 접근하게 되는것이다.
+
+<img src="/js/js-원시참조타입/3.png" className={`max-w-full h-auto`}></img>
+
+위 코드를 보면 foo라는 객체(원시타입)를 bar에 리터럴로 선언되었다.  
+그리고 bar의 val키의 값을 20으로 변경을 하였다.  
+하지만 원시타입과는 다르게 두개의 객체 val의 값 모두가 변경이되었다.  
+이것이 참조 타입의 특징이다. 참조 타입은 값이 변하는 값으로 값을  
+변경할 경우 다른 메모리에 새로운 값을 재할당 하는것이 아닌 값이 변경된다.  
+foo와 bar은 같은 메모리 주소를 보고 있는 일종의 포인터다.  
+그래서 한쪽이 값을 변경해도 같은 곳을 바라보고 있기 때문에  
+결국에 두개의 식별자도 값이 변경되는 것이다.
