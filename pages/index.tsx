@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Container from "../components/Container";
+
 import Image from "next/image";
 import RecentPosts from "../components/RecentPosts";
 import metadata from "../data/metadata";
@@ -28,7 +29,7 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             <span className={`ml-3`}>개발자로서의 개발을 위한 개발생활</span>
           </article>
 
-          <footer className={`absolute bottom-5 left-5 animate-pulse`}>
+          <div className={`absolute bottom-5 left-5 animate-pulse`}>
             <Link href="https://github.com/kagrin97">
               <Image
                 src={`/github.png`}
@@ -38,8 +39,9 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
                 className={`rounded-3xl hover:cursor-pointer`}
               />
             </Link>
-          </footer>
+          </div>
         </div>
+
         <RecentPosts posts={posts} />
       </div>
     </Container>
