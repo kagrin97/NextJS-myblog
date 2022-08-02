@@ -1,0 +1,105 @@
+---
+title: MVC 패턴이란 무엇일까?
+date: 2022-08-02
+description: MVC 패턴에 대해서 알아보자
+category: other
+---
+
+<h3 className={`dark:text-white`}>MVC 패턴은</h3>
+
+- M : model
+- V : view
+- C : controller
+
+이라고 합니다. 무슨말인지 잘 모르겠죠 ㅎㅎ 저도 잘 몰랐습니다.
+
+이번에 원티드에서 프리온보딩 프론트엔드 챌린지에 사전과제를  
+풀어 보게 되어서 원티드 관리자분이 만들어주신 백엔드 쪽 코드를  
+보다보니까 제가 진짜 백엔드에는 1도 모르는 구나 깨달았습니다..
+
+모델은 머야? 뷰? 이런 느낌으로 아는 것이 하나도 없었습니다.  
+관리자분이 작성해주신 코드는 express기반이라서 udemy에 있는  
+9만원짜리 nodejs 강의를 반 정도 들었더니 mvc가 무엇인지  
+어렴풋이 깨달아서 기억하기위해 작성 하겠습니다.
+
+---
+
+<h3 className={`dark:text-white`}>MVC 패턴 분석</h3>
+
+우선 뷰는 HTML,JSX와 같이 사용자가 실제로 보게되는 브라우저를 뜻 합니다.
+
+모델은 db와 소통하면서 사용자가 원한 데이터를 가져오거나 수정 삭제등을  
+해주는 역할을 해줍니다.
+
+그리고 컨트롤러는 뷰와 모델간의 소통을 해주면서 뷰를 render하거나  
+모델에서 가져온 데이터를 뷰한테 전달해주는 역할을 해줍니다.
+
+<img src="/other/other-MVC/1.png" className={`max-w-full h-auto`}></img>
+
+위 사진을 보면 컨트롤러가 뷰와 모델사이에서 브로커 역할을 해줍니다.  
+그리고 뷰와 모델끼리도 소소한 소통을 하고있습니다.
+
+---
+
+<h3 className={`dark:text-white`}>실제 동작 과정</h3>
+
+저는 React와 express를 기반으로 설명하겠습니다.
+
+우선 React와 같은 프론트엔드 쪽에서 서버쪽으로 Request를 보냅니다.
+
+그리고 Request를 받은 서버쪽에서 router를 이용해서 받은 url과 메소드
+
+에 따라서 해당하는 컨트롤러와 연결 시켜줍니다.
+
+그리고 연결을 받은 컨트롤러는 모델과 소통하면서 모델이 처리한 데이터를
+
+다시 가지고와서 Response를 프론트엔드 쪽으로 보내줍니다.
+
+Response를 받은 프론트엔드는 Response안에 있는 정보를 사용합니다.
+
+---
+
+<h3 className={`dark:text-white`}>실제 코드</h3>
+
+우선 view를 보자면
+
+<img src="/other/other-MVC/2.png" className={`max-w-full h-auto`}></img>
+
+axios 패키지를 이용해 get방식으로 url과 headers에 토큰을 붙여서 보내줍니다.
+
+<img src="/other/other-MVC/3.png" className={`max-w-full h-auto`}></img>
+
+그러면 server에서 해당하는 url과 router를 연결 시켜줍니다.
+
+<img src="/other/other-MVC/4.png" className={`max-w-full h-auto`}></img>
+
+그리고 라우터에서도 컨트롤러안 함수와 연결 시키줍니다.
+
+<img src="/other/other-MVC/5.png" className={`max-w-full h-auto`}></img>
+
+그리고 위 코드에서는 나오지 않았지만 컨트롤러 에서 모델을 이용해 데이터를  
+받아온다음 res을 날려서 프론테엔드한테 data를 전달 해줍니다.
+
+그러면 데이터를 받은 프론트엔드에서 data를 보여 주거나 아니면 서버에  
+post를 날려서 데이터를 추가 할 수도 있습니다.
+
+---
+
+<h3 className={`dark:text-white`}>사용하면 좋은 점이 있나요?</h3>
+
+사용하면 좋은 점이 무조건 있습니다. 처음 프로젝트를 생성할떄는
+
+코드의 양이 적어서 하나의 파일에서도 모든 작업이 가능합니다.
+
+하지만 코드의 양이 점점 많아지고 사이트가 커질수록
+
+점점 관리하기가 어려워지기 때문에 react에서 작은 기능들을 컴포넌트로
+
+나누는 것 처럼 모델 뷰 컨트롤러 3가지로 나누면서 각각 맡은 일을 수행하기
+
+때문에 코드의 가독성도 좋아지고 효율적으로 처리하게 됩니다.
+
+---
+
+오늘은 MVC 패턴에 대해서 알아봤는데 알아도 알아도 잘 모르겠는게  
+코딩인 것 같습니다. ㅠㅠ
