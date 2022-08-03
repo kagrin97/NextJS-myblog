@@ -17,7 +17,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
     <Container customMeta={customMeta} className="relative">
       <div className="mt-10 prose">
         <h1 className="text-green-500">{post.title}</h1>
-        <div className={`dark:text-slate-50 text-neutral-900`}>
+        <div className={`dark:text-slate-50 text-neutral-900 `}>
           <MDXComponent />
         </div>
       </div>
