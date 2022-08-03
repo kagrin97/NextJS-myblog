@@ -26,7 +26,7 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             className={`flex-col absolute top-14 font-extrabold italic text-white text-base md:text-3xl text flex justify-center w-full drop-shadow-lg`}
           >
             <span className={`ml-3 mb-3`}>MinGyu-Kang Development Blog</span>
-            <span className={`ml-3`}>개발자로서의 개발을 위한 개발생활</span>
+            <span className={`ml-3`}>개발을 위한 개발생활</span>
           </article>
 
           <div className={`absolute bottom-5 left-5 animate-pulse`}>
