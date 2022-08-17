@@ -1,0 +1,123 @@
+---
+title: 원티드 프리온보딩 8월 챌린지 [1-2] 일지
+date: 2022-08-17
+description: 타입스크립트 사용이유와 React Query
+category: other
+---
+
+2번째 강의에서는 타입스크립트를 사용하는 이유와 코드리뷰를 진행했습니다.
+
+<h3 className={`dark:text-white`}>1. 타입스크립트 사용하는 이유는?</h3>
+
+타입스크립트는 안전하기 때문에 사용합니다. 일반 자바스크립트는 매우
+
+유연한 언어라서 다른 타입이 값으로 들어와도 에러를 나타내지 않기 때문에
+
+매우 위험합니다. 런타임시에 문제가 발생하기 때문에 서버에 올리고
+
+문제가 터지는 경우가 있을수 있기 때문에 코드 작성시에 에러를 나타내
+
+주는 타입스크립트는 매우 개발자한테 좋은 안전 장치인 셈입니다.
+
+또한 타입을 명시하기 때문에 처음 보는 코드를 봐도 타입을 보면서
+
+어떤 코드인지 더 확실하게 알수 있기때문에 협업할때 좋다고 합니다.
+
+그리고 타입스크립트는 타입을 컴퓨터가 알고 있기 때문에 해당 변수가
+
+사용할수있는 타입의 메소드를 자동 완성으로 보여 줍니다.
+
+하지만 any를 사용하게 되면 타입 추론에 빈틈이 생겨서 개발 당시에는
+
+잘 작동했지만 나중에 문제가 생길 확률이 높아집니다.
+
+<img
+  src="/other/other-프리온보딩8월[1-2]/1.png"
+  className={`max-w-full h-auto`}
+></img>
+
+그 밖에도 제너릭이라는 개념을 배우게 되었는데 이해는 되는데 실제로
+
+어떻게 사용해야하는지 아직 감이 잡히질 않는 것 같습니다.
+
+그리고 과제에 대한 피드백을 진행중 다른 참여자분 코드를 보여주셨는데
+
+<img
+  src="/other/other-프리온보딩8월[1-2]/2.png"
+  className={`max-w-full h-auto`}
+></img>
+
+클래스를 상속받아서 새로운 클래스에 구조와 메소드들을 만들어서
+
+사용하는 코드를 봤는데 클래스는 아직 너무 어려운 것 같습니다. ㅠㅠ
+
+---
+
+<h3 className={`dark:text-white`}>2. 과제</h3>
+
+과제는 총 2가지로
+
+- 리덕스 분석및 scratch 작성해보기(선택)
+
+- React Query 적용해서 API 호출 적용해보기
+
+예전에 잠시 리덕스를 배워본적이 있는데 그때 당시에는 이해를 했지만
+
+지금 보니까 하나도 생각이 안나더라구요 하지만 선택이었기 때문에
+
+React Query를 적용을 먼저하기로 했습니다.
+
+(React Query를 하고나니 리덕스할 시간이 없었다...)
+
+React Query를 컴포넌트에 직접넣어서 사용하는 방법은 별 무리가 없었지만
+
+커스텀훅안에 React Query를 넣어서 사용하는 방법을 사용하니까 많은
+
+에러는 만나게 되어서 하루종일 삽질 했습니다. ㅠㅠ
+
+<h3 className={`dark:text-white`}>3. zustand 적용</h3>
+
+초기엔 맨 위의 컴포넌트에서 하위 컴포넌트에 props를 넘겨줄때 많은 props를
+
+넘겨주게 되어서 코드 자체가 많이 더러웠습니다.
+
+```
+export default function TodoDetail({
+  getToDos,
+  detail,
+  editTilte,
+  editText,
+  setEditTilte,
+  setEditText,
+  editId,
+  todoNull,
+  getDetail,
+}: any)
+```
+
+위 코드를 보면 정말 많은 수의 코드를 넘겨주어서 코드가 더러웠습니다.(any수정전)
+
+zustand를 적용해서 깔끔한 client state를 관리하게 되었습니다.
+
+```
+├─ store
+│ ├─ useDetailTodoStore.ts
+│ ├─ useEditTodoStore.ts
+│ └─ useNullTodoStore.ts
+```
+
+---
+
+<h3 className={`dark:text-white`}>4. 소감</h3>
+
+React Query는 정말 놀라운 패키지 인것 같습니다.
+
+React Query말고도 swr같은 패키지도 있는것으로 알고있습니다.
+
+유튜브에서 배민에서 진행한 React Query설명도 들으면서
+
+server-state를 사용하는 이유에 대해서 알게 되었습니다.
+
+stale-while-validate 라는 개념도 알게 되었구요.
+
+여러분들도 React Query를 꼭 사용해 보시면 좋을 것 같습니다.

@@ -1,0 +1,274 @@
+---
+title: 원티드 프리온보딩 8월 챌린지 [1-1] 일지
+date: 2022-08-17
+description: 사전과제를 보는 이유와 추상화
+category: other
+---
+
+<img
+  src="/other/other-프리온보딩8월[1-1]/1.PNG"
+  className={`max-w-full h-auto`}
+></img>
+
+<h3 className={`dark:text-white`}>1. 원티드 프리온보딩 챌린지란?</h3>
+
+이번에 8월초부터 9월까지 원티드 프리온보딩 챌린지에 참여하게 되었습니다.
+
+챌린지란 2주간 코스 참여자가 강사님한테 2주일간 4번 3시간씩 강의를 듣고
+
+자신인 푼 과제를 리팩토링하고 다른 여러 지식을 배웁니다.
+
+그리고 남은 기간동안 원티드에 이력서를 제출해 취업하는 코스입니다.
+
+8월 주제는 CRUD와 server-state인 react-query가 주제이지만
+
+지금 현재 3번의 강의를 들은 결과 typescript와 클린코드 react-query를
+
+배우고있습니다.
+
+챌린지에 참여해서 여러가지 상품을 받을수있습니다. (전 못받을듯 ㅠㅠ)
+
+<img
+  src="/other/other-프리온보딩8월[1-1]/2.PNG"
+  className={`max-w-full h-auto`}
+></img>
+
+사실 공부하면서 블로그에 공부한 점을 적을 생각이 없었지만
+
+다른 참여자 분들이 적으시는 블로그들을 보면서 뒤늦게라도 적고있습니다.
+
+강의를 진행해주시는 강사님은 현재 리멤버라는 명함앱을 만드시는 분입니다.
+
+전 직장에서 사람을 가르치는 일을 하셨던 분이라 그런지 말도 매우 재밌게 하시고
+
+개발에 대한 상식과 지식이 매우 출중하신 분 같습니다. (개발 민수..)
+
+3시간씩 강의인데도 4시간을 하십니다. (전 매우 좋아용 😎)
+
+---
+
+<h3 className={`dark:text-white`}>2. 사전과제가 뭐죠?</h3>
+
+사전 과제는 강사님께서 작성하신 서버코드를 가지고 api를 날려서 CRUD가 되는
+
+TODO앱을 만들어서 제출하는 것이었습니다.
+
+당시에 저는 서버쪽 코드를 아무것도 몰라서 사전과제 API파일이 있는 레포지토리에
+
+가도 이게 당최 머하는 파일인지 하나도 모르겠더라구요. 그래서 포기할려고 했는데
+
+udemy라는 node, express 전반적으로 알려주는 강의가 세일을 해서 질렀습니다.
+
+<img
+  src="/other/other-프리온보딩8월[1-1]/3.PNG"
+  className={`max-w-full h-auto`}
+></img>
+
+이 강의를 하루종일 보면서 mvc패턴을 알게되었고 기본적인 메커니즘 공부했습니다.
+
+---
+
+<h3 className={`dark:text-white`}>3. 기업에서 사전과제를 내는 이유</h3>
+
+1주차 첫번째 시간에는 기업에서 사전과제를 수행하게하는 이유에대해 배웠습니다.
+
+기업에서 사람이 필요해서 사람을 뽑을려고 사전과제와 면접을 보게되는데
+
+다섯개의 후보군이 존재한다고 합니다.
+
+- 1. 이상한 사람 👽
+- 2. 거만한 사람 😤
+- 3. 못하는 사람 😞
+- 4. 잘하기'만' 하는 사람 🤖
+- 5. 잘하고 괜찮기 까지 한 사람 💘
+
+기업 입장에서는 3,4,5번중에서 사람을 뽑는다고 합니다.
+
+그중 5번은 토스같은 대기업에 붙어서 오지 않는다고 하네요.
+
+그래서 3,4번중에 뽑게되는데 사전과제를 보게되면 그 사람이 포텐셜이
+
+있는 사람인지를 보게 되는데 포텐셜을 지닌사람은 논리적으로 자신의
+
+견해를 솔직하게 말하는 사람이라고합니다.
+
+즉 왜 이 코드를 작성했는데 확실한 이유가 있으신 분이란 거죠.
+
+---
+
+<h3 className={`dark:text-white`}>4. 리팩토링ing...</h3>
+
+- <h4 className={`dark:text-white`}>view와 비즈니스 로직을 분리</h4>
+
+사전과제에 대해서 많은 이야기를 해주셨는데 그중에서
+
+view와 비즈니스 로직을 분리 하는 이유에 대해서 설명해주셨습니다.
+
+제 초기코드를 보면 추상화가 아예 되어있지 않고 컴포넌트에 많은 기능을
+
+우겨 넣었다는 것을 알수 있습니다.
+
+<img
+  src="/other/other-프리온보딩8월[1-1]/4.png"
+  className={`max-w-full h-auto`}
+></img>
+
+리팩토링으로 컴포넌트에 있던 axios코드를 따로 커스텀훅을 만들어서 분리하는
+
+방식을 사용했습니다. (잘하시는 다른 참여자분 코드를 참고했습니다.)
+
+<img
+  src="/other/other-프리온보딩8월[1-1]/5.png"
+  className={`max-w-full h-auto`}
+></img>
+
+---
+
+- <h4 className={`dark:text-white`}>맥락을 이해하기 힘든 변수명</h4>
+
+변수나 함수를 만들때 목적을 잘 드러내는 이름을 붙여야 합니다.
+
+- 타입별 변수명
+  - boolean : is-, has-, can-, ...
+  - function : get-, handle-, submit-, …
+  - array : -s (ex. users.map(user ⇒ user.id)), …
+- 피해야 할 변수명
+  - data, info, foo, user1, mdhms`, …
+
+그 밖에도 명령형 프로그래밍과 추상화에 대해서 설명해 주셨습니다.
+
+---
+
+<h3 className={`dark:text-white`}>5. 과제</h3>
+
+이날 과제는 타입스크립트로 작성된 저의 애니스크립트에 any를 모두 없애는것이
+
+과제였습니다. 당시에 저는 에러가 나면 무조건 any를 남발하였기 때문에
+
+이 과제가 제일 어려웠습니다. 하지만 타입 추론과 타입 가드에대해 알게 되었고
+
+결국 모든 코드에 any를 제거했습니다. (다 제거한줄 알았지만 1개가 남아있었)
+
+그중 가장 안 풀리던 문제는 error 타입을 만났을때 입니다.
+
+구글링 결과 error는 if (error intansof Error) 를 사용하면 된다고 나와
+
+있었지만 저의 경우에는 효과가 없었습니다. 그래서 결국에는 throw error를
+
+날려서 에러를 없애는 방식을 사용했지만 다른분의 코드를 보니
+
+AxiosError이라는 타입을 알게 되어서 any를 없앨수 있었습니다.
+
+---
+
+<h3 className={`dark:text-white`}>6. 소감</h3>
+
+프리온보딩에 참여하기 전까지 추상화가 무엇인지 폴더 구조를 어떻게
+
+구상하는지 클린코드는 무엇인지 정말 아는 것이 없었습니다.
+
+하지만 뛰어난 강사님의 강의를 듣고 공부하면서 정말 많은 발전했습니다.
+
+밑에는 초기 코드 tree와 리팩토링후 tree 입니다.
+
+리팩토링전 tree
+
+```
+wanted-pre-onboarding-challenge-fe-1
+├─ package-lock.json
+├─ .gitignore
+├─ package.json
+├─ README.md
+├─ server (간략)
+└─ client
+   ├─ package-lock.json
+   ├─ src
+   │  ├─ react-app-env.d.ts
+   │  ├─ reportWebVitals.ts
+   │  ├─ setupTests.ts
+   │  ├─ components
+   │  │  ├─ AuthForm.tsx
+   │  │  ├─ TodoForm.tsx
+   │  │  ├─ Nav.tsx
+   │  │  ├─ TodoDetail.tsx
+   │  │  └─ TodoList.tsx
+   │  ├─ index.tsx
+   │  ├─ App.tsx
+   │  └─ router
+   │     ├─ Auth.tsx
+   │     ├─ Detail.tsx
+   │     └─ Home.tsx
+   ├─ .gitignore
+   ├─ package.json
+   ├─ tsconfig.json
+   └─ public
+      ├─ robots.txt
+      ├─ logo192.png
+      ├─ logo512.png
+      ├─ favicon.ico
+      ├─ index.html
+      └─ manifest.json
+
+```
+
+리팩토링후 After Tree
+
+```
+wanted-pre-onboarding-challenge-fe-1
+├─ package-lock.json
+├─ .gitignore
+├─ package.json
+├─ README.md
+├─ server (간략)
+└─ client
+   ├─ package-lock.json
+   ├─ src
+   │  ├─ react-app-env.d.ts
+   │  ├─ types
+   │  │  └─ todo.ts
+   │  ├─ reportWebVitals.ts
+   │  ├─ store
+   │  │  ├─ useDetailTodoStore.ts
+   │  │  ├─ useEditTodoStore.ts
+   │  │  ├─ useRenderStore.ts
+   │  │  └─ useNullTodoStore.ts
+   │  ├─ hooks
+   │  │  ├─ useDeleteTodo.ts
+   │  │  ├─ useUpdateTodo.ts
+   │  │  ├─ useAddTodo.ts
+   │  │  ├─ useGetDetail.ts
+   │  │  └─ useGetTodos.ts
+   │  ├─ setupTests.ts
+   │  ├─ components
+   │  │  ├─ AuthForm.tsx
+   │  │  ├─ TodoForm.tsx
+   │  │  ├─ Nav.tsx
+   │  │  ├─ TodoDetail.tsx
+   │  │  └─ TodoList.tsx
+   │  ├─ index.tsx
+   │  ├─ App.tsx
+   │  ├─ router
+   │  │  ├─ Auth.tsx
+   │  │  ├─ Detail.tsx
+   │  │  └─ Home.tsx
+   │  └─ api
+   │     ├─ auth
+   │     │  └─ AuthApi.ts
+   │     └─ todo
+   │        ├─ TodoDeleteApi.ts
+   │        ├─ TodoDetailsApi.ts
+   │        ├─ TodoAddApi.ts
+   │        ├─ TodoGetApi.ts
+   │        └─ TodoUpdateApi.ts
+   ├─ .gitignore
+   ├─ package.json
+   ├─ tsconfig.json
+   └─ public
+      ├─ robots.txt
+      ├─ logo192.png
+      ├─ logo512.png
+      ├─ favicon.ico
+      ├─ index.html
+      └─ manifest.json
+
+```

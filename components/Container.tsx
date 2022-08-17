@@ -2,6 +2,7 @@ import Image from "next/image";
 import Head from "next/head";
 import metadata from "../data/metadata";
 import Nav from "./Nav";
+import Link from "next/link";
 
 const Container = (props) => {
   const meta = {
@@ -36,19 +37,26 @@ const Container = (props) => {
       <header
         className={`w-full max-w-3xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10 bg-gray-100 dark:bg-neutral-800`}
       >
-        <div className={`flex flex-row items-center ml-2`}>
-          <Image
-            src={`/round.webp`}
-            alt="로고"
-            width={40}
-            height={40}
-            objectFit={`cover`}
-            className={`rounded-full`}
-          />
-          <span className={`mx-3 font-semibold italic text-lg text-green-400`}>
-            Kang blog
-          </span>
-        </div>
+        <Link href="/" passHref>
+          <button
+            className={`flex flex-row items-center ml-2 hover:animate-bounce`}
+          >
+            <Image
+              src={`/round.webp`}
+              alt="로고"
+              width={40}
+              height={40}
+              objectFit={`cover`}
+              className={`rounded-full`}
+            />
+            <span
+              className={`mx-3 font-semibold italic text-lg text-green-400`}
+            >
+              Kang blog
+            </span>
+          </button>
+        </Link>
+
         <Nav />
       </header>
       <main className={`w-full max-w-3xl mt-10`}>{props.children}</main>
