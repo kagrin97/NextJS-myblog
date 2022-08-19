@@ -38,16 +38,14 @@ const Container = (props) => {
         className={`w-full max-w-3xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10 bg-gray-100 dark:bg-neutral-800`}
       >
         <Link href="/" passHref>
-          <button
-            className={`flex flex-row items-center ml-2 hover:animate-bounce`}
-          >
+          <button className={`flex flex-row items-center ml-2 `}>
             <Image
               src={`/round.webp`}
               alt="로고"
               width={40}
               height={40}
               objectFit={`cover`}
-              className={`rounded-full`}
+              className={`rounded-full hover:animate-spin`}
             />
             <span
               className={`mx-3 font-semibold italic text-lg text-green-400`}

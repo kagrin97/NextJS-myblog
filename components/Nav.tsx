@@ -22,7 +22,7 @@ const Nav = () => {
         {theme === "light" ? (
           <Image
             src={`/달.png`}
-            alt={""}
+            alt={"다크모드로 전환하는 버튼"}
             width={50}
             height={50}
             className={`rounded-3xl hover:cursor-pointer`}
@@ -30,7 +30,7 @@ const Nav = () => {
         ) : (
           <Image
             src={`/해.png`}
-            alt={""}
+            alt={"라이트모드로 전환하는 버튼"}
             width={50}
             height={50}
             className={`rounded-3xl hover:cursor-pointer`}
@@ -59,6 +59,7 @@ const Nav = () => {
           <Link href={nav.link} key={nav.title}>
             <div className={`hover:cursor-pointer hover:text-green-400`}>
               <a
+                href={nav.link}
                 className={`mr-5 ${nav.link === path ? "text-green-400" : ""}`}
               >
                 {nav.title}
