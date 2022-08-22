@@ -2,8 +2,8 @@ import type { NextPage } from "next";
 import Container from "../components/Container";
 
 import Image from "next/image";
-import RecentPosts from "../components/RecentPosts";
-import metadata from "../data/metadata";
+import RecentPosts from "components/RecentPosts";
+import metadata from "data/metadata";
 import { allPosts } from "contentlayer/generated";
 import { InferGetStaticPropsType } from "next";
 import Link from "next/link";

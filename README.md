@@ -1,28 +1,103 @@
-# NextJS를 이용해 블로그를 만들었습니다.
+# 👀 블로그 프로젝트 목차
 
-주소 : [https://firebase-twitter.vercel.app/](https://kagrin97-blog.vercel.app/)
+- [1. 구현된 기능](#1-구현된-기능)
+  - 1-1. 블로그 기능
+  - 1-2. 다른 모든 기능
+- [2. 사용한 프레임워크및 라이브러리](#2-사용한-프레임워크및-라이브러리)
+- [3. 폴더 구조](#3-폴더-구조)
+  - 폴더구조 설명
+  - 폴더 트리
+- [4. 주안점](#4-주안점)
+- [5. 한계점](#5-한계점)
 
-## 사용 기술
+### 라이트하우스 지표
 
-- frontEnd : NextJS, TypeScript
-- backend, db : contentlayer 
-- deploy : vercel
+![성능표](<public/%EC%84%B1%EB%8A%A5%EC%A7%80%ED%91%9C(ligthHosue).PNG>)
 
-## 구현한 기능
+## 1. 구현된 기능
 
-  ### 블로그 포스트 가져오기
+- ### 1-1) 블로그 기능
 
-  ![본다](https://user-images.githubusercontent.com/75124028/180695584-57d74da4-8b7d-4d88-8a33-541328a25655.gif)
-  - contentlayer.config.ts 설정 파일에 포스터의 필드와 contents 타입과 path를 설정합니다.
-  - contentlayer의 useMDXComponent메소드를 사용해 posts폴더의 MDX파일(블로그글)을 가져옵니다.
   ***
-  ### 블로그 포스팅 기능
-  
-  ![포스팅](https://user-images.githubusercontent.com/75124028/180694879-51cd8624-1536-48a0-8237-08f115187e90.gif)
-  - contentlayer라는 NextJS용 SDK를 사용해서 블로그 작성, 삭제, 수정이 가능합니다.
-  ***
-  ### 다크모드, 댓글기능
 
-  ![댓글](https://user-images.githubusercontent.com/75124028/180695344-2e45d499-ca3b-4cf8-bb60-69b474026ac9.gif)
-  - next-themes를 사용 현재 dark인지 ligth인지를 판단해 _document의 className을 dark, ligth 토글
-  - utterances의 깃 이슈기능을 이용해서 블로긔 댓글 
+  - [x] 메인 화면에서 최신 글 5개를 가져옵니다.
+
+  - [x] 각각 카테고리 별로 포스터를 가져옵니다 (최신순으로)
+
+  - [x] 포스터를 누르면 포스터의 내용을 가져옵니다.(포스터는 mdx 입니다.)
+
+- ### 1-2) 다른 모든 기능
+
+  ***
+
+  - [x] 라이트모드, 다크모드를 바꿀수 있습니다.
+
+  - [x] utterances를 사용해 댓글기능을 구현했습니다.
+
+  - [x] 기존 tailwind 코드 블록에 스타일을 새로 적용시켰습니다. (globals.css)
+
+## 2. 사용한 프레임워크및 라이브러리
+
+- ### **Next.JS** : react에서 SSR방식을 사용해 성능을 향상시키고 SEO를 유리하게 하기 위해서 사용했습니다.
+
+- ### **contentlayer** : Next.JS와 호환이 되면서 블로그 기능을 구현할 수 있는 SDK로 Next.js 단독 또는 Gatsby와 같은 다른 프레임워크보다 빌드 시간이 빠릅니다.
+
+- ### **tailwind** : 기존 css보다 사용하기 편리하고 컴포넌트에서 스타일 유추가 쉽기 때문에 사용했습니다.
+
+- ### **rehype-prism-plus** : 코드 블록을 사용할 때 tailwind를 사용하면 스타일 적용이 안 되기 때문에 코드 블록에 클래스를 추가 하기 위해 사용했습니다.
+
+- ### **next-themes** : 라이트모드와 다크모드를 구현하기 위해 현재 테마 정보를 가져오기위해 사용했습니다.
+
+## 3. 폴더 구조
+
+- ### 3-1) 폴더 구조 설명
+
+  ***
+
+  | 폴더           | 용도                                                  |
+  | -------------- | ----------------------------------------------------- |
+  | **data**       | 기본 META 데이터와 각 페이지 URL정보를 모았습니다.    |
+  | **components** | 페이지 안에서 자주 쓰이는 컴포넌트를 모아 놓았습니다. |
+  | **pages**      | 각각 페이지를 담당하는 파일 폴더입니다.               |
+  | **posts**      | 포스터파일인 mdx파일을 모아놓은 폴더입니다.           |
+  | **public**     | 리소스 파일을 모아놓은 폴더입니다.                    |
+
+- ### 3-2) 폴더 트리
+
+  ***
+
+  ```
+  NextJS-myblog
+  ├─ package-lock.json
+  ├─ data
+  ├─ contentlayer.config.ts
+  ├─ sitemap.config.js
+  ├─ .gitignore
+  ├─ .babelrc
+  ├─ package.json
+  ├─ README.md
+  ├─ styles
+  ├─ tailwind.config.js
+  ├─ postcss.config.js
+  ├─ posts
+  ├─ tsconfig.json
+  ├─ components
+  ├─ pages
+  ├─ public
+  ├─ .eslintrc.json
+  ├─ next.config.js
+  └─ next-env.d.ts
+
+  ```
+
+## 4. 주안점
+
+블로그는 노출이 많이 될수록 좋기 때문에 seo에 유리한 nextjs와 메타태그를 많이
+
+사용했습니다. 그리고 빠른 성능을 위해서 contentlayer를 사용해 빠른 로딩을 구현했습니다.
+
+## 5. 한계점
+
+현재 posts 폴더 안에 카테고리별로 폴더를 구분하는 넣고 싶었지만
+
+contentlayer특성 때문에 구현하기 어렵지만 구현할 예정입니다.
