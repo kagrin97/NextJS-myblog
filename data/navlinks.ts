@@ -3,6 +3,7 @@ const navlinks: { title: string; link: string }[] = [
   { title: "TypeScript", link: "/type-script" },
   { title: "NextJS", link: "/next-js" },
   { title: "React", link: "/react" },
+  { title: "Git", link: "/git" },
   { title: "Other", link: "/other" },
 ];
 
