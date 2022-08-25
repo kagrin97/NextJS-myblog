@@ -1,0 +1,191 @@
+---
+title: Git의 rebase의 2가지 기능
+date: 2022-08-25
+description: rebase의기능인 merge, commit 정리
+category: git
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://git-scm.com/docs/git-rebase"
+>
+  git rebase 문서
+</a>
+
+1. <a href="#1" className={`dark:text-white`}>
+     rebase의 merge 기능
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     rebase의 merge 기능중 충돌이 발생했을떄
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     rebase의 merge 기능 사용하면 안되는 경우
+   </a>
+4. <a href="#4" className={`dark:text-white`}>
+     rebase의 정리 기능
+   </a>
+5. <a href="#5" className={`dark:text-white`}>
+     정리 기능 사용하면 안되는 경우
+   </a>
+
+<h2 id="1" className={`dark:text-white`}>
+  1. rebase의 merge 기능
+</h2>
+
+---
+
+rebase는 re-base로 베이스를 <b>재배치</b>한다는 뜻입니다.
+
+rebase는 merge기능과 마찬가지로 두개의 브랜치를 <b>합칠때</b> 사용할수 있는 명령어입니다.
+
+그렇다면 merge와 대체 뭐가 <b>다르길래</b> 사용하는 걸까요?
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/186634543-4e21ecfd-c6a8-4dca-8184-98491db2b72e.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+
+2개의 사진이 있는데 위의 사진은 일반적인 merge를 사용했을때 나타나는 모습입니다.
+
+첫번째 사진은 master브랜치에서 업데이트가 일어날때마다
+
+자신이 작업중인 feature 브랜치에서 최신 정보를 업데이트하기 위해서
+
+`git merge master` 같은 명령어를 사용해서 합치게 되는데 <b>conflict(충돌)</b> 일어날 경우
+
+merge commit을 작성하게 됩니다. 그럴경우 history가 merge commit이 많을경우
+
+주렁주렁 달려있어서 남들이 봤을때 해석하기가 매우 어려워질 수가 있습니다.
+
+특히 대형 프로젝트일경우 엄청나게 많은 merge commit로 머리가 아파옵니다.
+
+그떄 사용하는 명령어가 <b>rebase</b>입니다.
+
+rebase는 merge commit을 작성하지않고 history자체를 <b>재생성</b> 합니다.
+
+밑의 사진을 보면 master브랜치 맨끝에 제가 작업중인 feature 브랜치의
+
+commit들이 한번에 쭈르르 모여있는 모습을 볼수가 있습니다.
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/186636597-b4c9fb2b-2178-49f4-a751-7542f0a7dcb0.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+
+잦은 merge commit으로 더러워진 모습
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/186637604-6d6756a6-7082-4c13-ad67-2a542554bfa8.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+
+rebase 사용으로 깔끔해진 모습
+
+(master브랜치위에 내가작업한 commit이 나열되있다.)
+
+<h2 id="2" className={`dark:text-white`}>
+  2. rebase의 merge 기능중 충돌이 발생했을떄
+</h2>
+
+---
+
+feature브랜치에서 master 브랜치와 rebase할때 충돌이 일어날수있다.
+
+`git rebase master`
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/186638312-fc56612a-bf27-4d4f-a864-a3c009f506fa.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+
+경고 메세지를 살펴보면 test2.txt파일에 문제가 생긴것 같다.
+
+이 문제는 현재 합치는 도중에 문제가 발생한 것이므로 되돌리기 위해서는
+
+`git rebase --abort`라는 명령어를 사용하면 rebase를 취소할수 있다.
+
+하지만 합치고 싶을떄는 test2.txt 파일에 충돌부분을 수정후에
+
+`git add .` 후에 `git rebase --continue` 를 사용하면 다시 합쳐진다.
+
+<h2 id="3" className={`dark:text-white`}>
+  3. rebase의 merge 기능 사용하면 안되는 경우
+</h2>
+
+---
+
+rebase를 사용하면 안되는 경우는 rebase를 사용하면
+
+커밋의 hash(커밋 <b>고유 id</b>라고 보면됨)가 바뀌기 때문에 문제가 발생한다.
+
+왜 문제가 발생하냐면 다른 사람들도 사용중인 branch일 경우 다른 사람들의
+
+local repo에도 커밋들의 hash값들은 그대로인데 rebase를 사용해 push할경우
+
+다른 사람들의 commit과 <b>충돌</b>할수가 있어서 잘 사용해야한다.
+
+<h2 id="4" className={`dark:text-white`}>
+  4. rebase의 정리 기능
+</h2>
+
+---
+
+rebase는 각각 커밋들을 <b>이름바꾸기, 커밋합치기, 커밋삭제하기</b> 등등
+
+여러가지 기능을 더 할수가 있다. (checkout처럼 많은기능을 포함)
+
+`git rebase -i HEAD~4` 이 명령어는 최신커밋 4개를 불러온다.
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/186640716-c6d81e19-3ef8-481e-9462-b34f33814c69.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+
+그러면 이런 파일이 열리게 되는데 (vscode로 default 설정해줘야함)
+
+위에서부터 4줄은 최신커밋 4개이고 그 밑에줄은 명령어 이름과 설명이다.
+
+- <b>pick</b> : 커밋 유지
+
+- <b>reword</b> : 커밋 메시지 수정하기
+
+- <b>fixup</b>: 이전에 생성된 커밋과 합쳐지고 이전 커밋만 남는다. (그
+  이후커밋들의 해쉬가 바뀜)
+
+- <b>drop</b>: 커밋 삭제
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/186644537-8c15f32b-343e-4157-916c-91e39360273e.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+
+이런식으로 이름을 바꾸거나 삭제하거나 커밋을 합칠 수 있다.
+
+<h2 id="5" className={`dark:text-white`}>
+  5. 정리 기능 사용하면 안되는 경우
+</h2>
+
+---
+
+이 명령어도 merge기능처럼 커밋들을 재생성 하기 때문에 다른
+
+사람들과 협업 중 이라면은 사용하지 않는 편이 좋다.
+
+위의 정리하는 명령어를 잠깐 사용해 봤는데도 오류가 많이나서
+
+진땀을 뻇다. 매우 유용한 기능이지만 개인적으로 오류가 두려워서
+
+잘 안쓸것 같다. 😥
