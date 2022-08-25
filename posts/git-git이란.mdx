@@ -102,13 +102,13 @@ git을 사용하면 프로젝트를 저장, 복사, 백업, 되돌리기, 여러
 
 ---
 
-여러분들은 <b>git init</b>를 사용하면 초기화 되었다는 메시지를
+여러분들은 `git init`를 사용하면 초기화 되었다는 메시지를
 
 본적이 있을것이다. git init은 현재 저장소에 <b>.git</b> 이라는 폴더를
 
 생성하게 된다 .git 폴더는 숨겨진 파일이 므로 ls 명령어를 쳐도 나오지 않는다.
 
-대신 <b>ls -a</b> 을 사용하면 모든 파일과 폴더가 나타나니 쳐보자
+대신 `ls -a` 을 사용하면 모든 파일과 폴더가 나타나니 쳐보자
 
 <div>
   <img
@@ -149,13 +149,13 @@ git을 사용하면 프로젝트를 저장, 복사, 백업, 되돌리기, 여러
 
 이름을 봐도 전혀 감이 오질 않지 않는가 나도 처음에 그랬다.
 
-여러분들은 커밋을 작성하기 전에 <b>git add .</b> 라는 명령어를 쳤을 것이다.
+여러분들은 커밋을 작성하기 전에 `git add .` 라는 명령어를 쳤을 것이다.
 
 git add . 은 현재 <b>working directory</b>에 있는 모든 파일을 <b>staging area</b>로
 
 올리는 역할을 한다 그러면 사람들은 왜 올려야 하는지 의문점이 가질수가 있다.
 
-그 이유는 <b>commit</b> 명령어를 치게 된다면 현재 staging area에 있는 모든 파일을
+그 이유는 `git commit` 명령어를 치게 된다면 현재 staging area에 있는 모든 파일을
 
 <b>local repo</b>에 저장을 하게된다. 즉 그룹 단위로 커밋 할수가 있는 것이다.
 
@@ -163,13 +163,13 @@ git add . 은 현재 <b>working directory</b>에 있는 모든 파일을 <b>stag
 
 파일들만을 그룹을 지어서 commit을 할수가 있다.
 
-<b>git add a1.py a2.py</b> 이런식으로 staging area에 올릴 파일을 추릴수가 있다.
+`git add a1.py a2.py` 이런식으로 staging area에 올릴 파일을 추릴수가 있다.
 
 커밋을 할때는 기능별로 구분을 지어서 커밋을 하는 것이 좋다 그 이유는 나중에
 
 특정 커밋으로 되돌리거나 삭제하거나 하기가 유리하기 때문이다.
 
-<b>git status</b>를 사용하면 현재 git의 구역을 보여준다.
+`git status`를 사용하면 현재 git의 구역을 보여준다.
 
 밑의 사진들을 보면서 실제 구동하는 장면을 보도록하자
 
@@ -186,9 +186,9 @@ git add . 은 현재 <b>working directory</b>에 있는 모든 파일을 <b>stag
 
 현재 working directory에 존재하는데 <b>빨간 글씨</b> 2줄위를 살펴보면
 
-git add 라는 명령어를 사용해서 staging area에 올리라고 나와있다.
+`git add` 라는 명령어를 사용해서 staging area에 올리라고 나와있다.
 
-그 밑에 줄을 보면 <b>git restore</b>를 사용하면 수정된 파일을 취소 할수가있다.
+그 밑에 줄을 보면 `git restore`를 사용하면 수정된 파일을 취소 할수가있다.
 
 2. staging area에 파일을 올리자!
 
@@ -199,11 +199,11 @@ git add 라는 명령어를 사용해서 staging area에 올리라고 나와있�
   ></img>
 </div>
 
-위 사진을 보면 <b>git add .</b> 명령어로 working directory에 존재하는 모든
+위 사진을 보면 `git add .` 명령어로 working directory에 존재하는 모든
 
 파일을 staging area을 올렸다. 그결과 <b>초록글씨</b>로 올라가있는 파일을 볼수 있다.
 
-<b>git restore --staged</b>을 사용하면 working directory로 끌어 내릴수가 있다.
+`git restore --staged`을 사용하면 working directory로 끌어 내릴수가 있다.
 
 3. 커밋하기
 
@@ -247,8 +247,8 @@ git과 github는 같은 곳에서 만들어진 것이 아니라는 사실을 알
 
 그리고 사람들이 git의 repo를 착각 할수가 있는데 repo는 현재 로컬에서만 저장이된
 
-상태로 github에는 저장되어 있지 않다 저장하기 위해서는 <b>psuh</b>를 해줘야한다.
+상태로 github에는 저장되어 있지 않다 저장하기 위해서는 `git psuh`를 해줘야한다.
 
-<b>git clone</b> 이라는 명령어는 git 문서에도 나와있는 명령어로 github하고만
+`git clone` 이라는 명령어는 git 문서에도 나와있는 명령어로 github하고만
 
 사용되는 명령어가 아니다 <b>gitlab</b>같은 다른 원격 저장소에서도 사용될수 있다.

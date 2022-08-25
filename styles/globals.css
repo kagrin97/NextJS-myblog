@@ -6,6 +6,20 @@ body {
   font-family: "Noto Sans KR", sans-serif;
 }
 
+.prose :where(code):not(:where([class~="not-prose"] *)) {
+  color: rgb(235, 87, 87);
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+  font-size: 0.875em;
+  background-color: rgba(175, 184, 193, 0.2);
+  border-radius: 6px;
+}
+
+code:last-child::after,
+code:last-child::before {
+  content: none;
+}
+
 code[class*="language-"],
 pre[class*="language-"] {
   @apply bg-zinc-900;
@@ -25,6 +39,8 @@ pre[class*="language-"] {
   -moz-hyphens: none;
   -ms-hyphens: none;
   hyphens: none;
+
+  overflow-x: hidden;
 }
 
 pre[class*="language-"]::-moz-selection,
