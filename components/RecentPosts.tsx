@@ -3,7 +3,7 @@ import Link from "next/link";
 const RecentPosts = ({ posts }) => {
   return (
     <section className={`mt-10`}>
-      <div className={`flex flex-col`}>
+      <article className={`flex flex-col`}>
         {posts.slice(0, 5).map((post) => (
           <Link
             key={post._id}
@@ -34,7 +34,7 @@ const RecentPosts = ({ posts }) => {
             </a>
           </Link>
         ))}
-      </div>
+      </article>
     </section>
   );
 };

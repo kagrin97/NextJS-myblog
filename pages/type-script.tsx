@@ -10,7 +10,7 @@ const TypeScript = ({
   const type = posts.filter((post) => post.category === "type");
   return (
     <Container>
-      <div className={`mt-10 flex flex-col`}>
+      <article className={`mt-10 flex flex-col`}>
         {type.map((post) => (
           <BlogPost
             date={post.date.slice(0, 10)}
@@ -20,7 +20,7 @@ const TypeScript = ({
             key={post._id}
           />
         ))}
-      </div>
+      </article>
     </Container>
   );
 };

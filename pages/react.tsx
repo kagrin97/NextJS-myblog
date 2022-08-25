@@ -8,7 +8,7 @@ const React = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const react = posts.filter((post) => post.category === "react");
   return (
     <Container>
-      <div className={`mt-10 flex flex-col`}>
+      <article className={`mt-10 flex flex-col`}>
         {react.map((post) => (
           <BlogPost
             date={post.date.slice(0, 10)}
@@ -18,7 +18,7 @@ const React = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             key={post._id}
           />
         ))}
-      </div>
+      </article>
     </Container>
   );
 };

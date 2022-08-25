@@ -10,7 +10,7 @@ const javaScript = ({
   const javaScript = posts.filter((post) => post.category === "js");
   return (
     <Container>
-      <div className={`mt-10 flex flex-col`}>
+      <article className={`mt-10 flex flex-col`}>
         {javaScript.map((post) => (
           <BlogPost
             date={post.date.slice(0, 10)}
@@ -20,7 +20,7 @@ const javaScript = ({
             key={post._id}
           />
         ))}
-      </div>
+      </article>
     </Container>
   );
 };

@@ -15,7 +15,7 @@ const Container = (props) => {
   };
 
   return (
-    <div className={`w-full flex flex-col items-center p-3 relative`}>
+    <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>{meta.title}</title>
@@ -57,8 +57,8 @@ const Container = (props) => {
 
         <Nav />
       </header>
-      <main className={`w-full max-w-3xl mt-10`}>{props.children}</main>
-    </div>
+      <section className={`w-full max-w-3xl mt-10`}>{props.children}</section>
+    </main>
   );
 };
 

@@ -12,7 +12,7 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <Container>
       <div className={`my-5 w-full`}>
-        <div className={`relative`}>
+        <section className={`relative`}>
           <Image
             src={`/배너.jpg`}
             alt="대표 이미지"
@@ -40,7 +40,7 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
               />
             </Link>
           </div>
-        </div>
+        </section>
 
         <RecentPosts posts={posts} />
       </div>

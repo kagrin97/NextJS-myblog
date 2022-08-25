@@ -15,12 +15,12 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Container customMeta={customMeta} className="relative">
-      <div className="mt-10 prose">
+      <article className="mt-10 prose">
         <h1 className="text-green-500">{post.title}</h1>
-        <div className={`dark:text-slate-50 text-neutral-900 `}>
+        <article className={`dark:text-slate-50 text-neutral-900`}>
           <MDXComponent />
-        </div>
-      </div>
+        </article>
+      </article>
       <a href="#" className="fixed bottom-5 right-5">
         <Image
           src={`/top.png`}

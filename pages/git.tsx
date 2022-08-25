@@ -8,7 +8,7 @@ const Git = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const git = posts.filter((post) => post.category === "git");
   return (
     <Container>
-      <div className={`mt-10 flex flex-col`}>
+      <article className={`mt-10 flex flex-col`}>
         {git.map((post) => (
           <BlogPost
             date={post.date.slice(0, 10)}
@@ -18,7 +18,7 @@ const Git = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             key={post._id}
           />
         ))}
-      </div>
+      </article>
     </Container>
   );
 };
