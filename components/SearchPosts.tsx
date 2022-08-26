@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-const RecentPosts = ({ posts }) => {
+const SearchPosts = ({ posts }) => {
   return (
     <section className={`flex flex-col`}>
-      {posts.slice(0, 5).map((post) => (
+      {posts.map((post) => (
         <Link key={post._id} href={`/blog/${post._raw.flattenedPath}`} passHref>
           <a className="mt-5 transition ease-in-out hover:-translate-x-1.5 hover:text-green-500/80">
             <div
@@ -33,4 +33,4 @@ const RecentPosts = ({ posts }) => {
   );
 };
 
-export default RecentPosts;
+export default SearchPosts;
