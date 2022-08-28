@@ -7,6 +7,7 @@ import metadata from "data/metadata";
 import Nav from "components/Nav";
 
 import NextProgress from "next-progress";
+import ProgressBar from "react-scroll-progress-bar";
 
 const Container = (props) => {
   const meta = {
@@ -43,6 +44,7 @@ const Container = (props) => {
         delay={300}
         options={{ showSpinner: true }}
       />
+      <ProgressBar bgcolor="#22c55e" />
       <header
         className={`w-full max-w-3xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10 bg-gray-100 dark:bg-neutral-800 bg-opacity-80 dark:bg-opacity-80`}
       >
@@ -63,9 +65,9 @@ const Container = (props) => {
             </span>
           </button>
         </Link>
-
         <Nav />
       </header>
+
       <section className={`w-full max-w-3xl mt-10`}>{props.children}</section>
     </main>
   );
