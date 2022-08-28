@@ -74,7 +74,7 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             value={searchTitle}
             onChange={onChangeSearchTitle}
             className={`w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-neutral-800 mt-3 border-4 border-gray-200 dark:border-gray-600 focus:outline-none`}
-            placeholder="찾고싶은 블로그 포스터의 제목을 입력하세요 😎"
+            placeholder="포스터의 제목을 입력하세요. 😎"
           />
         </form>
         {searchPosts.length ? (
