@@ -1,0 +1,165 @@
+---
+title: 원티드 프리온보딩 프론트엔드 코스 [1-1] 일지
+date: 2022-09-03
+description: 프론트엔드 코스, 첫번째 과제
+category: other
+---
+
+저번의 프리온보딩 8월챌린지를 끝내고나서 아직 부족하다는 생각이
+
+들어서 이번에는 프론트엔드 코스를 신청하게 되었습니다.
+
+이번 프론트엔드 코스는 저번 챌린지에서는 2주정도 강의를 듣고 자신이 만든
+
+사전과제인 todo를 리팩토링하면서 공부하는 코스였다면
+
+이번에는 4주정도 강의를 듣고 다른 참여자 분들과 같이 팀을
+
+이루어서 <b>기업과제를</b> 수행하는 코스입니다.
+
+<img
+  src="https://user-images.githubusercontent.com/75124028/188257102-1b535baa-421a-44f8-b2ed-4bf1918393a6.PNG"
+  className={`max-w-full h-auto`}
+></img>
+
+이번 코스에서는 사전과제를 수행하고 자신의 naver블로그에 <b>참가 에세이</b>를
+
+작성한 후에 제출해서 통과한 80명만을 뽑습니다.
+
+그리고 일반전형일경우 30만을 내야하며 SBA전형을 신청할경우
+
+무료로 참가할수있습니다. (코스에 성실히참여하면 30만원 돌려줍니다.)
+
+<img
+  src="https://user-images.githubusercontent.com/75124028/188257214-40195fd9-9895-4fff-bb7b-1f2b42a085f4.PNG"
+  className={`max-w-full h-auto`}
+></img>
+
+<a
+  href="https://github.com/kagrin97/wanted-pre-onboarding-fe"
+  className={`dark:text-white`}
+>
+  사전과제 링크
+</a>
+<a
+  href="https://blog.naver.com/kyo490/memo/222849975824"
+  className={`dark:text-white`}
+>
+  제 네이버 블로그 링크
+</a>
+
+사전과제는 저번 8월챌린지와 거의 흡사한 todolist작성입니다.
+
+대신 정말 기본적인 라이브러리만을 사용해야하는 제한이 있어서
+
+리액트쿼리와 다른 스타일적인 요소를 저는 포함시키지 않았습니다.
+
+---
+
+<h2 className={`dark:text-white`}>처음해보는 협업</h2>
+
+7~8명이서 12개 팀을 이루어서 <b>한달동안 사전과제</b>를 같이합니다.
+
+저는 1조에 속하게 되었습니다. ㅎㅎ
+
+첫번째 과제는 8명이서 작성한 todo에서 best부분을 찾아서 새로운
+
+todo를 만드는것이 저희의 과제였습니다. 화요일에 시작해 목요일 낮12시
+
+까지 제출해야 했기때문에 생각보다 매우 빠듯해 급하게 제출해서
+
+아쉬움이 남습니다. 저희팀은 제일 먼저 코딩컨벤션을 설정했습니다.
+
+<a
+  href="https://instinctive-moustache-aba.notion.site/WPO-FE-6-1-Coding-Convention-6a0123a0196343ea88c8434a3c157812#d00f53fad5c545a4b1e2aba7f6c62f31"
+  className={`dark:text-white`}
+>
+  코딩컨벤션을 정리한 노션링크
+</a>
+
+eslint, prettier, husky를 이용해서 기본적인 룰을 만들었습니다.
+
+그리고 각자가 생각하는 제일 잘만든 todo를 뽑아서 그걸 베이스로 삼아서
+
+리팩토링할려고 하였는데 무료 6표로 제 todo가 <b>선택</b>이 되었습니다. 😄
+
+8명이란 많은 인원수 때문에 분업하는것이 매우 어려웠는데
+
+개발4 사이드4로 분배를 하였고 제 <b>코드가 베이스</b>가 되었기 때문에
+
+저는 <b>개발쪽으로 진행</b>하게 되었습니다.
+
+사이드 쪽에서 배포, 코딩 컨벤션 정리, 위키를 정리하셨습니다.
+
+저는 기존엔 api파일들을 너무 <b>세분화</b>해서 작성했는데 ex) TodoGetApi...
+
+<b>응집도</b>가 떨어진다고 팀원들이 의견을 내주어 다른 한분의 코드인 class의
+
+메소드로 CRUD를 제어하는 코드를 가져와서 <b>저의 비즈니스로직과 결합</b>하는
+
+역할을 맡았습니다. 나뉘어진 모듈을 합쳐서 하나의 클래스로만든코드 👇
+
+```js:scr/api/todo.ts
+import api from 'api/interceptor';
+
+interface ITodo {
+  todo: string;
+  id: number;
+  isCompleted: boolean;
+}
+
+class Todo {
+  async createTodo(todo: string) {
+    const res = await api.post('/todos', {
+      todo: todo,
+      isCompleted: false,
+    });
+    return res;
+  }
+
+  async getTodos() {
+    const res = await api.get('/todos');
+    return res;
+  }
+
+  async updateTodo({ id, todo, isCompleted }: ITodo) {
+    const res = await api.put(`/todos/${id}`, {
+      todo: todo,
+      isCompleted: isCompleted,
+    });
+    return res;
+  }
+
+  async deleteTodo(id: number) {
+    const res = await api.delete(`/todos/${id}`);
+    return res;
+  }
+}
+
+export default new Todo();
+```
+
+<a
+  href="https://github.com/wanted-fe-6/wanted-pre-onboarding-fe-6-1-1"
+  className={`dark:text-white`}
+>
+  첫번째 과제repo 주소
+</a>
+
+---
+
+<h2 className={`dark:text-white`}>여담</h2>
+
+저희 팀원중 한분이 개인적인 사정으로 첫번쨰 과제를 수행하시던
+
+도중에 빠지게 되었습니다. ㅠㅠ
+
+8명이나 모이다보니까 서로의견을 취합하고 결론내고 협업하는 과정이
+
+매우 힘들더군요. 차라리 혼자였다면 이렇게해보고 저렇게 해보고
+
+했을텐데 다른분들도 사용하시는 repo라서 섣불리 건들기 어려웠습니다.
+
+다른 팀의 과제 리드미를 읽고 아직 부족하다고
+
+느꼈습니다. 다음 과제에서는 더 업그레이드 하겠습니다!
