@@ -1,0 +1,349 @@
+---
+title: javaScript 의존성 역전 원칙, 의존성 주입
+date: 2022-09-08
+description: 의존성, 의존성 역전 원칙, 의존성 주입
+category: js
+---
+
+이 포스터는 원티드 프론트엔드 강의중 알게된점을 기술했습니다.
+
+또한 상당수의 내용이 강의중 정리해주신 글을 참고해서 작성했습니다.
+
+1. <a href="#1" className={`dark:text-white`}>
+     의존성이란?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     의존성 역전 원칙
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     의존성 주입
+   </a>
+4. <a href="#4" className={`dark:text-white`}>
+     여담
+   </a>
+
+<h2 id="1" className={`dark:text-white`}>
+  의존성이란?
+</h2>
+
+의존성이란 간단하게 두 모듈간의 <b>연결</b>이라고 보면됩니다.
+
+객체지향언어인 js에서는 두개의 클래스간의 관계라고도 합니다.
+
+```js
+class A {
+	foo() { ... }
+}
+
+class B {
+    getList() {
+        const a = new A();
+        const data = a.foo();
+        ...
+    }
+}
+```
+
+위 코드에서 B클래스는 A라는 클래스를 사용해서 getList라는 메소드를
+
+사용하고 있습니다. 이말은 <b>B는 A에 의존</b>하고있다고 할수있습니다.
+
+반대로 A는 B에서 무슨일이 일어나든지 전혀 상관이없습니다.
+
+---
+
+<h2 id="2" className={`dark:text-white`}>
+  의존성 역전 원칙
+</h2>
+
+의존성이란 특정한 모듈이 동작하기 위해서 다른 모듈을 필요로 하는 것을 의미합니다.
+
+의존성 역전 원칙은 <b>“유연성이 극대화된 시스템"</b>을 만들기 위한 원칙입니다.
+
+이 말은 곧 소스 코드 의존성이 <b>추상</b>에 의존하며 <b>구체</b>에는 의존하지 않는 것을 의미합니다.
+
+<b>추상</b>이란 구체적인 구현 방법이 포함되어 있지 않은 형태를 의미합니다.
+추상이란 말이 어려울 수 있지만,
+
+결국 그 내부가 어떻게 구현되어있는지 신경쓰지 않고 그냥 내가 <b>“해줘야 하는 일”</b>과 <b>“결과"</b>만 신경씁니다.
+
+구체는 반대로 실질적으로 해당 동작을 하기 위해서 수행해야 하는 <b>구체적인 일련의 동작과 흐름</b>을 의미합니다.
+
+이런 구체적인 동작들을 굉장히 빈번하게 변경될 여지가 많습니다.
+
+따라서 이러한 구체에 애플리케이션이 점점 의존하게 된다면 결국 구체가 변할 때 마다,
+
+내 애플리케이션도 그에 맞춰서 <b>변화</b>해야 한다는 의미가됩니다.
+
+실생활의 예를 통해 추상과 구체의 개념을 알아봅시다. 우리 모두는 스마트폰을 활용합니다.
+
+그리고 스마트폰은 전화를 할 수 있습니다. 우리는 스마트폰의 전화 앱을 실행하고
+
+1. 번호를 입력한다.
+2. 통화 버튼을 누른다.
+
+의 과정을 거치면 통화가 이루어진다는 것을 알고 있습니다.
+
+하지만 저 내부적인 과정에서는 우리의 요청을 통신사가 받아서, 기지국을 찾고, 상대방의 전화번호와 연결된 기지국을 찾고
+
+두개의 음성을 연결해서 실시간으로 전달해주는 <b>구체적인 과정</b>이 발생합니다.
+
+우리가 어떤 스마트폰을 사용하든, 그리고 어떤 통신사를 사용하든 번호를 입력하고, 통화버튼을 누른다는 추상은 변하지
+
+않습니다. 하지만 통신사가 변경되면 통신사별로 통화를 연결할 때 사용하는 프로세스, 기지국등은 미묘하게 달라질 것입니다.
+
+만약 우리가 통신사를 변경할 때 마다 이러한 모든 프로세스를 일일이 맞춰서 변경해야지만 통화기능이 동작하게 되어있다면
+
+대부분의 사용자들은 결국 통신사를 변경하는 것을 포기하게 될 것입니다.
+
+이처럼 변화가 자주 발생하는 추상에 의존하는 것은 애플리케이션 구조 상 기피해야 할 항목입니다.
+
+하지만, 우리가 일반적으로 코드를 작성하다보면 위와 같이 구체에 의존하는 경우가 자주 발생하게 됩니다.
+
+```js
+fetch("todos", {
+	headers:{
+		Authorization:localStorage.getItem("ACCESS_TOKEN");
+	}
+}
+```
+
+위 코드는 두가지 <b>문제</b>가 있습니다.
+
+1. localStorage라는 <b>구체적인 사항</b>에 의존하고 있습니다.
+
+2. localStorage는 <b>“브라우저”</b>라는 구체적인 사항에서 제공하는 API입니다.
+
+물론, 구체적인 요소에 하나도 의존을 하지 않고 애플리케이션을 만들 순 없습니다.
+
+실질적으로 브라우저에서 제공하는 기능을 이용해야 한다는 사실을 무시할 순 없으니까요
+
+하지만, 이 외부 요소에 직접적으로 의존하는 코드를 <b>최소화</b>하고,
+
+전체적인 제어권을 우리의 애플리케이션 안으로 가져올 순 있습니다.
+
+```js
+class TokenRepository {
+  TOKEN_KEY = "ACCESS_TOKEN";
+
+  save(token) {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  get() {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  remove() {
+    localStorage.removeItem(this.TOKEN_KEY);
+  }
+}
+
+const tokenRepository = new TokenRepository();
+
+
+fetch("todos", {
+	headers:{
+		Authorization:tokenRepository.get();
+	}
+}
+```
+
+위와 같은 방식으로 코드를 변경하게 되면 구체적인 요소인 localStorage는
+
+TokenRepository Class에 의해서 관리되게 됩니다. 그리고, 애플리케이션 내에서의
+
+의존관계는 변경되게 됩니다. 이제 핵심 비지니스 로직들은 tokenRepositry에 의존하게 되었으며
+
+실질적인 localStorage에 대한 <b>의존성은 없어지게</b> 되었습니다.
+
+만약 이 상황에서 외부 요소들이 변경되게 된다면 어떻게 될까요?
+
+외부요소들이 변경되게 된다면 외부 요소들의 동작을 tokenRepository에 맞춰주게 되면 됩니다.
+
+sessionStorage로 변경되든, cookie로 변경되든 외부요소들이 어떻게 되든 상관없이
+
+외부요소들은 무조건 save, get, remove라는 tokenRepositry에 구현된 3가지 동작을 할 수 있어야 합니다.
+
+```js
+class TokenRepository {
+  TOKEN_KEY = "ACCESS_TOKEN";
+
+  save(token) {
+    sessionStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  get() {
+    return sessionStorage.getItem(this.TOKEN_KEY);
+  }
+
+  remove() {
+    sessionStorage.removeItem(this.TOKEN_KEY);
+  }
+}
+```
+
+이 상황에서 코드의 실행 흐름과 의존성의 방향을 생각해봅시다.
+
+코드는 아래의 방향대로 실행됩니다
+
+1. API 호출 코드 → tokenRepositry → localStorage
+
+기존의 구체적인 localStorage를 그대로 사용하고 있던 코드의 의존성 방향은 아래와 같습니다.
+
+1. API 호출 코드 → localStorage
+
+위와 같은 의존성이 설정되어있기에 localStorage가 변경되면 API 호출 코드 또한 변경되어야 합니다.
+
+하지만 tokenRepository를 이용해서 의존성을 관리한 코드는 아래와 같은 의존성 방향을 가집니다.
+
+- API 호출 코드 → tokenRepositry ← localStorage
+
+이처럼 특정 시점에서 코드의 실행 흐름(제어 흐름)과 의존성이
+
+방향이 반대로 뒤집혔기에 이를 <b>“의존성 역전 원칙(DIP)”</b>이라고
+
+부르며 <b>IoC(Inversion of Control)</b>이라고도 표현합니다.
+
+<h2 id="3" className={`dark:text-white`}>
+  의존성 주입
+</h2>
+
+의존성 주입이란 특정한 모듈에 필요한 의존성을 내부에서 가지고 있는 것이
+
+아니라 해당 모듈을 사용하는 입장에서 <b>주입해주는 형태로 설계</b>하는 것을 의미합니다.
+
+- 의존성 주입x
+
+```js
+import httpClient from "./httpClient";
+import tokenRepository from "./tokenRepository";
+
+class AuthService {
+  signup(email, password) {
+    httpClient
+      .fetch("auth/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
+      .then((res) => res.json())
+      .then(({ access_token }) => tokenRepository.saveToken(access_token));
+  }
+
+  singin(email, password) {
+    httpClient
+      .fetch("auth/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
+      .then((res) => res.json())
+      .then(({ access_token }) => tokenRepository.saveToken(access_token));
+  }
+
+  logout() {
+    tokenRepository.remove();
+  }
+}
+
+const authService = new AuthService(httpClient, tokenRepository);
+```
+
+- 의존성 주입 O
+
+```js
+import httpClient from "./httpClient";
+import tokenRepository from "./tokenRepository";
+
+class AuthService {
+  constructor(httpClient, tokenRepository) {
+    this.httpClient = httpClient;
+    this.tokenRepository = tokenRepository;
+  }
+
+  signup(email, password) {
+    this.httpClient
+      .fetch("auth/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
+      .then((res) => res.json())
+      .then(({ access_token }) => this.tokenRepository.saveToken(access_token));
+  }
+
+  singin(email, password) {
+    this.httpClient
+      .fetch("auth/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
+      .then((res) => res.json())
+      .then(({ access_token }) => this.tokenRepository.saveToken(access_token));
+  }
+
+  logout() {
+    this.tokenRepository.remove();
+  }
+}
+
+const tokenRepository = new TokenRepositry();
+const httpClient = new HttpClient(process.env.BASE_URL);
+const authService = new AuthService(httpClient, tokenRepository);
+```
+
+의존성 주입을 적용하면 좋은 점은 해당 모듈에서 직접적으로 의존성을 가지고 있지 않게 되는 것입니다.
+
+예를들어 의존성 주입을 하지 않은 경우에는 AuthService 클래스에서 직접적으로
+
+httpClient, tokenRepositry를 의존하고 있기에 관련된 동작을 변경하려면 AuthService를 직접 수정해야 합니다.
+
+하지만 의존성 주입을 이용해서 클래스 내부에서 가지고 있는 것이 아니라, <b>클래스를 생성할 때 외부에서 주입</b>하는 식으로
+
+변경하게 되면 추후에 AuthService의 코드 수정 없이 AuthService에서 사용하는
+
+httpClient, tokenRepositry와 연관된 <b>동작을 쉽게 변경해서 다양하게 사용</b>할 수 있게 됩니다.
+
+이는 곧 프로그램의 유연성, 테스트의 용이성, mocking등을 쉽게 활용할 수 있게 된다는 의미입니다.
+
+보통 Class 단위에서 많이 사용되는 용어이기에 어려움을 느낄 수 있는데 익숙한 함수로 생각하면 됩니다.
+
+함수의 경우에는 인자를 통해서 내부에서 사용할 요소를 전달받을 수 있는데, 동작을 내부에서
+
+전체 다 가지고 있는 것이 아니라, 외부에서 받을 수 있게 설정하면 훨씬 더 유용하게 사용할 수 있게
+
+되는 것을 생각해보면 됩니다.
+
+---
+
+<h2 id="4" className={`dark:text-white`}>
+  여담
+</h2>
+
+여담으로 의존성역전, 주입에대해서 들었을때 머리가 핑핑 도는줄 알았습니다.
+
+너무 어려웠기떄문이죠 결국 둘다 모듈의 기능들을 추상화하고 연결을 느슨하게
+
+함으로써 매일매일이 달라지는 프론트엔드 세계에서 유연하게 대처하기위해서
+
+사용되어지는 <b>아키텍쳐</b>라고 생각합니다. 백엔드 같은경우에는 그 역사가 오래
+
+되었기때문에 어느정도 정해진 아키텍쳐가 존재한다고 합니다. 하지만 프론트시장은
+
+생겨난지 얼마 되지않은 곳이기 때문에 의존성을 최대한 줄이는것이 정답이라고
+
+볼수가 없다고 생각합니다. 실력이 좋은 프론트개발자 분들은 이런점들을 생각해서
+
+매우 유연하게 코드를 짠다라는 소리는 들었습니다. 아직 완전히 이해하지는 못했지만
+
+제 코드들에 하나씩 적용해 나가면서 공부할생각입니다!!
