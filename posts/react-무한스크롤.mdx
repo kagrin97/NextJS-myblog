@@ -1,0 +1,253 @@
+---
+title: React에서 무한스크롤(Infinite Scroll) 구현하기
+date: 2022-09-12
+description: tanstack/react-query, react-infinite-scroller
+category: react
+---
+
+원티드 프론트엔드 코스중 팀원들과 함께 진행한 영화 웹사이트에서
+
+<b>구현사항에 인피니트 스크롤</b>을 사용해달라는 구현 요구사항이 존재해서
+
+이번 기회에 구현도 해보면서 구현 방법을 포스팅하게 되었습니다!
+
+1. <a href="#1" className={`dark:text-white`}>
+     무한스크롤(Infinite Scroll)이란?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     무한스크롤을 하기위해 필요한 것
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     react-query로 api요청하기
+   </a>
+4. <a href="#4" className={`dark:text-white`}>
+     react-infinite-scroller로 view검사하기
+   </a>
+5. <a href="#5" className={`dark:text-white`}>
+     실제 프로젝트 코드
+   </a>
+6. <a href="#6" className={`dark:text-white`}>
+     여담
+   </a>
+
+<h2 id="1" className={`dark:text-white`}>
+  무한스크롤(Infinite Scroll)이란?
+</h2>
+
+<b>무한 스크롤(Infinite Scroll)</b>이란 사용자가 특정 페이지 <b>하단</b>에 도달했을
+때,
+
+API가 호출되며 콘텐츠가 끊기지 않고 계속 로드되기 때문에 페이지가 바뀌는
+
+페이지네이션방식과 달리 <b>많은양의 콘텐츠를 스크롤</b>해서 볼수 있는 장점이 있습니다.
+
+대표적인 무한 스크롤을 사용하는 앱은 <b>인스타그램</b>이 있습니다.
+
+실제로 적용한 저희 팀 프로젝트 👇
+
+![무한스크롤 적용웹](https://user-images.githubusercontent.com/75124028/189596467-702d5972-cbbd-4537-8e26-3733b67dc5e6.gif)
+
+---
+
+<h2 id="2" className={`dark:text-white`}>
+  무한스크롤을 하기위해 필요한 것
+</h2>
+
+무한 스크롤을 하기 위해서는 기본적으로 <b>view가 맨 밑에 있다고 판단</b>이
+
+될때 다음 정보를 위한 api를 <b>재요청</b>하는 과정이 필요합니다.
+
+그래서 api요청은 `axios`, `react-query`를 사용했고 view의 위치를 알기위해
+
+react의 `react-infinite-scroller`라는 패키지를 사용했습니다.
+
+```
+npm install axios
+npm install @tanstack/react-query
+npm install react-infinite-scroller
+```
+
+제가 전에 react-query를 사용했을때는 `react-query`라는
+
+이름이였지만 이번에 리뉴얼되면서 `@tanstack/react-query`로 바뀌었습니다.
+
+---
+
+<h2 id="3" className={`dark:text-white`}>
+  react-query로 api요청하기
+</h2>
+
+```js
+import { useInfiniteQuery } from "@tanstack/react-query";
+
+const initialUrl = `/movie/upcoming?api_key=${REACT_APP_API_KEY}&language=ko-KR`;
+const apiBase = axios.create({ baseURL: "https://api.themoviedb.org/3" });
+
+const fetchMovies = async (pageParam) => {
+  const { data } = await apiBase(pageParam);
+  return data;
+};
+
+function Movie() {
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetching } =
+    useInfiniteQuery(
+      ["upcoming"],
+      ({ pageParam = initialUrl }) => fetchMovies(pageParam),
+      {
+        getNextPageParam: (lastPage) => {
+          const { page, total_pages } = lastPage;
+          if (page >= total_pages) return undefined;
+          const nextUrl = initialUrl + `&page=${page + 1}`;
+          return nextUrl;
+        },
+      }
+    );
+}
+```
+
+전에 react-query를 사용했을때에는 useQuery나 useMutation같은 기능만을
+
+사용했지만 이번에 처음으로 인피니티 스크롤을 구현 시켜보면서 <b>useInfiniteQuery</b>
+
+기능을 사용해서 지속적으로 api요청을 보낼수가 있다는 점을 알게되었습니다.
+
+<b>getNextPageParam</b>라는 메서드에 코드를 작성해 마지막페이지 이상을 넘어갈떄
+
+<b>undefined</b>을 리턴하며 마지막 페이지가 아닐 경우에는
+
+api요청에서 page부분을 +1 시켜주어서
+
+다음페이지 정보를 가져오게 할수가 있습니다.
+
+useInfiniteQuery는 useQuery와 마찬가지로 이름을 설정해줄수 있습니다.
+
+useInfiniteQuery에는 여러가지 리턴값들이 존재하는데 <b>data</b>는 실제 데이터
+
+<b>fetchNextPage</b>는 api요청을 다시보내주는 메서드이며 <b>hasNextPage</b>는
+
+다음 페이지가 존재하는지 확인합니다.
+
+---
+
+<h2 id="4" className={`dark:text-white`}>
+  react-infinite-scroller로 view검사하기
+</h2>
+
+```jsx
+import InfiniteScroller from "react-infinite-scroller";
+
+return (
+  <InfiniteScroller loadMore={fetchNextPage} hasMore={hasNextPage}>
+    <Header>
+      <div>영화</div>
+    </Header>
+    <Container>
+      {data.pages.map((page) =>
+        page.results.map((movieInfo) => (
+          <MovieAdvancedCard key={movieInfo.id} movieInfo={movieInfo} />
+        ))
+      )}
+    </Container>
+  </InfiniteScroller>
+);
+```
+
+`react-infinite-scroller`은 페이지를 검사합니다. <b>InfiniteScroller</b>에서
+
+<b>loadMore</b>는 페이지가 넘어갈때 실행할 함수를 넣어줍니다.
+
+<b>hasMore</b>는 페이지가 존재하는지 검사하고 싶을때 사용하는 함수를 넣어줍니다.
+
+---
+
+<h2 id="5" className={`dark:text-white`}>
+  실제 프로젝트 코드
+</h2>
+
+```js:api/movie.js
+import { apiBase } from './api';
+
+import { useInfiniteQuery } from '@tanstack/react-query';
+
+const { REACT_APP_API_KEY } = process.env;
+
+const fetchMovies = async pageParam => {
+  const { data } = await apiBase(pageParam);
+  return data;
+};
+
+class Movie {
+  getMovieList(url) {
+    const initialUrl = `/movie/${url}?api_key=${REACT_APP_API_KEY}&language=ko-KR`;
+    return useInfiniteQuery([url], ({ pageParam = initialUrl }) => fetchMovies(pageParam), {
+      cacheTime: 3600,
+      staleTime: 90,
+      getNextPageParam: lastPage => {
+        const { page, total_pages } = lastPage;
+        if (page >= total_pages) return undefined;
+        const nextUrl = initialUrl + `&page=${page + 1}`;
+        return nextUrl;
+      },
+    });
+  }
+}
+
+export default new Movie();
+```
+
+```jsx:pages/Upcoming.jsx
+import InfiniteScroller from 'react-infinite-scroller';
+
+function Upcoming() {
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetching } =
+    Movie.getMovieList('upcoming');
+
+  if (isLoading) return <Loader />;
+
+  return (
+    <InfiniteScroller loadMore={fetchNextPage} hasMore={hasNextPage}>
+      <Header>
+        <div>
+          <BiCameraMovie /> 아직 개봉하지않은 영화
+        </div>
+      </Header>
+      <Container>
+        {data.pages.map(page =>
+          page.results.map(movieInfo => (
+            <MovieAdvancedCard key={movieInfo.id} movieInfo={movieInfo} />
+          ))
+        )}
+        {isFetching && <Loader />}
+      </Container>
+    </InfiniteScroller>
+  );
+}
+```
+
+실제로 저희 프로젝트에서 진행할때에는 api요청 부분을 다른 페이지에서도
+
+사용하는 기능이기때문에 <b>모듈화시켜서 재사용성</b>을 높였습니다.
+
+`Movie.getMovieList('upcoming')`
+
+제가 맡았던 <b>upcoming(개봉예정작)</b>페이지를 구현할때 사용한 실제 코드입니다.
+
+<b>isLoading</b>라는 useInfiniteQuery리턴값을 사용해 로딩시 보여줄 페이지와
+
+<b>isFetching</b>이라는 값으로 페치시 보여줄 스켈레톤화면도 구성했습니다.
+
+---
+
+<h2 id="6" className={`dark:text-white`}>
+  여담
+</h2>
+
+이번에 무한 스크롤을 구현하면서 react는 사용자가 많아서 참 편한점이
+
+많다고 생각이 들었습니다. `react-infinite-scroller`도 일반 js에서
+
+구현할려면 `IntersectionObserver`를 사용해서 복잡한 코드를 작성해야
+
+했을텐데 react는 없는 패키지가 없기 때문에 무한스크롤 부분도 손쉽게
+
+구현할수 있었습니다. 😅
