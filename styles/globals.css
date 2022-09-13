@@ -95,12 +95,16 @@ pre[class*="language-"] {
 .token.keyword,
 .token.selector,
 .token.important,
-.token.atrule {
-  color: #ff7b79;
+.token.atrule,
+.token.arrow.operator,
+.token.operator {
+  color: plum;
 }
 
-.token.operator,
-.token.punctuation,
+.token.punctuation {
+  color: gold;
+}
+
 .token.attr-name {
   @apply text-slate-300;
 }
@@ -113,13 +117,20 @@ pre[class*="language-"] {
 }
 
 .token.entity,
-.token.number,
-.token.symbol {
+.token.symbol,
+.token.keyword.module {
   color: #59c0ff;
 }
 
-.token.string,
-.token.char {
+.token.css.language-css,
+.token.string {
+  color: LightGreen;
+}
+
+.token.number,
+.token.char,
+.token.keyword.nil,
+.token.class-name {
   color: #ffa657;
 }
 
@@ -154,6 +165,10 @@ pre[class*="language-"] {
   padding-bottom: 2px;
   font-size: 14px;
   @apply text-slate-200;
+}
+
+.token.parameter {
+  color: Crimson;
 }
 
 .rehype-code-title {
@@ -217,4 +232,20 @@ pre {
   margin-left: -8px;
   color: rgb(156, 163, 175); /* Line number color */
   content: attr(line);
+}
+.token.keyword.control-flow {
+  color: skyblue;
+}
+
+.token.function,
+.token.method.function.property-access,
+.token.function-variable.function {
+  color: CornflowerBlue;
+}
+.token.maybe-class-name {
+  color: MediumTurquoise;
+}
+
+.token.constant {
+  color: Tomato;
 }

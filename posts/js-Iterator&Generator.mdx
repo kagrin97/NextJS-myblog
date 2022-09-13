@@ -30,15 +30,15 @@ category: js
 
 <h3 className={`dark:text-white`}>iterable의 의미</h3>
 
-Iteration은 <b>“반복”</b>이라는 의미를 가지고 있습니다. 모든 애플리케이션은 <b>“순차, 분기, 반복"</b> 3가지로 이루어져있습니다. 반복은 애플리케이션을 구성하는 3가지 요소 중 하나인만큼 개발을 하는 과정에서 빈번하게 수행되는 행위입니다.
+- Iteration은 <b>“반복”</b>이라는 의미를 가지고 있습니다. 모든 애플리케이션은 <b>“순차, 분기, 반복"</b> 3가지로 이루어져있습니다. 반복은 애플리케이션을 구성하는 3가지 요소 중 하나인만큼 개발을 하는 과정에서 빈번하게 수행되는 행위입니다.
 
 <h3 className={`dark:text-white`}>Protocol의 의미</h3>
 
-Protocol은 <b>“규약"</b>을 의미합니다. 그리고 Iterable은 <b>“반복 가능한”</b>이란 의미를 갖습니다. 따라서 자바스크립트에서 말하는 Iterable protocol이란 <b>“반복 가능한 자바스크립트 객체들을 정의하는 규약"</b>이라고 할 수 있습니다.
+- Protocol은 <b>“규약"</b>을 의미합니다. 그리고 Iterable은 <b>“반복 가능한”</b>이란 의미를 갖습니다. 따라서 자바스크립트에서 말하는 Iterable protocol이란 <b>“반복 가능한 자바스크립트 객체들을 정의하는 규약"</b>이라고 할 수 있습니다.
 
 <h3 className={`dark:text-white`}>Iterable protocol 어디서 사용될까?</h3>
 
-이러한 Iterable protocol은 우리가 알게 모르게 사용해오고 있었습니다. 자바스크립트에서 사용하는 `for of` 문법, Spread Operator(`[...arr]`), 배열 구조분해할당 등의 문법은 내부적으로 iterator protocol을 통해서 동작하고 있습니다. 그리고 String, Array등의 자바스크립트 <b>빌트인 객체</b>들은 기본적으로 Iterable protocol을 충족하기에 우리가 자연스럽게 위와 같은 문법을 사용할 수 있었던 것입니다.
+- 이러한 Iterable protocol은 우리가 알게 모르게 사용해오고 있었습니다. 자바스크립트에서 사용하는 `for of` 문법, Spread Operator(`[...arr]`), 배열 구조분해할당 등의 문법은 내부적으로 iterator protocol을 통해서 동작하고 있습니다. 그리고 String, Array등의 자바스크립트 <b>빌트인 객체</b>들은 기본적으로 Iterable protocol을 충족하기에 우리가 자연스럽게 위와 같은 문법을 사용할 수 있었던 것입니다.
 
 <h3 className={`dark:text-white`}>iterable의 조건</h3>
 
@@ -124,9 +124,9 @@ value값을 1씩올리고 value값이 4이상일경우 done을 true로 바꾸는
   Generator Function, Generator를 알아보자
 </h2>
 
-Iterator를 개발자가 직접 정의하는 것은 굉장히 유용하게 사용될 수 있습니다. 하지만, 위의 예시에서 봤듯이 next method를 정의하고 그 안에서 value와 done property를 조작해서 매번 리턴해주는 것은 꽤나 번거롭고, 많은 주의를 기울여야 하는 일입니다. 따라서 자바스크립트에서는 <b>편리하게 Iterator 객체를 만들 수 있는 방법을 제공</b>해줍니다.
+- Iterator를 개발자가 직접 정의하는 것은 굉장히 유용하게 사용될 수 있습니다. 하지만, 위의 예시에서 봤듯이 next method를 정의하고 그 안에서 value와 done property를 조작해서 매번 리턴해주는 것은 꽤나 번거롭고, 많은 주의를 기울여야 하는 일입니다. 따라서 자바스크립트에서는 <b>편리하게 Iterator 객체를 만들 수 있는 방법을 제공</b>해줍니다.
 
-자바스크립트에는 <b>Generator Function</b>이란 것이 존재합니다. 이 함수는 Iterator의 일종인 Generator 객체를 리턴하는 함수입니다. 이 함수를 정의하기 위해서는 `function*` 키워드를 활용해야 합니다.
+- 자바스크립트에는 <b>Generator Function</b>이란 것이 존재합니다. 이 함수는 Iterator의 일종인 Generator 객체를 리턴하는 함수입니다. 이 함수를 정의하기 위해서는 `function*` 키워드를 활용해야 합니다.
 
 <h3 className={`dark:text-white`}>Generator를 만들어보자</h3>
 
