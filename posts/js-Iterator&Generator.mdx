@@ -1,0 +1,184 @@
+---
+title: javaScrip의 Iterator와 Generator
+date: 2022-09-13
+description: javaScrip의 Iterable, Iterator, Generator
+category: js
+---
+
+이 포스터는 원티드 프론트엔드 강의중 알게된점을 기술했습니다.
+
+또한 상당수의 내용이 강의중 정리해주신 글을 참고해서 작성했습니다.
+
+그리고 <b>Iterable</b>과 <b>Iterator</b>은 이름이 비슷하지만 다릅니다.
+
+1. <a href="#1" className={`dark:text-white`}>
+     Iterable protocol를 알아보자
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     Iterator protocol를 알아보자
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     Generator Function, Generator를 알아보자
+   </a>
+4. <a href="#4" className={`dark:text-white`}>
+     여담
+   </a>
+
+<h2 id="1" className={`dark:text-white`}>
+  Iterable protocol를 알아보자
+</h2>
+
+<h3 className={`dark:text-white`}>iterable의 의미</h3>
+
+Iteration은 <b>“반복”</b>이라는 의미를 가지고 있습니다. 모든 애플리케이션은 <b>“순차, 분기, 반복"</b> 3가지로 이루어져있습니다. 반복은 애플리케이션을 구성하는 3가지 요소 중 하나인만큼 개발을 하는 과정에서 빈번하게 수행되는 행위입니다.
+
+<h3 className={`dark:text-white`}>Protocol의 의미</h3>
+
+Protocol은 <b>“규약"</b>을 의미합니다. 그리고 Iterable은 <b>“반복 가능한”</b>이란 의미를 갖습니다. 따라서 자바스크립트에서 말하는 Iterable protocol이란 <b>“반복 가능한 자바스크립트 객체들을 정의하는 규약"</b>이라고 할 수 있습니다.
+
+<h3 className={`dark:text-white`}>Iterable protocol 어디서 사용될까?</h3>
+
+이러한 Iterable protocol은 우리가 알게 모르게 사용해오고 있었습니다. 자바스크립트에서 사용하는 `for of` 문법, Spread Operator(`[...arr]`), 배열 구조분해할당 등의 문법은 내부적으로 iterator protocol을 통해서 동작하고 있습니다. 그리고 String, Array등의 자바스크립트 <b>빌트인 객체</b>들은 기본적으로 Iterable protocol을 충족하기에 우리가 자연스럽게 위와 같은 문법을 사용할 수 있었던 것입니다.
+
+<h3 className={`dark:text-white`}>iterable의 조건</h3>
+
+Iterable protocol을 충족하는 객체를 iterable이라고 합니다.
+
+1. 객체는 `[Symbol.iterator]` 를 <b>key</b>로 가지고 있는 <b>property</b>가 있어야합니다.
+2. `[Symbol.iterator]` property의 value는 특정한 객체를 반환하는 함수이며, 이 함수에서 <b>반환하는 객체는 Iterator</b>입니다.
+
+<h3 className={`dark:text-white`}>정리</h3>
+
+- Iterable Protocol은 반복 가능한 객체를 정의하는 규약이다
+- Iterable Protocol을 충족시키기 위해서는 객체는 `[Symbol.iterator]` 프로퍼티를 가지고 있어야 하며 이 프로퍼티의 값은 “Iterator 객체를 반환하는 함수"이다.
+
+---
+
+<h2 id="2" className={`dark:text-white`}>
+  Iterator protocol를 알아보자
+</h2>
+
+Iterator protocol은 특정한 값들의 <b>순서를 만드는 표준 방법</b>입니다.
+
+<h3 className={`dark:text-white`}>iterator가 되기 위한 조건</h3>
+
+1. `next` 메소드를 가지고 있어야 한다
+2. `next` 메소드는 `done` 과 `value` 두가지 프로퍼티를 가진 객체를 반환한다.
+3. `done` 프로퍼티는 boolean이며, 순회할 값이 남아있는지 여부를 표현한다
+   1. done이 true일 경우, 모든 값들을 순회했다고 판단한다.
+   2. done이 false일 경우, 순회할 값이 남아있다고 판단한다.
+4. `value` 프로퍼티는 순회 안에서 현재 반환할 값을 의미한다. done이 true일 경우 생략 가능하다.
+
+<h3 className={`dark:text-white`}>next로 값들을 꺼내오기</h3>
+
+```js showLineNumbers
+const arr = ["a", "b", "c", "d", "e"];
+const arrIter = arr[Symbol.iterator]();
+
+console.log(arrIter.next()); // { value:a, done:false }
+console.log(arrIter.next()); // { value:b, done:false }
+console.log(arrIter.next()); // { value:c, done:false }
+console.log(arrIter.next()); // { value:d, done:false }
+console.log(arrIter.next()); // { value:e, done:false }
+console.log(arrIter.next()); // { value:undefined, done:true }
+```
+
+기본적으로 Iterator의 next프로토콜을 실행하면 객체를 리턴해주는데
+value값과 done이 존재합니다. value는 실제 루프를 돌때 해당 값이고
+done은 value가 <b>undefined</b>일때 done이 <b>true</b>로 바뀌게됩니다.
+
+<h3 className={`dark:text-white`}>iterable을 만들어보자</h3>
+
+```js showLineNumbers
+const iterable = {
+  [Symbol.iterator]: () => {
+    let count = 0;
+
+    return {
+      next: () => {
+        return {
+          done: count > 3,
+          value: count++,
+        };
+      },
+    };
+  },
+};
+
+const iterator = iterable[Symbol.iterator]();
+
+iterator.next(); // { value:0, done:false }
+iterable.next(); // { value:1, done:false }
+iterable.next(); // { value:2, done:false }
+iterable.next(); // { value:3, done:false }
+iterable.next(); // { value:4, done:true }
+```
+
+iterator를 실제로 만들어볼수도 있는데 next를 실행할때마다
+value값을 1씩올리고 value값이 4이상일경우 done을 true로 바꾸는
+코드입니다.
+
+---
+
+<h2 id="3" className={`dark:text-white`}>
+  Generator Function, Generator를 알아보자
+</h2>
+
+Iterator를 개발자가 직접 정의하는 것은 굉장히 유용하게 사용될 수 있습니다. 하지만, 위의 예시에서 봤듯이 next method를 정의하고 그 안에서 value와 done property를 조작해서 매번 리턴해주는 것은 꽤나 번거롭고, 많은 주의를 기울여야 하는 일입니다. 따라서 자바스크립트에서는 <b>편리하게 Iterator 객체를 만들 수 있는 방법을 제공</b>해줍니다.
+
+자바스크립트에는 <b>Generator Function</b>이란 것이 존재합니다. 이 함수는 Iterator의 일종인 Generator 객체를 리턴하는 함수입니다. 이 함수를 정의하기 위해서는 `function*` 키워드를 활용해야 합니다.
+
+<h3 className={`dark:text-white`}>Generator를 만들어보자</h3>
+
+```js showLineNumbers
+function* generator() {
+  console.log("init");
+  const foo = yield 1;
+  console.log("foo", foo);
+  const bar = yield 2;
+  console.log("bar", bar);
+  const baz = yield 3;
+}
+
+const iter = generator();
+
+iter.next("Hello");
+// 'init'
+// { value: 1, done: false }
+
+iter.next("Middle");
+// 'foo' 'Middle'
+// { value: 2, done: false }
+
+iter.next("Bye");
+// {'bar' 'Bye'}
+// { value: 3, done: false }
+```
+
+1. iter.next에 인자값을 `Hello`를 넣어서 generator를 실행한다.
+
+2. console.log("init") 가 실행되고 yield로인해 동작이 멈춘다.
+
+3. yield 뒤에있는 숫자는 객체의 value값에 할당이된다.
+
+4. 이후에 next 메서드를 호출하면서 전달한 인자는 현재 위치한 yield에 할당된다.
+
+   - 즉 문자열 매개변수 "Middle"값이 foo에 할당된다(처음에 넣은 "Hello"는 무시된다.)
+
+5. 그 이후에는 다시 반복입니다.
+
+---
+
+<h2 id="4" className={`dark:text-white`}>
+  여담
+</h2>
+
+이번에 Iterable을 알게되면서 js를 사용할떄 아무 생각없이 루프를 돌리기위해
+
+사용한 for of문이 사실은 Iterable를 사용해서 루프가 돌아가고 있다는 사실을 처음
+
+알게되었습니다. 전에 Generator를 공부한적이 있지만 당시에는 그런것이 있더라~
+
+라는 생각만가지고 실제로 어디에서 사용되는지에 대해서는 까맣게 잊어버렸습니다.
+
+저희들이 편리하게 사용하는 기능들을 만드신분들에게 <b>존경심</b>이 듭니다. 👍

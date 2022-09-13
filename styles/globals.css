@@ -81,6 +81,7 @@ pre[class*="language-"] {
 
 .token {
   font-size: 14px;
+  width: 100%;
 }
 
 .token.comment,
@@ -185,7 +186,7 @@ pre {
 
 .code-line {
   display: block;
-  padding-left: 16px;
+  padding-left: 20px;
   padding-right: 16px;
   margin-left: -16px;
   margin-right: -16px;
