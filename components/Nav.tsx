@@ -1,17 +1,32 @@
 import navlinks from "data/navlinks";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
 const Nav = () => {
   const path = useRouter().pathname;
+
   const [menu, setMenu] = useState(false);
-  const toggleMenu = () => {
-    setMenu((menu) => !menu);
-  };
   const { theme, setTheme } = useTheme();
+
+  const toggleMenu = (e: any) => {
+    const text = e.target.innerText;
+    if (text === "Menu") {
+      setMenu((menu) => !menu);
+    } else {
+      setMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", toggleMenu);
+    return () => {
+      window.removeEventListener("click", toggleMenu);
+    };
+  }, []);
+
   return (
     <nav className={`flex flex-row items-center mr-5`}>
       <button
@@ -43,7 +58,7 @@ const Nav = () => {
         </Link>
       </div>
       <button
-        onClick={toggleMenu}
+        onClick={() => toggleMenu}
         className={` hover:text-green-400 ${menu ? "text-green-400" : ""}`}
       >
         Menu
@@ -51,9 +66,9 @@ const Nav = () => {
       <div
         className={`${
           menu
-            ? "absolute top-20 right-0 bg-white z-10 dark:bg-neutral-600"
+            ? "absolute top-20 right-3 bg-white z-10 dark:bg-neutral-600"
             : "hidden"
-        } pl-5 rounded-l-lg`}
+        } pl-5 rounded-lg`}
       >
         {navlinks.map((nav) => (
           <Link href={nav.link} key={nav.title}>
