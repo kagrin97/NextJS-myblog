@@ -1,0 +1,65 @@
+---
+title: "[JS/백준] 15787 기차가 어둠을 헤치고"
+date: 2022-09-21
+description: "[구현] 기차가 어둠을 헤치고"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/15787"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/191482442-b21edae0-5348-4250-9585-84822d538e35.png"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+이 문제는 1~4번까지의 명령어를 받고나서 해당하는 명령어를 수행한다음에
+
+각각 기차의 상태를 저장해서 같은 모양의 기차가 존재하면 그 모양의 기차는
+
+1개만 통과할수있다. js는 객체를 Set에 넣어도 중복이 있어도 제거되지 않기
+
+때문에 객체모양 그대로 문자열로 변형후에 Set에 넣어주면 중복을 제거해준다.
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers const line = require("fs").readFileSync("./input.txt", "utf8");
+const inputData = line.trim().split("\n");
+
+const [n, m] = inputData[0].split(" ").map((val) => +val);
+
+let trainArray = Array.from(Array(n), () => new Array(20).fill(0));
+
+for (let i = 1; i < m + 1; i++) {
+  const order = inputData[i].split(" ").map((val) => +val);
+  if (order[0] === 1) {
+    trainArray[order[1] - 1][order[2] - 1] = 1;
+  } else if (order[0] === 2) {
+    trainArray[order[1] - 1][order[2] - 1] = 0;
+  } else if (order[0] === 3) {
+    trainArray[order[1] - 1].pop();
+    trainArray[order[1] - 1].unshift(0);
+  } else if (order[0] === 4) {
+    trainArray[order[1] - 1].shift();
+    trainArray[order[1] - 1].push(0);
+  }
+}
+
+// 중복을 제거할 Set
+const passTrain = new Set();
+
+// 객체를 문자열로 변형후에 Set에 넣어줌
+trainArray.forEach((val) => {
+  passTrain.add(JSON.stringify(val));
+});
+
+console.log(passTrain.size);
+```
