@@ -7,7 +7,7 @@ import PostList from "components/PostList";
 
 import { allJs } from "contentlayer/generated";
 
-const javaScript = ({
+const JavaScript = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [searchTitle, setSearchTitle] = useState("");
@@ -60,4 +60,4 @@ export const getStaticProps = async () => {
   };
 };
 
-export default javaScript;
+export default JavaScript;
