@@ -1,32 +1,55 @@
-import type { NextPage } from "next";
-import BlogPost from "components/BlogPost";
-import Container from "components/Container";
-import { allPosts } from "contentlayer/generated";
+import { useEffect, useState } from "react";
 import { InferGetStaticPropsType } from "next";
+
+import PostList from "components/PostList";
+import Container from "components/Container";
+import SeachBar from "components/SeachBar";
+
+import { allTypes } from "contentlayer/generated";
 
 const TypeScript = ({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchPosts, setSearchPosts] = useState([]);
+
+  const onChangeSearchTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTitle(e.target.value);
+  };
+
+  const getSearchPosts = () => {
+    if (searchTitle !== "") {
+      const tmp = [];
+      allTypes.map((post) => {
+        const regex = new RegExp(searchTitle, "gim");
+        if (regex.test(post.title)) {
+          tmp.push(post);
+        }
+      });
+      setSearchPosts(tmp);
+    } else {
+      setSearchPosts([]);
+    }
+  };
+
+  useEffect(() => {
+    getSearchPosts();
+  }, [searchTitle]);
+
   const type = posts.filter((post) => post.category === "type");
   return (
     <Container>
-      <article className={`mt-10 flex flex-col`}>
-        {type.map((post) => (
-          <BlogPost
-            date={post.date.slice(0, 10)}
-            title={post.title}
-            des={post.description}
-            slug={post._raw.flattenedPath}
-            key={post._id}
-          />
-        ))}
-      </article>
+      <SeachBar
+        searchTitle={searchTitle}
+        onChangeSearchTitle={onChangeSearchTitle}
+      />
+      <PostList searchPosts={searchPosts} posts={type} />
     </Container>
   );
 };
 
 export const getStaticProps = async () => {
-  const posts = allPosts.sort(
+  const posts = allTypes.sort(
     (a, b) => Number(new Date(b.date)) - Number(new Date(a.date))
   );
 

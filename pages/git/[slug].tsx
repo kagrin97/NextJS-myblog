@@ -1,7 +1,7 @@
 import Container from "components/Container";
 import Comments from "components/Comments";
 import Image from "next/image";
-import { allPosts } from "contentlayer/generated";
+import { allGits } from "contentlayer/generated";
 import { InferGetStaticPropsType } from "next";
 import { useMDXComponent } from "next-contentlayer/hooks";
 
@@ -41,13 +41,13 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export const getStaticPaths = async () => {
   return {
-    paths: allPosts.map((p) => ({ params: { slug: p.slug } })),
+    paths: allGits.map((p) => ({ params: { slug: p.slug } })),
     fallback: false,
   };
 };
 
 export const getStaticProps = async ({ params }) => {
-  const post = allPosts.find((p) => p.slug === params.slug);
+  const post = allGits.find((p) => p.slug === params.slug);
   return {
     props: {
       post,

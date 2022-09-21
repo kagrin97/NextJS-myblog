@@ -7,35 +7,7 @@ import Container from "../components/Container";
 import RecentPosts from "components/RecentPosts";
 import SearchPosts from "components/SearchPosts";
 
-import { allPosts } from "contentlayer/generated";
-
-const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [searchTitle, setSearchTitle] = useState("");
-  const [searchPosts, setSearchPosts] = useState([]);
-
-  const onChangeSearchTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTitle(e.target.value);
-  };
-
-  const getSearchPosts = () => {
-    if (searchTitle !== "") {
-      const tmp = [];
-      allPosts.map((post) => {
-        const regex = new RegExp(searchTitle, "gim");
-        if (regex.test(post.title)) {
-          tmp.push(post);
-        }
-      });
-      setSearchPosts(tmp);
-    } else {
-      setSearchPosts([]);
-    }
-  };
-
-  useEffect(() => {
-    getSearchPosts();
-  }, [searchTitle]);
-
+const Home = () => {
   return (
     <Container>
       <div className={`my-5 w-full`}>
@@ -68,34 +40,9 @@ const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
             </Link>
           </div>
         </section>
-        <form className={`w-full flex items-center`}>
-          <input
-            type="text"
-            value={searchTitle}
-            onChange={onChangeSearchTitle}
-            className={`w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-neutral-800 mt-3 border-4 border-gray-200 dark:border-gray-600 focus:outline-none`}
-            placeholder="포스터의 제목을 입력하세요. 😎"
-          />
-        </form>
-        {searchPosts.length ? (
-          <SearchPosts posts={searchPosts} />
-        ) : (
-          <RecentPosts posts={posts} />
-        )}
       </div>
     </Container>
   );
-};
-
-export const getStaticProps = async () => {
-  const posts = allPosts.sort(
-    (a, b) => Number(new Date(b.date)) - Number(new Date(a.date))
-  );
-  return {
-    props: {
-      posts,
-    },
-  };
 };
 
 export default Home;
