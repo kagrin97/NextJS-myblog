@@ -110,9 +110,27 @@ export const Types = defineDocumentType(() => ({
   },
 }));
 
+export const Algorithm = defineDocumentType(() => ({
+  name: "Algorithm",
+  contentType: "mdx",
+  filePathPattern: `algorithm/*.mdx`,
+  fields: {
+    title: { type: "string", required: true },
+    date: { type: "string", required: true },
+    description: { type: "string", required: true },
+    category: { type: "string", required: true },
+  },
+  computedFields: {
+    slug: {
+      type: "string",
+      resolve: (doc) => doc._raw.sourceFileName.replace(/\.mdx$/, ""),
+    },
+  },
+}));
+
 export default makeSource({
   contentDirPath: "posts",
-  documentTypes: [Js, Git, Next, Other, React, Types],
+  documentTypes: [Js, Git, Next, Other, React, Types, Algorithm],
   mdx: {
     rehypePlugins: [rehypeCodeTitles, rehypePrism],
   },
