@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const SeachBar = ({ searchTitle, onChangeSearchTitle }) => {
   return (
-    <form className={`fixed w-full max-w-2xl flex mt-4`}>
+    <form className={`fixed w-4/5 max-w-2xl flex mt-4`}>
       <input
         type="text"
         value={searchTitle}
