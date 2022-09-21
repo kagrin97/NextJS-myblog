@@ -4,6 +4,7 @@ import { InferGetStaticPropsType } from "next";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import PostList from "components/PostList";
+import TopBtn from "components/TopBtn";
 
 import { allNexts } from "contentlayer/generated";
 
@@ -42,6 +43,7 @@ const NextJs = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
         onChangeSearchTitle={onChangeSearchTitle}
       />
       <PostList searchPosts={searchPosts} posts={nextjs} />
+      <TopBtn />
     </Container>
   );
 };

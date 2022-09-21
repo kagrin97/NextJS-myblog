@@ -1,8 +1,10 @@
+import { InferGetStaticPropsType } from "next";
+
 import Container from "components/Container";
 import Comments from "components/Comments";
-import Image from "next/image";
+import TopBtn from "components/TopBtn";
+
 import { allNexts } from "contentlayer/generated";
-import { InferGetStaticPropsType } from "next";
 import { useMDXComponent } from "next-contentlayer/hooks";
 
 const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -25,15 +27,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
           <MDXComponent />
         </article>
       </article>
-      <a href="#" className="fixed bottom-5 right-5">
-        <Image
-          src={`/top.png`}
-          alt="top버튼"
-          width={40}
-          height={40}
-          objectFit={`cover`}
-        />
-      </a>
+      <TopBtn />
       <Comments />
     </Container>
   );

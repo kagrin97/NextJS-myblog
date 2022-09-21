@@ -4,6 +4,7 @@ import { InferGetStaticPropsType } from "next";
 import PostList from "components/PostList";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
+import TopBtn from "components/TopBtn";
 
 import { allOthers } from "contentlayer/generated";
 
@@ -42,6 +43,7 @@ const Other = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
         onChangeSearchTitle={onChangeSearchTitle}
       />
       <PostList searchPosts={searchPosts} posts={other} />
+      <TopBtn />
     </Container>
   );
 };

@@ -4,6 +4,7 @@ import { InferGetStaticPropsType } from "next";
 import PostList from "components/PostList";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
+import TopBtn from "components/TopBtn";
 
 import { allTypes } from "contentlayer/generated";
 
@@ -44,6 +45,7 @@ const TypeScript = ({
         onChangeSearchTitle={onChangeSearchTitle}
       />
       <PostList searchPosts={searchPosts} posts={type} />
+      <TopBtn />
     </Container>
   );
 };

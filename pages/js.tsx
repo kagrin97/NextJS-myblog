@@ -4,6 +4,7 @@ import { InferGetStaticPropsType } from "next";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import PostList from "components/PostList";
+import TopBtn from "components/TopBtn";
 
 import { allJs } from "contentlayer/generated";
 
@@ -45,6 +46,7 @@ const JavaScript = ({
         onChangeSearchTitle={onChangeSearchTitle}
       />
       <PostList searchPosts={searchPosts} posts={javaScript} />
+      <TopBtn />
     </Container>
   );
 };
