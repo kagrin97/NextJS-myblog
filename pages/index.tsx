@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { InferGetStaticPropsType } from "next";
 import Link from "next/link";
 
 import Container from "../components/Container";
-import RecentPosts from "components/RecentPosts";
-import SearchPosts from "components/SearchPosts";
 
 const Home = () => {
   return (
