@@ -1,11 +1,21 @@
-const navlinks: { title: string; link: string }[] = [
-  { title: "JavaScript", link: "/js" },
-  { title: "TypeScript", link: "/types" },
-  { title: "NextJS", link: "/next" },
-  { title: "React", link: "/react" },
-  { title: "Git", link: "/git" },
-  { title: "Other", link: "/other" },
-  { title: "Algorithm", link: "/algorithm" },
+import {
+  allAlgorithms,
+  allGits,
+  allJs,
+  allNexts,
+  allOthers,
+  allReacts,
+  allTypes,
+} from "contentlayer/generated";
+
+const navlinks: { title: string; link: string; length?: number }[] = [
+  { title: "JavaScript", link: "/js", length: allJs.length },
+  { title: "TypeScript", link: "/types", length: allTypes.length },
+  { title: "NextJS", link: "/next", length: allNexts.length },
+  { title: "React", link: "/react", length: allReacts.length },
+  { title: "Git", link: "/git", length: allGits.length },
+  { title: "Other", link: "/other", length: allOthers.length },
+  { title: "Algorithm", link: "/algorithm", length: allAlgorithms.length },
 ];
 
 export default navlinks;

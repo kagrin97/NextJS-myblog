@@ -1,9 +1,12 @@
-import navlinks from "data/navlinks";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+
+import navlinks from "data/navlinks";
+
+import { allAlgorithms } from "contentlayer/generated";
 
 const Nav = () => {
   const path = useRouter().pathname;
@@ -72,12 +75,15 @@ const Nav = () => {
       >
         {navlinks.map((nav) => (
           <Link href={nav.link} key={nav.title}>
-            <div className={`hover:cursor-pointer hover:text-green-400`}>
+            <div className={`hover:cursor-pointer hover:text-green-400 `}>
               <a
                 href={nav.link}
-                className={`mr-5 ${nav.link === path ? "text-green-400" : ""}`}
+                className={`mr-5 flex justify-between ${
+                  nav.link === path ? "text-green-400" : ""
+                }`}
               >
-                {nav.title}
+                <span className="mr-4">{nav.title}</span>
+                <span>+{nav?.length}</span>
               </a>
             </div>
           </Link>
