@@ -13,6 +13,7 @@ const Nav = () => {
 
   const toggleMenu = (e: any) => {
     const text = e.target.innerText;
+    console.log(e);
     if (text === "Menu") {
       setMenu((menu) => !menu);
     } else {
