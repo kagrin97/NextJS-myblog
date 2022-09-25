@@ -40,7 +40,7 @@ const Nav = () => {
         {theme === "light" ? (
           <Image
             src={`/달.png`}
-            alt={"다크모드로 전환하는 버튼"}
+            alt={"라이트다크모드로 전환하는 버튼"}
             width={50}
             height={50}
             className={`rounded-3xl hover:cursor-pointer`}
@@ -48,7 +48,7 @@ const Nav = () => {
         ) : (
           <Image
             src={`/해.png`}
-            alt={"라이트모드로 전환하는 버튼"}
+            alt={"라이트다크모드로 전환하는 버튼"}
             width={50}
             height={50}
             className={`rounded-3xl hover:cursor-pointer`}

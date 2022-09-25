@@ -1,0 +1,201 @@
+---
+title: 원티드 프리온보딩 프론트엔드 코스 4주차
+date: 2022-09-25
+description: 프론트엔드 코스 4주차 기록
+category: other
+---
+
+원래는 주마다 2가지의 과제가 나갔었습니다. 하지만 이번주는 한가지만 과제를 주시더군여
+
+주식과 관련 회사라서그런지 <b>투자 관리 서비스의 관리자 기능</b> 구현이 과제였습니다. asfdadcsc
+
+처음에는 과제가 하나라서 띠옹했지만 다른 과제들과 궤를 달리하게 어려웠습니다.
+
+저는 <b>사용자 목록부분을</b> 구현했는데 나중에 알고보니까 제일 어렵고 양이 많은 부분있었습니다.
+
+---
+
+<a
+  href="https://github.com/wanted-fe-6/pre-onboarding-assignment-week-4-1-team-1"
+  target="_blank"
+  className={`dark:text-white`}
+>
+  👉 투자 관리 서비스의 관리자 기능 최종 repo
+</a>
+
+1. <a href="#1" className={`dark:text-white`}>
+     사용자 목록 구현요구사항
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     쿼리스트링으로 페이지를 구성하자!
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     api데이터안에서 api데이터를 보내서 정제해 화면에 보여주자!
+   </a>
+4. <a href="#4" className={`dark:text-white`}>
+     일반 사용자 계정과 관리자계정을 분리하자
+   </a>
+5. <a href="#5" className={`dark:text-white`}>
+     활성화 여부, 임직원 계좌 여부를 필터링하자
+   </a>
+6. <a href="#6" className={`dark:text-white`}>
+     여담
+   </a>
+
+<h2 id="1" className={`dark:text-white`}>
+  사용자 목록 구현요구사항
+</h2>
+
+사용자 목록
+
+- 표기되어야 하는 정보
+  - 고객명(name) : 가운데 글자 마스킹 필요, 두글자일 경우 성을 제외한 이름 마스킹 처리, 4글자 이상일 경우 마스킹 처리 후 앞뒤 한글자만 표기
+    - 고객명을 누를 경우 사용자 상세화면으로 이동합니다.
+  - 보유중인 계좌수(account_count) : (해당 API 호출 후 데이터를 정제하여 표기)
+  - 이메일 주소 (email)
+  - 주민등록상 성별코드 (gender_origin)
+  - 생년월일 (yyyy-mm-dd) (birth_date)
+  - 휴대폰 번호 (가운데 4자리 `***` 로 마스킹 필요) (phone_number)
+  - 최근로그인 (last_login)
+  - 혜택 수신 동의 여부 (해당 API 호출 후 데이터를 정제하여 표기) (allow_marketing_push)
+  - 활성화 여부 (해당 API 호출 후 데이터를 정제하여 표기) (is_active)
+  - 가입일 (created_at)
+- 구현되어야 하는 기능
+  - 목록에서는 활성화 여부, 임직원 계좌 여부를 필터링 할 수 있어야 합니다.
+  - 리스트 페이지에서는 검색이 가능해야 합니다.
+    - `json-server` 의 Full-text Search API 를 사용하여 구현합니다.
+    - 예시 : GET [http://localhost:3000/users?q=South](http://localhost:3000/users?q=South)
+  - 페이지네이션이 되어야 합니다.
+    - `json-server` 의 Paginate API 를 사용하여 구현합니다.
+    - 예시 : GET [http://localhost:3000/users?\\\_page=1&\\\_limit=20](http://localhost:3000/users?%5C%5C_page=1&%5C%5C_limit=20)
+  - 임의로 신규 사용자를 추가할 수 있어야 합니다.
+  - 잘못 생성한 사용자를 삭제할 수 있어야 합니다.
+  - 개명을 한 사용자를 위해 사용자명을 변경할 수 있어야 합니다.
+
+<h2 id="2" className={`dark:text-white`}>
+  쿼리스트링으로 페이지를 구성하자!
+</h2>
+
+첫번째 문제는 <b>쿼리스트링</b>으로 페이지를 구성해야한다는 점이었습니다. 저는 퀴리스트링으로 페이지를 구성
+
+한다는 개념자체가 없었기 때문에 처음부터 난관이었는데요. 그냥 페이지를 이동할때마다 url을 쿼리로
+
+보내준다음에 쿼리를 읽을수있는 <b>useLocation().search</b>을 사용해서 파라미터를 가져온다음 `query-string`
+
+이라는 패키지를 사용해서 각각 파라미터 정보를 가져올수있었습니다. 그후에는 api요청할때 파라미터를 보내서
+
+쿼리스트링형식으로 작동하는 웹페이지를 구현할수가 있었습니다.
+
+```js showLineNumbers
+const searchParams = useLocation().search;
+const query = qs.parse(searchParams);
+const search = query.q;
+```
+
+---
+
+<h2 id="3" className={`dark:text-white`}>
+  api데이터안에서 api데이터를 보내서 정제해 화면에 보여주자!
+</h2>
+
+두번쨰 난관이었는데요 보유중인 계좌수를 알아내기 위해서는 api로 받아온 각각의 유저데이터를 map으로 돌리고
+
+그후 그안에서 또다른 api요청을 보내서 해당 유저의 보유중인 계좌수를 알아내는 것이었는데 처음에는 map안에서
+
+<b>useState</b>등을 사용해서 데이터를 받아오면 페이지를 리렌더해서 화면에
+보여줄려고했지만 useState는 최상위에서만
+
+사용할수있었기때문에 다른 방법들을 구상하느라 반나절이 걸렸습니다. 그후에 차분하게 생각해보니 map안에 다른
+
+컴포넌트를 만들면 최상위에 use를 선언해야한다는 조건을 충족해 해결 할수있었습니다. (이 생각을 못했다니 ㅠㅠ)
+
+---
+
+<h2 id="4" className={`dark:text-white`}>
+  일반 사용자 계정과 관리자계정을 분리하자
+</h2>
+
+이번 과제에서 서버는 `json-server`로 db.json파일안에 3개의 객체가 있는 형태였습니다.
+
+- users : 관리자계정과, 일반사용자 계정이 혼용되어있음
+- userSetting : 각각유저의 정보가 들어있음(마케팅수신허용, 사용자 활성화 여부)
+- accounts : 계좌 정보
+
+이런 상태로 있다보니까 저는 사용자목록을 <b>users</b>에서 받아오는데 관리자 계정같은 경우 다른
+
+일반적 사용자들이 가지고 있는 정보들을 가지고있지않아서 에러가 나타나게되었습니다. 그래서
+
+users데이터객체에는 관리자 계정을 관리하고 일반 사용자를 customers라는 객체에 따로 저장해서
+
+사용을해서 에러를 fix했습니다.
+
+```js:db.json showLineNumbers
+{
+    'customers': ...,
+    'users': ...,
+    'userSetting': ...,
+    'accounts':...,
+}
+```
+
+---
+
+<h2 id="5" className={`dark:text-white`}>
+  활성화 여부, 임직원 계좌 여부를 필터링하자
+</h2>
+
+개인적으로 제일 어려웠던 부분이었던것 같습니다. 그이유는 해당 부분을 필터링하기 위해서는
+
+두개의 데이터객체인 <b>users, userSetting</b>을 계산해야했기 때문입니다. users에서는 유저의 uuid,
+
+email등 정보가 들어있고 userSetting에는 uuid, 활성화 여부, 임직원 계좌 여부만 들어있기때문에
+
+제일먼저 userSetting에 활성화 여부, 임직원 계좌가 `true`값이 존재할경우 해당 uuid를 가져와서
+
+uuid배열을 만들고나서 users에서 모든 유저정보를가져와서 일치하는 uuid를가진 유저정보만들 가져와서
+
+userList를 구성해야했기 때문에 최종 렌더링속도가 생각보다 <b>느려서</b> 여러가지 다른 방법을 구상해봤지만
+
+더 빨라지진 못했습니다. ㅠㅠ 다른 방법이 존재하는지를 잘 모르겠습니다. 아마도 현업에서는 두 정보가
+
+연동된 <b>데이터객체가 하나더 있지 않을까</b> 생각해봅니다. 🤔
+
+```js showLineNumbers
+const getFilterUser = (uuidFilterArray) => {
+  getCustomersAll().then((res) => {
+    // user리스트를 필터링해서 setState에 저장
+    const users = res.data.filter((val) => uuidFilterArray.includes(val.uuid));
+    const li = divisionList(users, +LiMIT_ITEM);
+    setPages(li.length);
+    setUserList(li);
+  });
+};
+
+const getUserUuid = async () => {
+  getUserSettingUuid(searchParams).then((res) => {
+    // uuid를 가져와 배열에 넣어줌
+    const uuidFilterArray = res.data.map((val) => {
+      return val.uuid;
+    });
+    getFilterUser(uuidFilterArray);
+  });
+};
+```
+
+---
+
+<h2 id="6" className={`dark:text-white`}>
+  여담
+</h2>
+
+이외에도 수 많은 버그와 에러에 정신을 차릴수가 없었습니다. 이번에 과제를 진행하면서
+
+느꼈던점은 바닐라js가아니라 `typescript`였다면 사전에 막을수 있었던 에러들이 있다는 사실입니다.
+
+이번에 타입스크립트를 사용하기에는 몇몇 팀원분들이 타입스크립트에 익숙하지 않으셔서 js로 구현했는데
+
+사실 그 전에는 타입스크립트를 사용할때는 장점은 알겠는데 너무 어렵다 쓰기가 싫다라는 생각을 가지고 있었는데
+
+이번 과제를 하면서 동작은 제대로 하지만 에러 메시지가 뜨고 실행중에는 문제가 없지만 나중에 문제가 생기는
+
+부분들을 겪으면서 타입스크립트가 왜 사람들이 <b>사랑하는 언어인지</b> 뼈저리게 느꼈습니다.
