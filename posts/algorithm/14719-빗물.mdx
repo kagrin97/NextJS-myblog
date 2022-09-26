@@ -1,0 +1,48 @@
+---
+title: "[JS/백준] 14719 빗물"
+date: 2022-09-26
+description: "[구현] 빗물"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/14719"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192216061-cdde3b83-1075-4114-b639-718ebab24a45.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+의외로 간단하게 풀수가 있는데 현재 블록에서 자신을 포함한 왼쪽과 오른쪽에서 가장 높은 블록들중 더
+
+작은 블록 높이가 현재 블록에 채워질 물의 높이가 된다. 처음에는 나도 이게 되나? 싶었지만 의외로 잘 된다.
+
+---
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+const inputData = line.trim().split("\n");
+
+const [h, w] = inputData[0].split(" ").map((val) => +val);
+
+const rain = inputData[1].split(" ").map((val) => +val);
+let water = 0;
+
+for (let i = 0; i < rain.length; i++) {
+  const maxLen = Math.max(...rain.slice(0, i + 1));
+  const minLen = Math.max(...rain.slice(i));
+  const minBlock = Math.min(maxLen, minLen);
+  water += minBlock - rain[i];
+}
+console.log(water);
+```

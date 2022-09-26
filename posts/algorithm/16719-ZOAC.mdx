@@ -1,0 +1,57 @@
+---
+title: "[JS/백준] 16719 ZOAC"
+date: 2022-09-26
+description: "[구현/재귀함수] ZOAC"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/16719"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192228659-08a94eef-5cf1-4bbd-97fc-c5f069242460.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+재귀함수로 풀수가 있는 문제이다. 가장 먼저 사전순으로 제일 작은 문자를 찾고
+
+그 문자의 오른쪽부터 훑어보면서 가장 사전순으로 작은 문자를 찾아서 합쳐주고 오른쪽이 다 끝났다면
+
+왼쪽으로 훑어보면서 똑같이 반복을해주면 된다. 이 문제는 함정이 있는데 4번째줄에 trim을 해주지
+
+않아서 `출력 형식에 맞지 않습니다.` 가 엄청 멘붕이었다.
+
+---
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+const inputData = line;
+
+const str = inputData.trim().split("");
+const tmp = Array(str.length).fill("");
+
+function abc(arr, start) {
+  if (!arr.length) {
+    return;
+  }
+  const copy = arr.slice(); // 배열 복사
+  const minAlpha = copy.sort()[0]; // 사전순 가장 작은 문자
+  const minIdx = arr.indexOf(minAlpha);
+  tmp[start + minIdx] = minAlpha;
+  console.log(tmp.join(""));
+  abc(arr.slice(minIdx + 1), start + minIdx + 1); // 오른쪽 훑기
+  abc(arr.slice(0, minIdx), start); // 왼쪽 훑기
+}
+
+abc(str, 0);
+```
