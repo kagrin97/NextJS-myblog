@@ -1,0 +1,83 @@
+---
+title: "[JS/백준] 22860 폴더 정리(small)"
+date: 2022-09-26
+description: "[구현] 폴더 정리(small)"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/22860"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192282912-d5b5b529-849a-4dca-b011-2a65345c2174.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+맨 처음에 이 문제를 보고서는 도저히 해결 방법이 떠오르지가 않아 google에 파이썬으로 구현된
+
+코드가 있어서 아이디어만 획득하고 작성한 코드이다. 이 문제는 재귀함수로 풀었는데 파일의 종류는
+
+Set을 사용해서 획득했고 파일의 갯수는 type이 0일때만 파일의 갯수를 += 1 해주었다.
+
+하지만 파일이아니라 폴더일경우 재귀함수를 이용해서 해당 폴더를 재귀로 탐색에 들어가고
+
+해당 폴더에 아무런 파일이나 폴더가 없을경우 return해서 해당 재귀를 끝내도록 코드를 구현했다.
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+const inputData = line.trim().split("\n");
+
+const [n, m] = inputData[0].split(" ").map((val) => +val);
+
+const flieObj = {};
+let fileCnt = 0;
+
+for (let i = 1; i < n + m + 1; i++) {
+  const [root, cur, type] = inputData[i].split(" ");
+
+  if (flieObj[root]) {
+    flieObj[root].push([cur, +type]);
+  } else {
+    flieObj[root] = [];
+    flieObj[root].push([cur, +type]);
+  }
+}
+
+function findFile(targeFolder, tmp) {
+  // 아무것도 안들어있는 폴더일경우 종료
+  if (!flieObj[targeFolder]) {
+    return;
+  }
+
+  for (let arr of flieObj[targeFolder]) {
+    const [name, type] = arr;
+    if (type === 0) {
+      fileCnt += 1;
+      tmp.add(name);
+    } else {
+      // 파일이아닌 폴더일경우 재귀시작
+      findFile(name, tmp);
+    }
+  }
+}
+
+const q = +inputData[n + m + 1];
+
+for (let i = n + m + 2; i < n + m + 2 + q; i++) {
+  const targeFolder = inputData[i].split("/").at(-1).trim();
+  const tmp = new Set(); // 파일 종류
+  fileCnt = 0;
+  findFile(targeFolder, tmp);
+  console.log(tmp.size, fileCnt);
+}
+```

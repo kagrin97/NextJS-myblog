@@ -1,0 +1,50 @@
+---
+title: "[JS/백준] 21756 지우개"
+date: 2022-09-27
+description: "[구현] 지우개"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/21756"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192417684-49c809a8-ffb9-4c19-ba1e-d1a70017cf87.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+간단한 문제이다 1~N 까지의 숫자를 담은 배열을 만들고 그 배열안에 숫자가 1나가
+
+남을때까지 while문을 돌린다 while문안에서는 짝수번째 값들만 뺀다음 배열에 새로 선언함
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+const inputData = +line.trim();
+
+let result = [];
+
+for (let i = 1; i < inputData + 1; i++) {
+  result.push(i);
+}
+
+while (result.length > 1) {
+  // 짝수번째 값들을 임시로 담을 배열
+  let tmp = [];
+
+  for (let i = 1; i < result.length; i += 2) {
+    tmp.push(result[i]);
+  }
+  result = tmp;
+}
+console.log(...result);
+```

@@ -1,0 +1,64 @@
+---
+title: "[JS/백준] 1316 그룹 단어 체커"
+date: 2022-09-27
+description: "[구현] 그룹 단어 체커"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/1316"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192419566-34b88129-b839-488c-b6fd-01846f10cabf.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+n개의 단어가 주어진다. 각각 단어를 검사하는데 aabbcc는 똑같은 문자가 연속될때 그룹단어라고 칭한다.
+
+그러므로 aabbcc는 그룹단어이다 하지만 aabbcca는 맨마지막에 a가 똑 떨어져 있기때문에 그룹단어가 아니다.
+
+이문제는 그룹 단어만 찾아서 갯수를 리턴해줘야한다. 나의 경우에는 tmp에 각각 문자들을 저장하고
+
+tmp안에 들어있는 문자가 들어왔는데 연속되지 않았다면 그룹단어가 아니라는 변수에 += 1을 추가한다
+
+결과적으로 n - x그룹단어 를 출력한다.
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+const inputData = line.trim().split("\n");
+
+const n = +inputData[0];
+
+const numList = [];
+let notGroup = 0;
+
+for (let i = 1; i < n + 1; i++) {
+  numList.push(inputData[i].trim());
+}
+
+numList.forEach((val, idx) => {
+  let tmp = [];
+  for (let str of val) {
+    if (tmp.includes(str)) {
+      if (tmp.at(-1) !== str) {
+        notGroup += 1;
+        break;
+      }
+    } else {
+      tmp.push(str);
+    }
+  }
+});
+
+console.log(n - notGroup);
+```

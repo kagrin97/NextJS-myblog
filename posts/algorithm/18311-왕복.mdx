@@ -1,0 +1,57 @@
+---
+title: "[JS/백준] 18311 왕복"
+date: 2022-09-27
+description: "[구현] 왕복"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/18311"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192422505-ae82c24a-e76d-4698-a085-aa8f1086dfb6.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+현재 자신이 k만큼의 코스에 있다면 현재있는 코스의 번호를 출력하는것이 문제의 요점이다.
+
+현재 코스의 정보를 저장하기위해 roadInfo에 [코스거리, 코스번호] 형식으로 저장한다음에
+
+왕복을 구현해야 하기떄문에 해당 배열을 뒤집어서 합쳐주었다. 그후 코스거리를 누적해서 더하기를
+
+해주고 누적값보다 k가 작을경우 해당 코스에서 달리고있다는 말이기때문에 해당 코스정보를 출력한다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+const inputData = line.trim().split("\n");
+
+const [n, k] = inputData[0].split(" ").map((val) => +val);
+
+let roadInfo = inputData[1].split(" ").map((val, idx) => [+val, idx + 1]);
+let copy = roadInfo.slice().reverse();
+
+let totalRoadInfo = roadInfo.concat(copy);
+
+let curDistance = 0;
+
+for (let i = 0; i < totalRoadInfo.length; i++) {
+  curDistance += totalRoadInfo[i][0];
+
+  if (k < curDistance) {
+    console.log(totalRoadInfo[i][1]);
+    process.exit();
+  }
+}
+```
