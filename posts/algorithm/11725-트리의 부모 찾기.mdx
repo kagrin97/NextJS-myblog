@@ -1,0 +1,79 @@
+---
+title: "[JS/백준] 11725 트리의 부모 찾기"
+date: 2022-09-28
+description: "[트리/BFS] 트리의 부모 찾기"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/11725"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192686488-2db53d8c-918c-4a41-8b2a-db40b5a3a9bb.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+이 문제는 인접 노드들의 번호를 모두 받은 다음에 1부터 BFS를 이용해 방문처리함으로 위로 올라가는
+
+형태를 미연에 방지하고 아래로만 내려가게 함으로써 부모노드를 찾을수가 있다.
+
+이 문제는 문자열을 하나씩 출력하면 시간초과가 발생하기 때문에 하나의 문자열로 만든후 출력한다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim().split("\n");
+
+const n = +inputData[0];
+let tree = {};
+
+// 인접노드 객체 생성
+for (let i = 1; i < inputData.length; i++) {
+  const [n1, n2] = inputData[i].split(" ").map(Number);
+  if (tree[n1]) {
+    tree[n1].push(n2);
+  } else {
+    tree[n1] = [n2];
+  }
+
+  if (tree[n2]) {
+    tree[n2].push(n1);
+  } else {
+    tree[n2] = [n1];
+  }
+}
+
+let q = [1];
+let ans = {};
+// 역방향 방지
+let check = Array(n + 1).fill(false);
+
+while (q.length) {
+  const parent = q.shift();
+  for (let i of tree[parent]) {
+    if (!check[i]) {
+      ans[i] = parent;
+      q.push(i);
+      check[i] = true;
+    }
+  }
+}
+
+// 시간초과를 방지
+let result = "";
+for (let i = 2; i < n + 1; i++) {
+  result += ans[i] + "\n";
+}
+console.log(result);
+```

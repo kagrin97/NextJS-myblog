@@ -1,0 +1,55 @@
+---
+title: "[JS/백준] 14916 거스름돈"
+date: 2022-09-28
+description: "[그리디] 거스름돈"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/14916"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/192696155-50b5f608-6eed-4e74-8805-e22f0f858bff.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+그리디 문제중 대표적인 문제로 2원,5원 두개로 거스름돈을 걸러줘야하는데 while문을 돌면서
+
+5원으로 걸러줄수있으면 걸러주고 아닐경우 2원을 하나씩 결과 값에 더해주는 방식으로
+
+구현했다.
+
+---
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let pay = +line.trim();
+
+let coin = 0;
+
+while (pay > 0) {
+  if (pay % 5 === 0) {
+    coin += parseInt(pay / 5);
+    break;
+  } else {
+    pay -= 2;
+    coin += 1;
+  }
+}
+
+if (pay < 0) {
+  console.log(-1);
+} else {
+  console.log(coin);
+}
+```
