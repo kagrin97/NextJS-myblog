@@ -1,0 +1,57 @@
+---
+title: "[JS/백준]{그리디,BigInt}(13305) 주유소"
+date: 2022-09-29
+description: "[그리디,BigInt] 주유소"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/13305"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193055639-91de59fe-c6ce-4bb9-9d29-635ac3ae0129.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+해당 문제는 현재 주유소 가격과 전 주유소 가격을 비교해서 현재 주유소 가격이 더 저렴하면
+
+현재 주유소 가격으로 기름을 구매해서 푸는 문제이다.
+
+이문제는 태어나서 처음으로 BigInt를 만나게 되었는데 BigInt는 Math를 사용할수 없고
+
+숫자 뒤에n이붙어서 일반전인 숫자타입과는 계산이 많이 어려워서 변형을 해줘야한다.
+
+그리고 결과값도 n을 지워주기 위해서 string으로 변형했다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim().split("\n");
+
+const roadDistance = inputData[1].split(" ").map((v) => BigInt(v));
+const oilPrice = inputData[2].split(" ").map((v) => BigInt(v));
+
+let result = 0n;
+let minPrice = oilPrice[0];
+
+for (let i = 0; i < roadDistance.length; i++) {
+  if (oilPrice[i] < minPrice) {
+    minPrice = oilPrice[i];
+  }
+
+  result += minPrice * roadDistance[i];
+}
+
+console.log(String(result));
+```

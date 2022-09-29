@@ -1,0 +1,43 @@
+---
+title: "[JS/백준]{그리디}(1343) 폴리오미노"
+date: 2022-09-29
+description: "[그리디] 폴리오미노"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/1343"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193036097-63ecc8cd-7189-4b33-92bd-cea1d9531f57.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+이 문제는 X가 4개연속되어있으면 AAAA로 바꾸고 X가 2개연속되어있으면 BB로 바꿔주면된다.
+
+처음에 이 문제를 풀때 너무 어렵게 생각을해서 간단한 문제인데 많은 시간은 사용했다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim();
+
+let board = inputData.replace(/XXXX/g, "AAAA").replace(/XX/g, "BB");
+
+if (board.includes("X")) {
+  console.log(-1);
+} else {
+  console.log(board);
+}
+```

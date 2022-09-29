@@ -1,0 +1,53 @@
+---
+title: "[JS/백준]{그리디}(2217) 로프"
+date: 2022-09-29
+description: "[그리디] 로프"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/2217"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193044793-c3a16654-ad3b-47c8-939d-3df481cc80f5.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+처음에 이문제를 풀때 조합을 이용해서 모든 경우의수를 다 구했더니 메모리초과가 나왔다. 그래서
+
+처음에는 모든로프의 허용무게를 구하고 작은값부터 하나씩 제거하면서 허용무게를 구했더니
+
+통과했다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+let [n, ...inputData] = require("fs")
+  .readFileSync("./input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+inputData = inputData.map((val) => +val.trim()).sort((a, b) => b - a);
+
+let maxWeight = -1;
+
+while (inputData.length) {
+  const okWeight = inputData.at(-1) * inputData.length;
+  if (maxWeight < okWeight) {
+    maxWeight = okWeight;
+  }
+  inputData.pop();
+}
+console.log(maxWeight);
+```
