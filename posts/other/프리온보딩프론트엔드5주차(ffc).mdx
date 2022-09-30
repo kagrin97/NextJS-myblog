@@ -1,0 +1,153 @@
+---
+title: 원티드 프리온보딩 프론트엔드 코스 5주차
+date: 2022-09-30
+description: 프론트엔드 코스 5주차 기록
+category: other
+---
+
+프론트엔드 코스의 마지막 주차입니다. 이번에는 마지막 주차인만큼 한가지의 과제만 나갔는데요
+
+마지막 과제라서 그런지 매우 쉬운 과제였습니다. 6명이나 팀원으로 있었기 때문에 모두 각자
+
+만들고 best를 찾아서 리팩토링할지 아니면 다 같이 할지 고민했었는데요.
+
+이번에는 마지막 과제이기도하고 쉬운과제라서 2명씩 파트를 맡아서 구현하기로 했습니다.
+
+---
+
+<a
+  href="https://github.com/wanted-fe-6/pre-onboarding-assignment-week-5-1-team-1"
+  target="_blank"
+  className={`dark:text-white`}
+>
+  👉 검색창 구현 + 검색어 추천 기능 repo
+</a>
+
+1. <a href="#1" className={`dark:text-white`}>
+     검색창 구현 + 검색어 추천 기능 구현요구사항
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     구현요구사항 해결과정
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     여담
+   </a>
+
+<h2 id="1" className={`dark:text-white`}>
+  1. 검색창 구현 + 검색어 추천 기능 구현요구사항
+</h2>
+
+<img
+  src="https://user-images.githubusercontent.com/75124028/193263044-6f68daf4-cec9-41d2-bcd3-f11b04acb849.PNG"
+  className={`max-w-full h-auto`}
+></img>
+
+사진을 보시면 검색어를 입력하면 추천 검색어가 api를 통해서 받아와져야합니다.
+
+또한 볼드처리를 해야하는데요
+
+- 예)
+  - 사용자 입력: 담낭
+    추천 검색어:  <b>담낭</b>의 악성 신생물,
+    <b>담낭</b>염,
+    <b>담낭</b>의 기타 질환, 달리 분류된 질환에서의 <b>담낭</b>
+
+이런식으로 해당부분에 볼드처리가 되야합니다. 그리고 키보드만으로 추천 검색어들로 이동해야합니다.
+
+- API 호출별로 로컬 캐싱 구현
+  - 캐싱 기능을 제공하는 라이브러리 사용 금지(React-Query 등)
+  - 캐싱을 어떻게 기술했는지에 대한 내용 README에 기술
+  - 입력마다 API 호출하지 않도록 API 호출 횟수를 줄이는 전략 수립 및 실행
+
+또한 api를 라이브러리를 사용하지않고 캐싱을해야하며 호출횟수를 줄여야했습니다.
+
+<h2 id="2" className={`dark:text-white`}>
+  2. 구현요구사항 해결과정
+</h2>
+
+저는 다른 한분과 기능부분을 맡았는데요 (볼드처리, 키보드로 이동기능) 많은 기능을 2명이서 개발
+
+할려고하니 두명이서 각각 코드를 작성하면 복잡해질것 같아서 discode의 화면공유로 한명이서 코드를
+
+작성하고 두명이서 머리를 맡대면서 코드를 작성했습니다.
+
+볼드처리 부분은 생각보다 간단했습니다. 받아온 추천검색 list에서 해당하는 문자열 부분을 앞뒤로
+
+`<b>` 태그를 넣는 것이였습니다.
+
+```js showLineNumbers
+const boldMaker = (input, list) => {
+  return list.map((data) => {
+    let regex = new RegExp(input, "gim");
+    return data.sickNm.replace(regex, `<b>${input}<b>`);
+  });
+};
+```
+
+하지만 이렇게하니까 화면에는 볼드처리가 되지않고 `<b>담낭<b>은 아프다` 이런식으로 태그 자체가
+
+보이더라구요 그래서 실제로 태그를 넣은 데이터를 list형태로 보여줄떄는 다른 방법을 추가해야했습니다.
+
+```js showLineNumbers
+{
+  searchingDatas?.map((data, index) => {
+    const splitedArr = data.split("<b>"); // 문자열자르기 (꼭<b>태그를 사용안해도됩니다)
+    const randomNum = Math.random() * 1000;
+    let isActive = false;
+    if (curLocation === index) {
+      isActive = true;
+    }
+    return (
+      <Container isActive={isActive}>
+        <StyledSearch />
+        <span>{splitedArr[0]}</span>
+        <b>{splitedArr[1]}</b> // 볼드처리될 문자열
+        <span>{splitedArr.slice(2)}</span> // 뒤에 볼드처리될 문자들을 무시하기위함
+      </Container>
+    );
+  });
+}
+```
+
+b태그 기준으로 split을 해준다음에 실제로 화면에 보여질떄 b태그안에 볼드처리할 문자열을
+
+넣는 방식으로 구현했습니다. 키보드 이동기능은 useState를 이용해서 간단하게 만들었습니다.
+
+```js showLineNumbers
+function handleNavigate(e) {
+  const { key } = e;
+  if (key === "ArrowDown") {
+    setCurLocation(curLocation + 1);
+  } else if (key === "ArrowUp") {
+    setCurLocation(curLocation - 1);
+  }
+}
+```
+
+api캐싱 부분은 제가 맡은 부분이 아니라서 자세하게 말씀드리기 어렵지만 간단하게 설명하자면
+
+1. 브라우저의 세션 스토리지를 사용하여 데이터를 캐싱
+2. storage 객체에서 set, get 메서드로 세션 스토리지에 접근
+3. cacheService 객체에서 전체적으로 캐싱 관련 서비스 관리
+4. hook 내부에서 service 로직을 불러와 사용 후 component 에 뿌려줌
+
+방식으로 세션에 저장하는 방식으로 캐싱을 구현했습니다. 또한 api 호출을 줄이기 위해서
+
+<b>debounce</b>를 이용해서 마지막이벤트에만 호출이 되도록 구현했습니다 디바운스
+말고 <b>쓰로틀링</b>
+
+방식도 있었지만 쓰로틀링은 인피니트 스크롤 방식에 더 적합하다고 생각해서 이렇게
+
+구현을 하신것 같습니다.
+
+<h2 id="3" className={`dark:text-white`}>
+  3. 여담
+</h2>
+
+길다면 길었던 프론트엔드코스가 끝났습니다. 이제부터는 취준을 할생각입니다.
+
+아직도 공부하다보면 제 자신이 너무 초라해질떄가 많습니다. 세상에는 괴물이 왜이리 많은지
+
+다른 조의 프로젝트를 보면 정말 잘 하셔서 현타(?)도 살짝 왔습니다. 하지만 많이 배웠습니다.
+
+오늘부터는 기존팀원중 2명과 함께 면접스터디를 진행할계획입니다. 😂

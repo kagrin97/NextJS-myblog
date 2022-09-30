@@ -1,0 +1,73 @@
+---
+title: "[JS/백준]{그리디}(11508) 2+1 세일"
+date: 2022-09-30
+description: "[그리디] 2+1 세일"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/11508"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193282880-ecc884cd-eefa-4a77-8e64-1df57ebe523e.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+매우 화나는 문제이다. 첫번쨰로 기존에 사용하던 fs를 사용했더니 런타임에러가 나타나서 readline을
+
+사용했다. 그리고나서는 문제가 틀렸길래 왜이러나 했더니 문제 예시로 나왔던 10, 9, 4, 2, 6, 4, 3
+
+부분의 지불 금액이 잘못되어있던것이었다. (32가아니라 29가 나와야함) 🤬🤬
+
+문제 해결 아이디어는 내림차순으로 정렬후 3번째 값들만 지우면 큰수들을 지울수가있다.
+
+예시 : (10,9,<del>8</del>) (7,6,<del>5</del>) (4,3)
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const solution = (N, milkInfo) => {
+  milkInfo.sort((a, b) => b - a);
+
+  let freeMilk = 0;
+
+  for (let i = 2; i < N; i += 3) {
+    freeMilk += milkInfo[i];
+  }
+  milkInfo = milkInfo.reduce((pre, cur) => pre + cur);
+  console.log(milkInfo - freeMilk);
+};
+
+const readline = require("readline");
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+  let N = null;
+  let count = 0;
+  const milkInfo = [];
+
+  for await (const line of rl) {
+    if (!N) {
+      N = +line;
+    } else {
+      milkInfo.push(+line);
+      count += 1;
+    }
+    if (N === count) {
+      rl.close();
+    }
+  }
+  solution(N, milkInfo);
+  process.exit();
+})();
+```

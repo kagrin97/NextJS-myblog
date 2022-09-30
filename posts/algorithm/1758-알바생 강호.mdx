@@ -1,0 +1,55 @@
+---
+title: "[JS/백준]{그리디}(1758) 알바생 강호"
+date: 2022-09-30
+description: "[그리디] 알바생 강호"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/1758"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193272932-6f57761a-cd37-431b-9830-315230cab04b.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+처음에 생각했을때는 내림차순으로 정렬한후에 0원부터 n-1원까지 빼준다음 다 더하면 문제를 풀수
+
+있을거라고 생각을 했지만 tip이 마이너스가 되는 상태를 고려하지 못해서 틀렸었다.
+
+그후 다른 예제를 더 입력해본결과 마이너스인 tip이 있을경우 for문을 종료해서 팁을 더 받지못하게했다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let [n, ...gestList] = line.trim().split("\n").map(Number);
+
+gestList.sort((a, b) => b - a);
+
+let minus = 0;
+let result = [];
+
+for (let i = 0; i < n; i++) {
+  const tip = gestList[i] - minus;
+  if (tip < 0) {
+    break;
+  }
+  minus++;
+  result.push(tip);
+}
+
+result = result.reduce((pre, cur) => pre + cur);
+
+console.log(result);
+```
