@@ -14,6 +14,14 @@
 
 ![성능표](<public/%EC%84%B1%EB%8A%A5%EC%A7%80%ED%91%9C(ligthHosue).PNG>)
 
+### 기술 스택
+<div>
+<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextjs&logoColor=white">
+<img src="https://img.shields.io/badge/contentlayer-8D5A9E?style=for-the-badge&logo=contentlayer&logoColor=white">
+<img src="https://img.shields.io/badge/tailwind-3484D2?style=for-the-badge&logo=tailwind&logoColor=white">
+<img src="https://img.shields.io/badge/vercel-68BC71?style=for-the-badge&logo=vercel&logoColor=black">
+</div>
+
 ## 1. 구현된 기능
 
 - ### 1-1) 블로그 기능
