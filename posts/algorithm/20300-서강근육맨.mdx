@@ -1,0 +1,68 @@
+---
+title: "[JS/백준]{그리디}(20300) 서강근육맨"
+date: 2022-10-01
+description: "[그리디] 서강근육맨"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/20300"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193412880-dc2a2a8b-70a3-4882-bf70-07bcdb55fdbd.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+쉽다고 생각을 해서 풀었는데 계속 에러가나서 google에 쳐보니까 10^18형식의 엄청나게
+
+큰 값이었기 때문이었다;; 기본 풀이 알고리즘은 오름차순 정렬후 만약에 홀수개의 기구가 있다면
+
+맨뒤의 기구는 따로 뺴두고 제일작은값과 제일큰값들을 더한값을 비교해 가면서 제일 큰 근손실
+
+정도를 찾으면된다. BigInt로 값을 받고나서 sort를 해주기 위해서는 - 을 사용하면
+
+에러가나기 때문에 비교문을 사용해서 오름차순 정렬을 구현했다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let [n, healthList] = line.trim().split("\n");
+
+healthList = healthList.split(" ").map(BigInt);
+healthList.sort((a, b) => (a < b ? -1 : 1));
+
+let maxHealth = -1;
+
+if (n % 2 != 0) {
+  let lastHealth = healthList.pop();
+  while (healthList.length) {
+    let lossMuscle = healthList.shift() + healthList.pop();
+    if (maxHealth < lossMuscle) {
+      maxHealth = lossMuscle;
+    }
+  }
+  if (maxHealth < lastHealth) {
+    maxHealth = lastHealth;
+  }
+} else {
+  while (healthList.length) {
+    let lossMuscle = healthList.shift() + healthList.pop();
+    if (maxHealth < lossMuscle) {
+      maxHealth = lossMuscle;
+    }
+  }
+}
+
+console.log(String(maxHealth));
+```

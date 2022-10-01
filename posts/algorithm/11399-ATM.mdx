@@ -1,0 +1,48 @@
+---
+title: "[JS/백준]{그리디}(11399) ATM"
+date: 2022-10-01
+description: "[그리디] ATM"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/11399"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193411698-ca0ecf25-ad4e-4c53-996a-87467865be84.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+간단한 문제이다. 오름차순으로 정렬한다음에 하나씩 더해주면된다.
+
+1 -> 1+/1+2 -> 1+2/+1+2+3 -> 누적값이 정답!
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let [n, gestList] = line.trim().split("\n");
+
+gestList = gestList.split(" ").map(Number);
+
+gestList.sort((a, b) => a - b);
+
+let result = 0;
+
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < i + 1; j++) {
+    result += gestList[j];
+  }
+}
+console.log(result);
+```

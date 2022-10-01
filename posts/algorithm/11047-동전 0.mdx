@@ -1,0 +1,57 @@
+---
+title: "[JS/백준]{그리디}(11047) 동전 0"
+date: 2022-10-01
+description: "[그리디] 동전 0"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/11047"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193413605-278819c5-279b-41e2-974b-28b59699f1f8.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+그리디 문제는 계속 풀다보니까 어느정도 패턴이 보이는것 같다 (실버 문제라서 그런것일수도)
+
+풀이법은 간단하다 큰 동전부터 비교하면서 총 동전 값에 더해도 k를 넘지않으면 동전수를 1 더해주고
+
+총 동전의 값에는 현재 동전 값을 더해준다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim().split("\n");
+
+const [n, k] = inputData[0].split(" ").map(Number);
+
+let coinCnt = 0;
+let curCoin = 0;
+
+const coinList = [];
+for (let i = 1; i < n + 1; i++) {
+  coinList.push(+inputData[i]);
+}
+
+while (coinList.length) {
+  const coinPrice = coinList.pop();
+
+  while (curCoin + coinPrice <= k) {
+    curCoin += coinPrice;
+    coinCnt++;
+  }
+}
+console.log(coinCnt);
+```

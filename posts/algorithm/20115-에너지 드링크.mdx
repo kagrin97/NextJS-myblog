@@ -1,0 +1,50 @@
+---
+title: "[JS/백준]{그리디}(20115) 에너지 드링크"
+date: 2022-10-01
+description: "[그리디] 에너지 드링크"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/20115"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193411661-e78d3e5a-cc39-47fe-98e1-2188e405032b.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+예전에 프로그래머스에서 풀었던 구명보트와 비슷한 문제인것같다.
+
+풀이 아이디어는 어차피 반을 버려야하는 에너지 드링크가 작을수록 나중에 최종값이
+
+더 커지기 때문에 오름차순으로 정렬후 맨 앞값(제일 작은 드링크) / 2 + 맨 뒤값(제일 큰 드링크)
+
+형식으로 더한후 다시 배열에 넣어주는것을 배열에 드링크가 하나 남을때까지 반복한다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let [n, drinkList] = line.trim().split("\n");
+
+drinkList = drinkList.split(" ").map(Number);
+drinkList.sort((a, b) => a - b);
+
+while (drinkList.length > 1) {
+  let throwDrink = drinkList.shift() / 2;
+  let newDrink = drinkList.pop();
+  newDrink += throwDrink;
+  drinkList.push(newDrink);
+}
+console.log(...drinkList);
+```
