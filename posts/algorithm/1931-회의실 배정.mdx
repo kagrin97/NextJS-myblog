@@ -1,0 +1,63 @@
+---
+title: "[JS/백준]{그리디}(1931) 회의실 배정"
+date: 2022-10-01
+description: "[그리디] 회의실 배정"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/1931"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193413605-278819c5-279b-41e2-974b-28b59699f1f8.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+우선 시작 시간을 기준으로 오름차순을 정렬을 해준다. 이 상태에서 회의실을 사용해버리면
+
+시작시간은 빠른데 끝나는시간이 엄청늦는 경우가 발생 할수가있기 때문에 끝나는 시간을 기준으로
+
+한번 더 정렬을 해주면 회의실을 이용할수있는 시간을 최적화가 가능하다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim().split("\n");
+
+const n = +inputData[0];
+
+const timeList = [];
+
+for (let i = 1; i < n + 1; i++) {
+  const [startTime, finishTime] = inputData[i].split(" ").map(Number);
+  timeList.push([startTime, finishTime]);
+}
+
+timeList.sort((a, b) => a[0] - b[0]);
+timeList.sort((a, b) => a[1] - b[1]);
+
+let cnt = 0;
+let last = 0;
+console.log(timeList);
+timeList.forEach((val) => {
+  const [startTime, finishTime] = val;
+  if (startTime >= last) {
+    cnt++;
+    last = finishTime;
+    console.log(startTime, finishTime);
+  }
+});
+
+console.log(cnt);
+```
