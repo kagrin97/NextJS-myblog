@@ -1,0 +1,57 @@
+---
+title: "[JS/백준]{그리디}(20365) 블로그2"
+date: 2022-10-02
+description: "[그리디] 블로그2"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/20365"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193459379-d15827a1-b8c9-4570-8fee-ba1464e4bf8c.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+이 문제 풀이법은 B, R을 split으로 둘로 나눈다음에 더 많이 칠해야하는 컬러는
+
+맨 처음에 전체적으로 딱 한번만 실행되게 한다 그리고 더 적게 칠해야하는 컬러는
+
+하나씩 칠하면된다.
+
+하지만 예외가 있는데 BBBRRR 이런경우는 위 방식대로하면 4번칠해야한다 2번칠하면 되는데
+
+그래서 이렇게 딱 2개로 나뉘는 경우만 2를 출력하고 종료한다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim().split("\n");
+
+let blueArr = inputData[1].split("R").filter((val) => val != "");
+let redArr = inputData[1].split("B").filter((val) => val != "");
+
+if (blueArr.length === 1 && redArr.length === 1) {
+  console.log(2);
+  process.exit(0);
+}
+
+let result = 0;
+if (blueArr.length > redArr.length) {
+  result += redArr.length + 1;
+} else {
+  result += blueArr.length + 1;
+}
+console.log(result);
+```

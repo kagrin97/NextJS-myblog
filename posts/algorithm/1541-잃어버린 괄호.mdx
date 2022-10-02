@@ -1,0 +1,60 @@
+---
+title: "[JS/백준]{그리디}(1541) 잃어버린 괄호"
+date: 2022-10-02
+description: "[그리디] 잃어버린 괄호"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/1541"
+>
+  문제 링크
+</a>
+
+<div>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/193457884-fed7c3aa-8096-4f3d-b055-a48bfbc9db9d.PNG"
+    className={`max-w-full h-auto`}
+  />
+</div>
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+그리디 문제는 꼭 수수께끼 문제를 푸는것같다 구현하기는 어렵지않은데 풀이방법을 생각해
+
+내는것이 어렵다 ㅠㅠ
+
+이문제는 괄호를 적적히써서 식에 대한 최소값을 찾는것이다. 일반적으로 최소값을 찾기위해서는
+
+음수에서 큰값을 뺴면 가장 최소값을 찾을수가 있다. 그래서 우선 -로 나눠서 +끼리 모은다
+
+그후 +를 다 더해준다음 다 빼주면 된다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim().split("-");
+
+inputData = inputData.map((val) => {
+  if (val.includes("+")) {
+    const arr = val.split("+").map(Number);
+    return arr.reduce((pre, cur) => pre + cur);
+  }
+  return +val;
+});
+
+let result = 0;
+
+inputData.forEach((val, idx) => {
+  if (idx === 0) {
+    result = val;
+  } else {
+    result -= val;
+  }
+});
+console.log(result);
+```
