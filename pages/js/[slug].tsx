@@ -6,7 +6,9 @@ import { allJs } from "contentlayer/generated";
 import { InferGetStaticPropsType } from "next";
 import { useMDXComponent } from "next-contentlayer/hooks";
 
-const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
+export default function Post({
+  post,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const MDXComponent = useMDXComponent(post.body.code);
   const customMeta = {
     title: post.title,
@@ -30,7 +32,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Comments />
     </Container>
   );
-};
+}
 
 export const getStaticPaths = async () => {
   return {
@@ -47,5 +49,3 @@ export const getStaticProps = async ({ params }) => {
     },
   };
 };
-
-export default Post;

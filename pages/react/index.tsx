@@ -11,7 +11,9 @@ import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allReacts } from "contentlayer/generated";
 
-const React = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
+export default function React({
+  posts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchPosts, setSearchPosts] = useState([]);
 
@@ -58,7 +60,7 @@ const React = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
       <TopBtn />
     </Container>
   );
-};
+}
 
 export const getStaticProps = async () => {
   const posts = allReacts.sort(
@@ -71,5 +73,3 @@ export const getStaticProps = async () => {
     },
   };
 };
-
-export default React;

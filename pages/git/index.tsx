@@ -11,7 +11,9 @@ import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allGits } from "contentlayer/generated";
 
-const Git = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
+export default function Git({
+  posts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchPosts, setSearchPosts] = useState([]);
 
@@ -59,7 +61,7 @@ const Git = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
       <TopBtn />
     </Container>
   );
-};
+}
 
 export const getStaticProps = async () => {
   const posts = allGits.sort(
@@ -72,5 +74,3 @@ export const getStaticProps = async () => {
     },
   };
 };
-
-export default Git;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const SeachBar = ({ searchTitle, onChangeSearchTitle }) => {
+export default function SeachBar({ searchTitle, onChangeSearchTitle }) {
   return (
     <form className={`fixed w-4/5 max-w-2xl flex mt-4`}>
       <input
@@ -12,6 +12,4 @@ const SeachBar = ({ searchTitle, onChangeSearchTitle }) => {
       />
     </form>
   );
-};
-
-export default SeachBar;
+}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const TopBtn = () => {
+export default function TopBtn() {
   const [isScroll, setIsScroll] = useState(false);
 
   useEffect(() => {
@@ -31,6 +31,4 @@ const TopBtn = () => {
       )}
     </>
   );
-};
-
-export default TopBtn;
+}

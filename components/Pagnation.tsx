@@ -6,7 +6,11 @@ interface PagnationProps {
   curPage: number;
 }
 
-const Pagnation = ({ pageCount, setCurPage, curPage }: PagnationProps) => {
+export default function Pagnation({
+  pageCount,
+  setCurPage,
+  curPage,
+}: PagnationProps) {
   const onChangePage = (e) => {
     setCurPage(+e.target.innerText);
   };
@@ -38,6 +42,4 @@ const Pagnation = ({ pageCount, setCurPage, curPage }: PagnationProps) => {
       <ul className="flex">{pageArray}</ul>
     </nav>
   );
-};
-
-export default Pagnation;
+}

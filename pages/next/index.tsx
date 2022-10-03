@@ -11,7 +11,9 @@ import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allNexts } from "contentlayer/generated";
 
-const NextJs = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
+export default function NextJs({
+  posts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchPosts, setSearchPosts] = useState([]);
 
@@ -59,7 +61,7 @@ const NextJs = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
       <TopBtn />
     </Container>
   );
-};
+}
 
 export const getStaticProps = async () => {
   const posts = allNexts.sort(
@@ -71,5 +73,3 @@ export const getStaticProps = async () => {
     },
   };
 };
-
-export default NextJs;
