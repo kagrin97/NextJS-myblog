@@ -1,0 +1,228 @@
+---
+title: javaScript callback 함수와 콜백 지옥
+date: 2022-10-03
+description: callback함수란?, 콜백 지옥은 무엇일까
+category: js
+---
+
+1. <a href="#1" className={`dark:text-white`}>
+     callback함수란?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     코드로보는 callback함수
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     콜백 지옥
+   </a>
+4. <a href="#4" className={`dark:text-white`}>
+     콜백의 장점
+   </a>
+
+<h1 id="1" className={`dark:text-white`}>
+  callback함수란?
+</h1>
+
+![콜백](https://user-images.githubusercontent.com/75124028/193495270-5544f1a1-caaa-4a48-9f01-c1622843cf16.PNG)
+
+콜백함수란 간단하게 설명하자면 어떤 함수 안의 <strong>매개변수에 함수를 넘겨주는 것</strong>을
+
+콜백함수라고합니다. 함수를 받은 함수는 일단 받고 나서 <strong>나중에 호출</strong>하는 것이 콜백함수라고 합니다.
+
+이렇게 설명만 들었을 때는 진심 1도 모르겠죠. 저도 그렇습니다. 사실 콜백함수가 무엇인지
+
+어렴풋이 알고 있으셨으면 이번에 공부하면서 더 자세히 배워봅시다!!
+
+한 가지 더 알고 계시면 좋은 것은 자바스크립트의 함수는 `일급 객체`라는 것입니다. 일급 객체는 무엇일까요?
+
+<h3 className={`dark:text-white`}>일급객체는 또 뭐야?</h3>
+
+일급객체란
+
+1. 변수나 데이터안에 담길 수 있고
+
+2. 매개변수로 전달 할 수 있고
+
+3. 반환 값으로 사용할 수 있고
+
+4. 실행도중에 생성될 수 있다
+
+이 조건을 만족하면 일급객체라고 볼 수가 있습니다. 그런데 이게 콜백함수랑 무슨 상관이냐고요?
+
+그건 2번을 잘 읽어보시면 매개변수로 함수를 전달할 수가 있다고 합니다. 콜백함수 이야기죠!
+
+다시 콜백함수 이야기로 돌아와 보면 콜백 함수는 이미 저희가 사용하고 있습니다.
+
+```js
+number.forEach((x) => {
+  console.log(x);
+});
+```
+
+저희가 자주 사용하는 forEach문에도 콜백함수가 있습니다. 첫 번째 매개변수로 익명 <strong>화살표 함수</strong>로
+
+콜백함수가 실행되고 있습니다. 또한 매개변수로 함수를 넘겨줄 때는 함수 이름 그대로 넘겨줘도
+
+됩니다. abc() 이런 식으로 넘겨줄 필요 없이 abc이렇게 넘겨주면 되죠!
+
+```js
+// 함수를 넘길때 이름만 넘겨주는모습
+object.addEventListener("click", myScript);
+```
+
+그렇다면 콜백함수를 왜 사용하는 것일까요? 콜백함수를 사용하는 이유는 <strong>비동기 동작을 동기적으로</strong>
+
+실행하게 해주기 위해서입니다.
+
+---
+
+<h1 id="2" className={`dark:text-white`}>
+  코드로보는 callback함수
+</h1>
+
+지금부터 콜백함수를 설명할 것인데 해당 코드들은 `모던 자바스크립트` 사이트에서 인용했습니다.
+
+```js showLineNumbers
+function loadScript(src) {
+  // <script> 태그를 만들고 페이지에 태그를 추가합니다.
+  // 태그가 페이지에 추가되면 src에 있는 스크립트를 로딩하고 실행합니다.
+  let script = document.createElement("script");
+  script.src = src;
+  document.head.append(script);
+}
+
+loadScript("/my/script.js"); // script.js엔 newFunction함수가 존재합니다!
+
+newFunction();
+```
+
+위 코드는 간단한 자바스크립트 코드입니다. <strong>script.js</strong>파일을 head에 넣어주는 간단한 코드죠
+
+하지만 `newFunction()`함수를 실제로 실행하면 에러가 발생합니다. 그 이유는 loadScript함수가
+
+비동기 방식으로 작동이 되기 때문에 실제로 script.js이 스크립트 로딩이 되기 전에 newFunction함수가
+
+실행이 돼서 <strong>에러</strong>가 나타나게 되는 것이죠
+
+그렇다면 어떻게 스크립트 로딩이 끝난 다음에 newFunction함수가 실행되게 하려면 어떻게 해야 할까요?
+
+```js showLineNumbers
+function loadScript(src, callback) {
+  let script = document.createElement('script');
+  script.src = src;
+
+    // 스크립트 로딩이 끝나면 받은 콜백함수를 실행하게 해줌
+  script.onload = () => callback(script);
+
+  document.head.append(script);
+}
+
+loadScript('/my/script.js', function() {
+  // 콜백 함수는 스크립트 로드가 끝나면 실행됩니다.
+  newFunction(); // 이제 함수 호출이 제대로 동작합니다.
+  ...
+});
+```
+
+이렇게 함수의 매개변수에 콜백함수를 넣게 되면 스크립트가 로딩 후에 실행되게 할 수 있습니다.
+
+참고로 `onload`는 스크립트가 로딩이 에러 없이 로딩되었을 때 실행해줍니다.
+
+이 방식을 <strong>콜백 기반(callback-based) 비동기 프로그래밍</strong>이라고 합니다.
+
+하지만 또 궁금한 것이 있죠. 에러처리는 그럼 어떻게 하는지요...
+
+<h3 className={`dark:text-white`}>에러 핸들링</h3>
+
+```js showLineNumbers
+function loadScript(src, callback) {
+  let script = document.createElement("script");
+  script.src = src;
+
+  script.onload = () => callback(null, script);
+  // 에러가 발생하면 실행
+  script.onerror = () =>
+    callback(new Error(`${src}를 불러오는 도중에 에러가 발생했습니다.`));
+
+  document.head.append(script);
+}
+
+loadScript("/my/script.js", function (error, script) {
+  if (error) {
+    // 에러 처리
+  } else {
+    // 스크립트 로딩이 성공적으로 끝나면 실행할...
+  }
+});
+```
+
+이렇게 에러를 처리하는 방식은 흔히 사용되는 패턴입니다.
+이런 패턴은 <strong>오류 우선 콜백(error-first callback)</strong>이라고 불립니다.
+
+오류 우선 콜백은 다음 관례를 따릅니다.
+
+1. callback의 첫 번째 인수는 에러를 위해 남겨둡니다. 에러가 발생하면 이 인수를 이용해 callback(err)이 호출됩니다.
+
+2. 두 번째 인수(필요하면 인수를 더 추가할 수 있음)는 에러가 발생하지 않았을 때를 위해 남겨둡니다. 원하는 동작이 성공한 경우엔 callback(null, result1, result2...)이 호출됩니다.
+
+오류 우선 콜백 스타일을 사용하면, 단일 콜백 함수에서 에러 케이스와 성공 케이스 모두를 처리할 수 있습니다.
+
+---
+
+<h1 id="3" className={`dark:text-white`}>
+  콜백 지옥
+</h1>
+
+그렇다면 이렇게 좋은 콜백을 요즘에는 `promise`나 `try, catch` 같은 형태로 비동기를 동기적으로
+
+처리하는 이유는 무엇이 있을까요? 그 이유는 <strong>중첩 콜백</strong> 때문입니다.
+
+```js showLineNumbers
+loadScript("/my/script.js", function () {
+  loadScript("/my/script.js", function () {
+    loadScript("/my/script.js", function () {
+      loadScript("/my/script.js", function () {
+        loadScript("/my/script.js", function () {});
+      });
+    });
+  });
+});
+```
+
+이런 식으로 동기적으로 하나하나 처리해야 할 함수들을 모두 콜백으로 넘겨줄 경우 <strong>가독성이 최악</strong>이
+
+됩니다. 그 유명한 `콜백 지옥`이라는 말이 여기에서 나온 것이죠
+
+그렇다면 콜백 지옥에서 탈출하려면 어떻게 해야 할까요 바로 위에서 설명해 드린
+
+promise나 try, catch 같은 형태를 사용하시면 콜백 지옥에서 탈출하실 수 있습니다.
+
+---
+
+<h1 id="4" className={`dark:text-white`}>
+  콜백함수의 장점
+</h1>
+
+그렇다면 promise나 try, catch 같은 더 좋은 형태가 있는데 콜백함수를 왜 사용하는
+
+것일까요?
+
+그 이유는 콜백함수는 추상화하기에 매우 유리하기 때문입니다.
+
+```js showLineNumbers
+function loadScript(src, callback) {
+  callback()
+}
+
+loadScript('/my/script.js', function() {
+  함수();
+  ...
+});
+```
+
+이런식으로 callback을 넘겨주기만하면 loadScript는 더이상 내부 로직에 강력히
+
+의존하지 않고 외부에서 로직의 일부분을 함수로 전달받아 수행하기 때문에 더욱 <strong>유연한 구조</strong>를
+
+가지게됩니다. 즉 콜백함수를 외부에서 주입하기 때문에 자유로운 교체가 장점이죠
+
+결국 <strong>추상화를 통한 코드 가변성과 확장성</strong>이 콜백함수의 장점입니다.
