@@ -5,6 +5,9 @@ import PostList from "components/PostList";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import TopBtn from "components/TopBtn";
+import Pagnation from "components/Pagnation";
+
+import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allOthers } from "contentlayer/generated";
 
@@ -31,18 +34,28 @@ const Other = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
   };
 
+  const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
+    posts,
+  });
+
   useEffect(() => {
     getSearchPosts();
   }, [searchTitle]);
 
-  const other = posts.filter((post) => post.category === "other");
   return (
     <Container>
       <SeachBar
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}
       />
-      <PostList searchPosts={searchPosts} posts={other} />
+      <PostList searchPosts={searchPosts} posts={newPosts} />
+      {!searchTitle && (
+        <Pagnation
+          curPage={curPage}
+          pageCount={pageCount}
+          setCurPage={setCurPage}
+        />
+      )}
       <TopBtn />
     </Container>
   );

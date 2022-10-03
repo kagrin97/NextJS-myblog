@@ -5,6 +5,9 @@ import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import PostList from "components/PostList";
 import TopBtn from "components/TopBtn";
+import Pagnation from "components/Pagnation";
+
+import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allJs } from "contentlayer/generated";
 
@@ -33,11 +36,13 @@ const JavaScript = ({
     }
   };
 
+  const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
+    posts,
+  });
+
   useEffect(() => {
     getSearchPosts();
   }, [searchTitle]);
-
-  const javaScript = posts.filter((post) => post.category === "js");
 
   return (
     <Container>
@@ -45,7 +50,14 @@ const JavaScript = ({
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}
       />
-      <PostList searchPosts={searchPosts} posts={javaScript} />
+      <PostList searchPosts={searchPosts} posts={newPosts} />
+      {!searchTitle && (
+        <Pagnation
+          curPage={curPage}
+          pageCount={pageCount}
+          setCurPage={setCurPage}
+        />
+      )}
       <TopBtn />
     </Container>
   );

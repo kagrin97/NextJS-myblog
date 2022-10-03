@@ -5,6 +5,9 @@ import PostList from "components/PostList";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import TopBtn from "components/TopBtn";
+import Pagnation from "components/Pagnation";
+
+import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allTypes } from "contentlayer/generated";
 
@@ -33,18 +36,28 @@ const TypeScript = ({
     }
   };
 
+  const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
+    posts,
+  });
+
   useEffect(() => {
     getSearchPosts();
   }, [searchTitle]);
 
-  const type = posts.filter((post) => post.category === "type");
   return (
     <Container>
       <SeachBar
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}
       />
-      <PostList searchPosts={searchPosts} posts={type} />
+      <PostList searchPosts={searchPosts} posts={newPosts} />
+      {!searchTitle && (
+        <Pagnation
+          curPage={curPage}
+          pageCount={pageCount}
+          setCurPage={setCurPage}
+        />
+      )}
       <TopBtn />
     </Container>
   );

@@ -5,6 +5,9 @@ import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import PostList from "components/PostList";
 import TopBtn from "components/TopBtn";
+import Pagnation from "components/Pagnation";
+
+import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allNexts } from "contentlayer/generated";
 
@@ -31,18 +34,28 @@ const NextJs = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
   };
 
+  const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
+    posts,
+  });
+
   useEffect(() => {
     getSearchPosts();
   }, [searchTitle]);
 
-  const nextjs = posts.filter((post) => post.category === "nextjs");
   return (
     <Container>
       <SeachBar
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}
       />
-      <PostList searchPosts={searchPosts} posts={nextjs} />
+      <PostList searchPosts={searchPosts} posts={newPosts} />
+      {!searchTitle && (
+        <Pagnation
+          curPage={curPage}
+          pageCount={pageCount}
+          setCurPage={setCurPage}
+        />
+      )}
       <TopBtn />
     </Container>
   );

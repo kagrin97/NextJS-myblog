@@ -5,6 +5,9 @@ import PostList from "components/PostList";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import TopBtn from "components/TopBtn";
+import Pagnation from "components/Pagnation";
+
+import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allAlgorithms } from "contentlayer/generated";
 
@@ -33,25 +36,35 @@ const Algorithms = ({
     }
   };
 
+  const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
+    posts,
+  });
+
   useEffect(() => {
     getSearchPosts();
   }, [searchTitle]);
 
-  const algorithm = posts.filter((post) => post.category === "algorithm");
   return (
     <Container>
       <SeachBar
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}
       />
-      <PostList searchPosts={searchPosts} posts={algorithm} />
+      <PostList searchPosts={searchPosts} posts={newPosts} />
+      {!searchTitle && (
+        <Pagnation
+          curPage={curPage}
+          pageCount={pageCount}
+          setCurPage={setCurPage}
+        />
+      )}
       <TopBtn />
     </Container>
   );
 };
 
 export const getStaticProps = async () => {
-  const posts = allAlgorithms.sort(
+  let posts = allAlgorithms.sort(
     (a, b) => Number(new Date(b.date)) - Number(new Date(a.date))
   );
 

@@ -5,6 +5,9 @@ import PostList from "components/PostList";
 import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import TopBtn from "components/TopBtn";
+import Pagnation from "components/Pagnation";
+
+import usePagnationPosts from "hooks/usePagnationPosts";
 
 import { allReacts } from "contentlayer/generated";
 
@@ -30,19 +33,28 @@ const React = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
       setSearchPosts([]);
     }
   };
+  const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
+    posts,
+  });
 
   useEffect(() => {
     getSearchPosts();
   }, [searchTitle]);
 
-  const react = posts.filter((post) => post.category === "react");
   return (
     <Container>
       <SeachBar
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}
       />
-      <PostList searchPosts={searchPosts} posts={react} />
+      <PostList searchPosts={searchPosts} posts={newPosts} />
+      {!searchTitle && (
+        <Pagnation
+          curPage={curPage}
+          pageCount={pageCount}
+          setCurPage={setCurPage}
+        />
+      )}
       <TopBtn />
     </Container>
   );
