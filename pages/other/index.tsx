@@ -8,33 +8,15 @@ import TopBtn from "components/TopBtn";
 import Pagnation from "components/Pagnation";
 
 import usePagnationPosts from "hooks/usePagnationPosts";
+import useSearchPosts from "hooks/useSearchPosts";
 
 import { allOthers } from "contentlayer/generated";
 
 export default function Other({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [searchTitle, setSearchTitle] = useState("");
-  const [searchPosts, setSearchPosts] = useState([]);
-
-  const onChangeSearchTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTitle(e.target.value);
-  };
-
-  const getSearchPosts = () => {
-    if (searchTitle !== "") {
-      const tmp = [];
-      allOthers.map((post) => {
-        const regex = new RegExp(searchTitle, "gim");
-        if (regex.test(post.title)) {
-          tmp.push(post);
-        }
-      });
-      setSearchPosts(tmp);
-    } else {
-      setSearchPosts([]);
-    }
-  };
+  const { searchTitle, searchPosts, onChangeSearchTitle, getSearchPosts } =
+    useSearchPosts(allOthers);
 
   const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
     posts,
