@@ -3,6 +3,8 @@ import Comments from "components/Comments";
 import TopBtn from "components/TopBtn";
 import BlogContents from "components/BlogContents";
 
+import { makeMeta } from "utils/makeMeta";
+
 import { allJs } from "contentlayer/generated";
 import { InferGetStaticPropsType } from "next";
 import { useMDXComponent } from "next-contentlayer/hooks";
@@ -11,11 +13,7 @@ export default function Post({
   post,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const MDXComponent = useMDXComponent(post.body.code);
-  const customMeta = {
-    title: post.title,
-    description: post.description,
-    date: new Date(post.date).toISOString(),
-  };
+  const customMeta = makeMeta(post);
 
   return (
     <Container customMeta={customMeta} className="relative">

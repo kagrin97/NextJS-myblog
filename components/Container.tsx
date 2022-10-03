@@ -59,7 +59,7 @@ export default function Container(props) {
               className={`rounded-full hover:animate-spin`}
             />
             <span
-              className={`mx-3 font-semibold italic text-lg text-green-400`}
+              className={`mx-3 font-semibssold italic text-lg text-green-400`}
             >
               Kang blog
             </span>
