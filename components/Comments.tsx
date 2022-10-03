@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-const Comments = () => {
+export default function Comments() {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -16,6 +16,4 @@ const Comments = () => {
   }, []);
 
   return <div ref={ref}></div>;
-};
-
-export default Comments;
+}

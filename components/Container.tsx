@@ -9,7 +9,7 @@ import Nav from "components/Nav";
 import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
 
-const Container = (props) => {
+export default function Container(props) {
   const meta = {
     type: metadata.type,
     title: metadata.title,
@@ -59,7 +59,7 @@ const Container = (props) => {
               className={`rounded-full hover:animate-spin`}
             />
             <span
-              className={`mx-3 font-semibold italic text-lg text-green-400`}
+              className={`mx-3 font-semibssold italic text-lg text-green-400`}
             >
               Kang blog
             </span>
@@ -71,6 +71,4 @@ const Container = (props) => {
       <section className={`w-full max-w-3xl mt-10`}>{props.children}</section>
     </main>
   );
-};
-
-export default Container;
+}

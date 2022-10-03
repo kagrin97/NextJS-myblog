@@ -6,9 +6,7 @@ import Image from "next/image";
 
 import navlinks from "data/navlinks";
 
-import { allAlgorithms } from "contentlayer/generated";
-
-const Nav = () => {
+export default function Nav() {
   const path = useRouter().pathname;
 
   const [menu, setMenu] = useState(false);
@@ -91,6 +89,4 @@ const Nav = () => {
       </div>
     </nav>
   );
-};
-
-export default Nav;
+}

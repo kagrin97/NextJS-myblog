@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import Container from "../components/Container";
 
-const Home = () => {
+export default function Home() {
   return (
     <Container>
       <div className={`my-5 w-full`}>
@@ -53,6 +53,4 @@ const Home = () => {
       </div>
     </Container>
   );
-};
-
-export default Home;
+}

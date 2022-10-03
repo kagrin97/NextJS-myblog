@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const BlogPost = ({ date, title, des, slug }) => {
+export default function BlogPost({ date, title, des, slug }) {
   return (
     <div className="w-full my-7 transition ease-in-out hover:-translate-x-1.5 hover:text-green-400/80">
       <Link href={`/${slug}`} passHref>
@@ -12,6 +12,4 @@ const BlogPost = ({ date, title, des, slug }) => {
       </Link>
     </div>
   );
-};
-
-export default BlogPost;
+}

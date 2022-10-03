@@ -5,48 +5,45 @@ import Container from "components/Container";
 import SeachBar from "components/SeachBar";
 import PostList from "components/PostList";
 import TopBtn from "components/TopBtn";
+import Pagnation from "components/Pagnation";
+
+import usePagnationPosts from "hooks/usePagnationPosts";
+import useSearchPosts from "hooks/useSearchPosts";
 
 import { allNexts } from "contentlayer/generated";
 
-const NextJs = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [searchTitle, setSearchTitle] = useState("");
-  const [searchPosts, setSearchPosts] = useState([]);
+export default function NextJs({
+  posts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { searchTitle, searchPosts, onChangeSearchTitle, getSearchPosts } =
+    useSearchPosts(allNexts);
 
-  const onChangeSearchTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTitle(e.target.value);
-  };
-
-  const getSearchPosts = () => {
-    if (searchTitle !== "") {
-      const tmp = [];
-      allNexts.map((post) => {
-        const regex = new RegExp(searchTitle, "gim");
-        if (regex.test(post.title)) {
-          tmp.push(post);
-        }
-      });
-      setSearchPosts(tmp);
-    } else {
-      setSearchPosts([]);
-    }
-  };
+  const { newPosts, pageCount, curPage, setCurPage } = usePagnationPosts({
+    posts,
+  });
 
   useEffect(() => {
     getSearchPosts();
   }, [searchTitle]);
 
-  const nextjs = posts.filter((post) => post.category === "nextjs");
   return (
     <Container>
       <SeachBar
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}
       />
-      <PostList searchPosts={searchPosts} posts={nextjs} />
+      <PostList searchPosts={searchPosts} posts={newPosts} />
+      {!searchTitle && (
+        <Pagnation
+          curPage={curPage}
+          pageCount={pageCount}
+          setCurPage={setCurPage}
+        />
+      )}
       <TopBtn />
     </Container>
   );
-};
+}
 
 export const getStaticProps = async () => {
   const posts = allNexts.sort(
@@ -58,5 +55,3 @@ export const getStaticProps = async () => {
     },
   };
 };
-
-export default NextJs;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import BlogPost from "components/BlogPost";
 
-const PostList = ({ searchPosts, posts }) => {
+export default function PostList({ searchPosts, posts }) {
   return (
     <article className={`mt-20 flex flex-col`}>
       {searchPosts.length ? (
@@ -31,6 +31,4 @@ const PostList = ({ searchPosts, posts }) => {
       )}
     </article>
   );
-};
-
-export default PostList;
+}
