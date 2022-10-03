@@ -6,8 +6,6 @@ import Image from "next/image";
 
 import navlinks from "data/navlinks";
 
-import { allAlgorithms } from "contentlayer/generated";
-
 export default function Nav() {
   const path = useRouter().pathname;
 
