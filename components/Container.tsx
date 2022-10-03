@@ -19,8 +19,6 @@ export default function Container(props) {
     ...props.customMeta,
   };
 
-  console.log(meta);
-
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>

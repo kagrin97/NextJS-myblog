@@ -1,0 +1,105 @@
+---
+title: "[JS/백준]{그리디}(21314) 민겸 수"
+date: 2022-10-03
+description: "[그리디] 민겸 수"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/21314"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/193584166-f87682ff-b9e7-43e9-abf7-dcf698e0bc57.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+가장 큰수를 만드는 방법은 K가 맨마지막에 오는 문자열들을 다 더해주었을때 가장 큰수가 된다
+
+ex) MK, K, MMK
+
+반대로 가장 작은수를 만드는 방법은 K가 들어왔을때 5를 더해주고 M이 들어왔을떄는 최대한 M을 더 길게 이어준다
+
+ex) M, K, K, MM, K
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+function findMax(inputData) {
+  let tmp = [];
+  let maxNum = "";
+
+  inputData.forEach((val) => {
+    if (val === "M") {
+      tmp.push(val);
+    } else {
+      if (!tmp.length) {
+        maxNum += "5";
+      } else {
+        if (tmp.at(-1) === "M") {
+          let a = "5";
+          a = a.padEnd(tmp.length + 1, "0");
+          maxNum += a;
+          tmp = [];
+        }
+      }
+    }
+  });
+
+  if (tmp.length) {
+    tmp.forEach((val) => {
+      if (val === "M") {
+        maxNum += "1";
+      } else {
+        maxNum += "5";
+      }
+    });
+  }
+
+  return maxNum;
+}
+
+function findMin(inputData) {
+  let tmp2 = [];
+  let minNum = "";
+
+  inputData.forEach((val) => {
+    if (val === "K") {
+      if (tmp2.length) {
+        let a = "1";
+        a = a.padEnd(tmp2.length, "0");
+        minNum += a;
+        tmp2 = [];
+      }
+      minNum += "5";
+    } else {
+      tmp2.push(val);
+    }
+  });
+
+  if (tmp2.length) {
+    if (tmp2[0] === "M") {
+      let a = "1";
+      a = a.padEnd(tmp2.length, "0");
+      minNum += a;
+    } else {
+      minNum += "5";
+    }
+  }
+  return minNum;
+}
+
+const line = require("fs").readFileSync("./input.txt", "utf8");
+let inputData = line.trim().split("");
+
+const maxNum = findMax(inputData);
+const minNum = findMin(inputData);
+
+console.log(maxNum);
+console.log(minNum);
+```
