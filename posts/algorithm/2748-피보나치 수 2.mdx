@@ -1,0 +1,49 @@
+---
+title: "[JS/백준]{dp}(2748) 피보나치 수 2"
+date: 2022-10-04
+description: "[dp] 피보나치 수 2"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/2748"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/193785608-a9c7fa0b-d7b3-4560-a2f9-dfbda435baf7.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+피보나치수 5와 완전 똑같은 문제이다.
+
+점화식 : dp[i] = dp[i-1] + dp[i-2]
+
+하지만 함정이있다. n이 90까지 있는데 90을 출력 하면 2880067194370816000이 나온다
+
+2880067194370816120이 나와야 하는데 120은 어디 간것일까? 그이유는 너무 숫자가 크기 때문이다
+
+그렇기 때문에 BigInt로 계산을 해야한다
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim();
+
+let dp = Array(91).fill(0);
+
+dp[1] = 1;
+
+for (let i = 2; i < +input + 1; i++) {
+  dp[i] = BigInt(dp[i - 1]) + BigInt(dp[i - 2]);
+}
+
+console.log(String(dp[input]));
+```

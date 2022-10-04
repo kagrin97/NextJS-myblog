@@ -1,0 +1,42 @@
+---
+title: "[JS/백준]{dp}(9655) 돌 게임"
+date: 2022-10-04
+description: "[dp] 돌 게임"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/9655"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/193791127-80e6c4af-01fb-44b7-8b81-394d973f0b94.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+dp문제답게 하나씩 해보면 점화식이 보인다
+
+i % 2 === 0 => 창영이가 이김
+else => 상근이가 이김
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim();
+
+input = +input;
+
+if (input % 2 === 0) {
+  console.log("CY");
+} else {
+  console.log("SK");
+}
+```
