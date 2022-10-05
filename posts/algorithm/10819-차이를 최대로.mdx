@@ -1,0 +1,63 @@
+---
+title: "[JS/백준]{완전탐색/브루트포스}(10819) 차이를 최대로"
+date: 2022-10-05
+description: "[완전탐색/브루트포스] 차이를 최대로"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/10819"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/194058706-59574a23-b604-4e8f-bf79-d866f3f22ba9.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+완전탐색 문제입니다. N의 크기가 8 이하이기 때문에 모든 순열을 구해서 최대 값을 찾으면 됩니다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const getPermutations = function (arr, selectNumber) {
+  const results = [];
+  if (selectNumber === 1) return arr.map((el) => [el]);
+
+  arr.forEach((fixed, index, origin) => {
+    const rest = [...origin.slice(0, index), ...origin.slice(index + 1)];
+    const permutations = getPermutations(rest, selectNumber - 1);
+    const attached = permutations.map((el) => [fixed, ...el]);
+    results.push(...attached);
+  });
+
+  return results;
+};
+
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+const n = +input[0];
+const numList = input[1].split(" ").map(Number);
+
+const per = getPermutations(numList, n);
+
+let maxVal = -1;
+
+per.forEach((arr, idx) => {
+  let result = 0;
+  for (let i = 0; i < n - 1; i++) {
+    result += Math.abs(arr[i] - arr[i + 1]);
+  }
+  if (maxVal < result) {
+    maxVal = result;
+  }
+});
+console.log(maxVal);
+```
