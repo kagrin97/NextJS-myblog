@@ -1,0 +1,127 @@
+---
+title: "[JS/백준]{bfs/브루트포스}(14502) 연구소"
+date: 2022-10-06
+description: "[bfs/브루트포스] 연구소"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/14502"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/194221815-01bd99e0-6299-4f24-acf6-de111d5d33d3.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+이 문제는 기둥을 3개만 세울 수밖에 없기 때문에 조합으로 모든 경우를 다 구해주면 풀린다.
+
+기둥을 3개 세우는 모든 조합을 구해서 실제로 3개를 세우고 바이러스를 퍼트린 다음에 안전 구역의
+
+개수를 구해준다 그 후에 최대 안전 구역 개수와 비교 후 갱신하면 된다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+const getCombinations = function (arr, selectNumber) {
+  const results = [];
+  if (selectNumber === 1) return arr.map((el) => [el]);
+
+  arr.forEach((fixed, index, origin) => {
+    const rest = origin.slice(index + 1);
+    const combinations = getCombinations(rest, selectNumber - 1);
+    const attached = combinations.map((el) => [fixed, ...el]);
+    results.push(...attached);
+  });
+  return results;
+};
+
+function bfs(wallList) {
+  //깊은복사
+  const boardCopy = JSON.parse(JSON.stringify(board));
+
+  const dx = [0, 0, -1, 1];
+  const dy = [1, -1, 0, 0];
+
+  // 기둥 3개를 세움
+  wallList.forEach((val) => {
+    const [x, y] = val;
+    boardCopy[x][y] = 1;
+  });
+
+  // 바이러스 퍼트림
+  virus.forEach((val) => {
+    const [i, j] = val;
+
+    let q = [[i, j]];
+
+    while (q.length) {
+      const [x, y] = q.shift();
+
+      for (let k = 0; k < 4; k++) {
+        let nx = x + dx[k];
+        let ny = y + dy[k];
+
+        if (0 <= nx && 0 <= ny && nx < n && ny < m && !boardCopy[nx][ny]) {
+          boardCopy[nx][ny] = 2;
+          q.push([nx, ny]);
+        }
+      }
+    }
+  });
+
+  let safeCnt = 0;
+
+  //안전구역 카운팅
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (boardCopy[i][j] === 0) {
+        safeCnt++;
+      }
+    }
+  }
+
+  return safeCnt;
+}
+
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const [n, m] = input[0].split(" ").map(Number);
+const board = input.slice(1).map((val) => val.split(" ").map(Number));
+
+let virus = [];
+let empty = [];
+
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < m; j++) {
+    if (board[i][j] === 2) {
+      virus.push([i, j]);
+    } else if (board[i][j] === 0) {
+      empty.push([i, j]);
+    }
+  }
+}
+
+// 3개를 세우는 모든 조합을 구해줌
+const combi = getCombinations(empty, 3);
+
+let result = 0;
+
+combi.forEach((val, idx) => {
+  const safeCnt = bfs(val);
+  if (safeCnt > result) {
+    result = safeCnt;
+  }
+});
+
+console.log(result);
+```
