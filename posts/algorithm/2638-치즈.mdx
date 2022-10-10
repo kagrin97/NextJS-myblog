@@ -1,0 +1,142 @@
+---
+title: "[JS/백준]{BFS}(2638) 치즈"
+date: 2022-10-10
+description: "[BFS] 치즈"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/2638"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/194823860-3a671700-1850-4a10-a581-aef013f6bd67.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+가장자리에 있는 치즈를 삭제해주고 모든 치즈가 사라질때까지 시간을 재고 시간을 출력하면된다.
+
+하지만 주의할점이 치즈안에 있는 공기와 외부 공기를 분리해서 풀어야한다.
+
+또한 가장자리 치즈의 조건은 외부공기와 2면이상 닿을 경우 가장자리 치즈라고 판단한다.
+
+1. 외부공기와 치즈안 내부공기를 구분한다.
+
+2. 가장자리 치즈를 가져온다
+
+3. 가장 자리 치즈를 녹인다
+
+4. 남은 치즈가 존재할경우 1번으로 돌아가고 없을경우 시간을 출력하고 끝낸다.
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers
+// 내외부 공기 구별
+function outAirCheck() {
+  let airBoard = Array.from(Array(n), () => new Array(m).fill(false));
+  let visited = Array.from(Array(n), () => new Array(m).fill(false));
+
+  visited[0][0] = true;
+  airBoard[0][0] = true;
+  let q = [[0, 0]];
+  while (q.length) {
+    const [x, y] = q.shift();
+    for (let k = 0; k < 4; k++) {
+      let nx = x + dx[k];
+      let ny = y + dy[k];
+
+      if (0 <= nx && 0 <= ny && nx < n && ny < m) {
+        if (!visited[nx][ny] && !board[nx][ny]) {
+          visited[nx][ny] = true;
+          airBoard[nx][ny] = true;
+          q.push([nx, ny]);
+        }
+      }
+    }
+  }
+  return airBoard;
+}
+
+// 가장자리 치즈구하기
+function edgeCheeseCheck(cheeseIndex, airboard) {
+  let edgeCheese = [];
+
+  while (cheeseIndex.length) {
+    const [x, y] = cheeseIndex.shift();
+    let edgeCnt = 0;
+    for (let k = 0; k < 4; k++) {
+      let nx = x + dx[k];
+      let ny = y + dy[k];
+
+      if (0 <= nx && 0 <= ny && nx < n && ny < m) {
+        if (airboard[nx][ny]) {
+          edgeCnt++;
+        }
+      }
+    }
+    if (edgeCnt >= 2) {
+      edgeCheese.push([x, y]);
+    }
+  }
+  return edgeCheese;
+}
+
+// 가장자리 치즈 삭제
+function deleteCheese(edgeCheeseIndex) {
+  edgeCheeseIndex.forEach((val) => {
+    const [x, y] = val;
+    board[x][y] = 0;
+  });
+}
+
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const [n, m] = input[0].split(" ").map(Number);
+const board = input.slice(1).map((str) => str.split(" ").map(Number));
+let time = 0;
+let isLiveCheese = true;
+
+const dx = [1, -1, 0, 0];
+const dy = [0, 0, 1, -1];
+
+// 치즈가 존재할때까지
+while (isLiveCheese) {
+  const airBoard = outAirCheck();
+  const cheeseIndex = [];
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (board[i][j] === 1) {
+        cheeseIndex.push([i, j]);
+      }
+    }
+  }
+
+  const edgeCheeseIndex = edgeCheeseCheck(cheeseIndex, airBoard);
+
+  deleteCheese(edgeCheeseIndex);
+  time++;
+
+  let cheeseCnt = 0;
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (board[i][j] === 1) {
+        cheeseCnt++;
+      }
+    }
+  }
+
+  if (!cheeseCnt) {
+    isLiveCheese = false;
+  }
+}
+console.log(time);
+```

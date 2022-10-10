@@ -1,0 +1,111 @@
+---
+title: "[JS/백준]{DFS,재귀함수}(2468) 안전 영역"
+date: 2022-10-10
+description: "[DFS, 재귀함수] 안전 영역"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/2468"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/194847462-a04cf8a7-f8d8-4aa8-8a69-fe579147e508.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+문제를 이해하는데 엄청 어려웠던 문제이다;;;
+
+`n * n`으로 지역의 높이가 주어지는데 비가 1 ~ 100 까지의 높이로 온다고 한다.
+
+그때 비의 높이와 같거나 낮으면 비에 잠기게 된다. 잠기지 않는 지역을 bfs나 dfs로 최대갯수를
+
+구하면 되는 문제이다. 말로 들어서는 모르겠으니 사진으로 보자
+
+![1](https://user-images.githubusercontent.com/75124028/194847968-cfd96eef-ffb8-4e63-8c49-542b634c34b4.PNG)
+
+위 사진을 보면 4개를 동그라미 쳤는데 해당하는 갯수가 안전한 영역이다.
+
+즉 비가 1부터 100까지의 안전 영역의 최대 갯수를 출력하면 된다.
+
+하지만 마지막으로 함정이 있는데 아무 지역도 물에 잠기지 않을 수도 있다.
+
+그럴 경우에 모든지역이 이어져있기 때문에 안전 영역은 1이라고 볼수있다.
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers
+function dfs(x, y) {
+  if (0 <= x && 0 <= y && x < n && y < n) {
+    if (canVisit[x][y]) {
+      canVisit[x][y] = false;
+      safeZoneFlag = true;
+      for (let k = 0; k < 4; k++) {
+        dfs(x + dx[k], y + dy[k]);
+      }
+    }
+  }
+}
+
+// 비가 잠기지 않는 지역과 잠긴 지역을 알아보는 함수
+function raining(height) {
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (board[i][j] > height) {
+        notRainBoardIndex.push([i, j]);
+      } else {
+        // 갈수없는 지역 (비에 잠김)
+        canVisit[i][j] = false;
+      }
+    }
+  }
+}
+
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const n = +input[0];
+let board = input.slice(1).map((str) => str.split(" ").map(Number));
+let canVisit = Array.from(Array(n), () => new Array(n).fill(true));
+let notRainBoardIndex = [];
+
+const dx = [1, -1, 0, 0];
+const dy = [0, 0, -1, 1];
+
+let maxSafe = -1;
+let safeZoneFlag = false;
+
+for (let i = 1; i < 100; i++) {
+  board = input.slice(1).map((str) => str.split(" ").map(Number));
+  canVisit = Array.from(Array(n), () => new Array(n).fill(true));
+  raining(i);
+  let safeZoneCnt = 0;
+
+  notRainBoardIndex.forEach((val, idx) => {
+    const [x, y] = val;
+    dfs(x, y);
+    if (safeZoneFlag) {
+      safeZoneCnt++;
+      safeZoneFlag = false;
+    }
+  });
+
+  notRainBoardIndex = [];
+
+  if (safeZoneCnt && maxSafe < safeZoneCnt) {
+    maxSafe = safeZoneCnt;
+  }
+}
+
+if (maxSafe === -1) {
+  console.log(1);
+} else {
+  console.log(maxSafe);
+}
+```
