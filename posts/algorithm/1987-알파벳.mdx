@@ -1,0 +1,71 @@
+---
+title: "[JS/백준]{DFS,백트래킹}(1987) 알파벳"
+date: 2022-10-11
+description: "[DFS, 백트래킹] 알파벳"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/1987"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/195070888-fa813b6e-aed3-42f2-93a2-28bd491978c1.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+난생처음 풀어보는 백 트래킹 문제라 다른 분들의 코드를 참고해서 작성하였다.
+
+가장 길게 이동하는 것이 목표이기 때문에 0,0에서 부터 시작해서 여러 곳을 찔러 보려면
+
+DFS의 백트래킹 방법을 사용해야 한다.
+
+한 곳을 쭉 이동하다가 더 이상 갈 곳이 없을 경우 하나씩 뒤로 돌아가다가 (set.delete)
+
+다시 갈 곳이 있으면 (set.add)를 사용해 DFS를 다시 돌려서 최대 이동 거리를 구할 수가 있다.
+
+여기서 알아낸 신기한 사실이 있는데 4방향을 탐색할 때 위아래보다는 양옆을 먼저 이동하는
+
+편이 속도가 더 빠르다는 사실이다. 그 이유는 2차원 데이터는 메모리에서는 1차원으로 저장되는데
+
+위아래로 이동할 경우에는 더 많은 거리의 메모리로 이동해야 하는데 좌우일 경우에는 그냥 1을 이동하면
+
+되기 때문이다.
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers
+function dfs(x, y) {
+  for (let k = 0; k < 4; k++) {
+    let nx = x + dx[k];
+    let ny = y + dy[k];
+    if (0 <= nx && 0 <= ny && nx < n && ny < m && !pastSet.has(board[nx][ny])) {
+      pastSet.add(board[nx][ny]);
+      maxDistance = Math.max(maxDistance, pastSet.size);
+      dfs(nx, ny);
+      pastSet.delete(board[nx][ny]);
+    }
+  }
+}
+
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const [n, m] = input[0].split(" ").map(Number);
+let board = input.slice(1).map((str) => str.trim().split(""));
+
+const dx = [0, 0, 1, -1];
+const dy = [-1, 1, 0, 0];
+
+let pastSet = new Set(board[0][0]);
+let maxDistance = 1;
+
+dfs(0, 0);
+console.log(maxDistance);
+```
