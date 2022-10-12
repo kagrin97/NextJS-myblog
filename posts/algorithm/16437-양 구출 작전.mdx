@@ -1,0 +1,68 @@
+---
+title: "[JS/백준]{DFS,트리}(16437) 양 구출 작전"
+date: 2022-10-12
+description: "[DFS,트리] 양 구출 작전"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/16437"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/195351271-1b02bd86-9d91-463d-9abf-c0161f00ff44.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+결국에 1번 섬으로 돌아오는 구조이기 때문에 트리 구조임을 알수있다. (사진으로도 알수있..)
+
+dfs안에 for문을 돌려서 dfs를 재귀호출 하고있기때문에 밑에서부터 트리 위로 올라오는 구조로
+
+실행되게 된다. 늑대일경우 현재 양의 수에 뺴주며 음수가 되지 않게 주의한다.
+
+양이 있는 섬에 도착했을경우에는 양의 수만큼 더해준다. 초기값을 1로 넣었기때문에
+
+1번 섬으로 가는 경우에 현재 양의 수를 유지하기위해서 [0,0] 값을 넣었다.
+
+<h2 className={`dark:text-white`}>풀이 코드</h2>
+
+```js showLineNumbers
+function dfs(curIndex) {
+  let sCount = 0;
+  for (let i of tree[curIndex]) {
+    sCount += dfs(i);
+  }
+  if (islandInfo[curIndex][0] === "W") {
+    sCount -= islandInfo[curIndex][1];
+    if (sCount < 0) {
+      sCount = 0;
+    }
+  } else {
+    sCount += islandInfo[curIndex][1];
+  }
+  return sCount;
+}
+
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const n = +input[0];
+let board = input.slice(1).map((str) => str.trim().split(" "));
+
+let islandInfo = [[], [0, 0]];
+let tree = Array.from(Array(n + 1), () => new Array().fill([]));
+
+board.forEach((val, idx) => {
+  const [t, a, p] = val;
+  islandInfo.push([t, +a]);
+  tree[+p].push(idx + 2);
+});
+
+console.log(dfs(1));
+```
