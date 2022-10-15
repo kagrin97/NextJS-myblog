@@ -1,0 +1,65 @@
+---
+title: "[JS/백준]{누적합}(11660) 구간 합 구하기 5"
+date: 2022-10-15
+description: "[누적합] 구간 합 구하기 5"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/11660"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/195991603-d274ed9e-924f-480b-847c-03573d81bced.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+이 문제는 난생 처음으로 누적합이라는 개념에대해서 접근해서 그런지 엄청나게 어려웠다.
+
+누적합 문제는 구하는 개념은 누적합 배열을 따로 만든 다음에 `[x2][y2]`값을 구하고 싶으면
+
+해당 구역의 끝 넘어 있는 값을 빼준다음 `[x1 - 1][y1 - 1]`을 더해주면 된다.
+
+`[x2][y2] - ([x1 - 1][y2] + [x2][y1 - 1]) + [x1 - 1][y1 - 1]`
+
+그냥 문자열을 하나씩 출력할경우 시간 초과가 발생하니 문자열을 합친다음 한번에 출력해야한다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumber
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const [n, m] = input[0].split(" ").map(Number);
+
+const board = input.slice(1, n + 1).map((str) => str.split(" ").map(Number));
+let dp = Array.from(Array(n + 1), () => new Array(n + 1).fill(0));
+
+// 누적합 배열 만듦
+for (let i = 1; i < n + 1; i++) {
+  for (let j = 1; j < n + 1; j++) {
+    dp[i][j] =
+      board[i - 1][j - 1] + dp[i][j - 1] + dp[i - 1][j] - dp[i - 1][j - 1];
+  }
+}
+
+let ans = "";
+
+for (let i = n + 1; i < input.length; i++) {
+  const [x1, y1, x2, y2] = input[i].split(" ").map(Number);
+  // [x2][y2] 값을 구하기위해 x의 끝값과 y의 끝값을 뺴준다음 xy의 끝값을 더해준다
+  ans +=
+    String(
+      dp[x2][y2] - (dp[x1 - 1][y2] + dp[x2][y1 - 1]) + dp[x1 - 1][y1 - 1]
+    ) + "\n";
+}
+console.log(ans);
+```
