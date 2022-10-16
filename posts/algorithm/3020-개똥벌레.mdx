@@ -1,0 +1,81 @@
+---
+title: "[JS/백준]{누적합}(3020) 개똥벌레"
+date: 2022-10-16
+description: "[누적합] 개똥벌레"
+category: algorithm
+---
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.acmicpc.net/problem/3020"
+>
+  문제 링크
+</a>
+
+![1](https://user-images.githubusercontent.com/75124028/196026588-a8936dc1-525d-4cc7-8b46-71877f7cdceb.PNG)
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+완탐으로 풀었을떄 최대 연산수가 `n * h`이기 때문에 총 1000억번을 수행하면 시간초과가 난다.
+
+따라서 이분탐색이나 누적합 방식으로 풀어야 빠르게 풀린다. 여기선 누적합으로 풀었다.
+
+밑에서 부터 솟아오르는 돌을 down에 높이를 index순서로 넣고 위에서부터 내려오는 돌을 up에 넣는다.
+
+그럴경우 각각 해당 높이에 추가된 돌들이 배열 형태로 담기게 된다.
+
+down = [0, 1, 0, 1, 0, 1, 0, 0] -> 1번쨰 index(높이)에 돌이 하나 추가 되었다는뜻 3, 5번째에 돌 1개가 더 추가됨
+
+이 상태에서 뒤에서부터 누적합을 사용하면 해당 인덱스(높이의) 돌들의 총갯수를 구할수가 있는데
+
+down = [0, 3, 2, 2, 1, 1, 0, 0] -> 1번쨰 높이(index)만큼의 돌이 총 3개가 존재한다는 뜻
+
+이런식으로 up도 누적합을 구해준뒤 해당하는 높이의 up, down의 총 돌갯수의 최소값과 갯수를 구하면된다.
+
+---
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumber
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const [n, h] = input[0].split(" ").map(Number);
+const down = Array(h + 1).fill(0);
+const up = Array(h + 1).fill(0);
+
+// 각각 높이에 추가된 돌의 갯수를 넣어줌
+for (let i = 1; i < n + 1; i++) {
+  const num = +input[i];
+  if (i % 2 === 0) {
+    up[num]++;
+  } else {
+    down[num]++;
+  }
+}
+
+// 누적합으로 해당 높의의 총 돌 갯수를 구함
+for (let i = h - 1; i > 0; i--) {
+  up[i] += up[i + 1];
+  down[i] += down[i + 1];
+}
+
+let maxStone = 200001;
+let cnt = 0;
+
+// 해당 높이에 up, down 두 돌의 총 갯수를 비교함
+for (let i = 1; i < h + 1; i++) {
+  const a = down[i] + up[h - i + 1];
+  if (a < maxStone) {
+    maxStone = a;
+    cnt = 1;
+  } else if (a === maxStone) {
+    cnt++;
+  }
+}
+console.log(maxStone, cnt);
+```
