@@ -1,0 +1,63 @@
+---
+title: "[JS/백준]{dp}(9251) LCS"
+date: 2022-10-22
+description: "[dp] LCS"
+category: algorithm
+---
+
+<div className={`flex justify-center`}>
+  <a
+    className={`dark:text-white`}
+    target="_blank"
+    href="https://www.acmicpc.net/problem/9251"
+  >
+    백준 문제 링크
+  </a>
+</div>
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+dp문제로 두번째 s2를 기준으로 dp배열을 만들고 2중 for문으로 하나씩 문자를 비교한다.
+
+같은 문자열이 나왔을경우 dp의 현재위치에 cnt+1 값을 넣어준다 여기서 cnt는 누적값을 의미한다.
+
+만약 순회중에 cnt값보다 해당 위치의 dp값이 더 클경우 cnt값을 갱신해준다 이 방법으로 점진적으로
+
+일치하는 문자열을 최대값을 갱신해줄수 있다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/197339136-6ad97354-4649-462d-b764-35c70137d1fd.png"
+    width="30%"
+  />
+</div>
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const s1 = input[0];
+const s2 = input[1];
+
+const len1 = s1.length;
+const len2 = s2.length;
+
+const dp = Array(len2).fill(0);
+
+for (let i = 0; i < len1; i++) {
+  let cnt = 0;
+  for (let j = 0; j < len2; j++) {
+    if (cnt < dp[j]) {
+      cnt = dp[j];
+    } else if (s1[i] === s2[j]) {
+      dp[j] = cnt + 1;
+    }
+  }
+}
+console.log(Math.max(...dp));
+```
