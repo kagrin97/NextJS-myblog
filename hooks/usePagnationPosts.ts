@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export default function usePagnationPosts({ posts }) {
   const [curPage, setCurPage] = useState(1);
-  const LIMIT_ITEM = 6;
+  const LIMIT_ITEM = 10;
   let newPosts;
 
   if (curPage === 1) {
