@@ -19,12 +19,15 @@ export default function Container(props) {
     ...props.customMeta,
   };
 
+  console.log(meta.date);
+
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>{meta.title}</title>
-        <meta name="article:published_time" content={meta.type} />
+        <meta name="article:published_time" content={meta.date} />
+        <meta name="Date" content={meta.date} />
         <meta property="og:type" content={meta.type} />
         <meta property="og:title" content={meta.title} />
         <meta property="og:description" content={meta.description} />
