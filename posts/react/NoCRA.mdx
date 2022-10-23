@@ -1,0 +1,511 @@
+---
+title: CRA없이 TypeScript, Eslint, Prettier, Husky, Jest, StoryBook, Styled-Components 환경 구축하기
+date: 2022-10-23
+description: CRA없이 React환경을 구축합니다.
+category: react
+---
+
+CRA를 사용할 때 불필요한 의존성을 너무 많이 설치해서 번들 크기가 커지는 것을
+
+막기 위해서 CRA없이 모두 돌아가게끔 설정을 해봤습니다. 이 설정을 적용한 보일러 플레이트
+
+코드를 Repo에 올려놨습니다. 실제로 Repo에 올리고 나서 5일 정도 뒤에 기억을 더듬어 가면서
+
+포스터를 작성한 것이므로 틀린 부분이 있거나 빠진 부분이 있을 수가 있습니다.
+
+그럴 경우 댓글로 알려주세용
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://github.com/kagrin97/NoCRA-boilerplate"
+>
+  NoCRA-boilerplate repo
+</a>
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     기본 TypeScript, babel, webpack 설정 (dev, prod)
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     Eslint, Prettier, Husky 설정
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     Jest 설정
+   </a>
+4. <a href="#4" className={`dark:text-white`}>
+     StoryBook, Styled-Components 설정
+   </a>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  기본 TypeScript, babel, webpack 설정 (dev, prod)
+</h2>
+
+참고로 이 부분 설정은
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://velog.io/@tnehd1998/CRA%EC%97%86%EC%9D%B4-ReactTypeScript-%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0"
+>
+  이분의 블로그를 참고했습니다.
+</a>
+
+<h3 className={`dark:text-white`}>기본 React 설정</h3>
+<br></br>
+
+```
+npm init -y // package.json파일 생성
+npm i react react-dom react-router-dom // react 필수 패키지 설치
+```
+
+<br></br>
+<b>react code를 집어넣을 html에 파일</b>
+
+```js:public/index.html showLineNumbers
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React App without CRA</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+<br></br>
+<b>html과 App 컴포넌트를 연결해주는 파일 생성</b>
+
+```js:src/index.tsx showLineNumbers
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+const rootElement = document.getElementById('root');
+
+ReactDOM.render(<App />, rootElement);
+```
+
+<br></br>
+<b>App 컴포넌트 파일</b>
+
+```js:src/App.tsx showLineNumbers
+import React from 'react';
+
+const App = () => (
+   <>
+    <h1>No CRA</h1>
+  </>
+);
+
+export default App;
+```
+
+---
+
+<h3 className={`dark:text-white`}>TypeScript 설정</h3>
+<br></br>
+
+타입스크립트는 자바스크립트 엔진을 사용하면서 커다란 애플리케이션을 개발할 수 있게 설계된 언어입니다.
+
+자바스크립트의 슈퍼셋이기 때문에 자바스크립트로 작성된 프로그램이 타입스크립트 프로그램으로 동작합니다.
+
+```
+npm i -D typescript @types/react @types/react-dom // 타입 패키지 설치
+tsc --init // tsconfig.json 파일 생성
+```
+
+<br></br>
+<b>기본적인 ts파일 설정</b>
+
+```json:tsconfig.json showLineNumbers
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext", // 사용할 import 문법
+    "lib": ["dom", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ES2020"],
+    "allowJs": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "outDir": "./build",
+    "isolatedModules": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",  // import시 루트 url설정
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
+
+---
+
+<h3 className={`dark:text-white`}>Babel 설정</h3>
+<br></br>
+
+Babel은 ECMAScript 2015+ 코드를 이전 JavaScript 엔진에서 실행할 수 있는 이전 버전과 호환되는
+
+JavaScript 코드로 변환하는 데 주로 사용되는 무료 오픈 소스 JavaScript 트랜스컴파일러입니다.
+
+<br></br>
+<b>babel을 사용하는데 필요한 패키지 설치</b>
+
+```
+npm i -D babel-loader @babel/core @babel/preset-env
+npm i -D @babel/preset-react @babel/preset-typescript
+```
+
+<br></br>
+<b>babel 설정파일</b>
+
+```js:babel.config.js showLineNumbers
+module.exports = {
+  presets: ['@babel/preset-react', '@babel/preset-env', '@babel/preset-typescript'],
+};
+```
+
+---
+
+<h3 className={`dark:text-white`}>Webpack 설정</h3>
+<br></br>
+
+웹팩은 오픈 소스 자바스크립트 모듈 번들러입니다. 주로 자바스크립트를 위한 모듈 번들러이지만 호환
+
+플러그인을 포함하는 경우 HTML, CSS, 심지어는 이미지와 같은 프론트엔드 자산들을 변환할 수 있습니다.
+
+<br></br>
+<b>webpack 필수 패키지 설치</b>
+
+```
+npm i -D webpack webpack-cli webpack-dev-server webpack-merge
+npm i -D html-webpack-plugin ts-loader
+```
+
+<br></br>
+<b>dev, prod 모드 둘다 적용할 베이스 common 파일 코드</b>
+
+```js:webpack.common.js showLineNumbers
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require('path');
+
+module.exports = {
+
+    // 기본 시작 파일
+  entry: './src/index.tsx',
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: ['babel-loader', 'ts-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
+    ],
+  },
+
+   //build시 번들파일 넣을 경로및
+  output: {
+    path: path.join(__dirname, '/build'),
+    filename: 'bundle.js',
+  },
+
+  // 플러그인 적용
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+    }),
+    new CleanWebpackPlugin(),
+  ],
+};
+```
+
+<br></br>
+<b>dev모드에 적용할 설정</b>
+
+```js:webpack.dev.js showLineNumbers
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common.js");
+
+module.exports = merge(common, {
+  mode: "development", // 현재 개발 모드
+  devtool: "eval",     // 최대성능, 개발환경에 추천
+  devServer: {
+    historyApiFallback: true,
+    port: 3000,
+    hot: true,
+  },
+});
+```
+
+<br></br>
+<b>prod모드에 적용할 설정</b>
+
+```js:webpack.prod.js showLineNumbers
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common.js");
+
+module.exports = merge(common, {
+  mode: "production", // 현재 배포 모드
+  devtool: "hidden-source-map", // 느리지만 안전 배포에 추천
+});
+```
+
+<br></br>
+<b>webpack 명령어 설정</b>
+
+```json:package.json showLineNumbers
+"scripts": {
+    "dev": "webpack-dev-server --config webpack.dev.js --open --hot",
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack --config webpack.dev.js"
+  },
+```
+
+dev : webpack을 실행하며 `개발단계`에서 실행
+
+build : `실제 배포시` build폴더에 파일을 생성
+
+start : `개발옵션`으로 build폴더에 파일 생성
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  Eslint, Prettier, Husky 설정
+</h2>
+
+<h3 className={`dark:text-white`}>Eslint 설정</h3>
+<br></br>
+
+ESLint는 자바스크립트 코드에서 발견되는 문제시되는 패턴들을 식별하기 위한 정적 코드 분석 도구입니다.
+
+```
+npm i -D eslint eslint-config-react-app eslint-config-prettier
+```
+
+<br></br>
+<b>eslint 기본적인 규칙 설정</b>
+
+```json:.eslintrc showLineNumbers
+{
+  "extends": ["react-app", "eslint:recommended"],
+  "rules": {
+    "no-var": "error", // var 금지
+    "no-multiple-empty-lines": "error", // 여러 줄 공백 금지
+    "no-console": ["error", { "allow": ["warn", "error", "info"] }],
+    "eqeqeq": "error", // 일치 연산자 사용 필수
+    "dot-notation": "error", // 가능하다면 dot notation 사용
+    "no-unused-vars": "error" // 사용하지 않는 변수 금지
+  }
+}
+```
+
+위의 규칙중 console.log 금지 규칙이 귀찮을 경우에는
+
+`"no-console": ["warn", { "allow": ["warn", "error", "info"] }],`
+
+으로 변경해주면 됩니다.
+
+```json:package.json showLineNumbers
+...
+"scripts": {
+    "lint": "eslint --cache .", //eslint 실행 명령어 cache저장함
+}
+...
+"eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+...
+```
+
+npm run lint 명령어를 사용하면 .eslintcache가 생성되는데 검사된 파일들을
+
+또 검사하지 않게 하기 위해서 저장해놓는 것으로 github에 올리지는 맙시다.
+
+---
+
+<h3 className={`dark:text-white`}>Prettier 설정</h3>
+<br></br>
+
+Prettier. 코드 포멧터(Code Formatter)란 개발자가 작성한 코드를 정해진
+
+코딩 스타일을 따르도록 변환해주는 도구를 말합니다.
+
+```
+npm i -D prettier
+```
+
+<br></br>
+
+```js:.prettierrc.js showLineNumbers
+module.exports = {
+  printWidth: 100, // 한줄당 문자 100개로 제한
+  singleQuote: true, // "" => ''
+  arrowParens: 'avoid', // arrow function parameter가 하나일 경우 괄호 생략
+};
+```
+
+<br></br>
+
+```json:package.json showLineNumbers
+...
+"scripts": {
+   "format": "prettier --cache --write .", // 실행 명령어
+}
+...
+```
+
+---
+
+<h3 className={`dark:text-white`}>husky 설정</h3>
+<br></br>
+
+husky는 깃 훅에 따라 원하는 동작을 하게 도와주는 패키지입니다.
+
+git add나 commit, push가 시행되기 전이나 후에 원하는 스크립트를 실행시켜주죠.
+
+```
+npm i -D husky
+npx husky install // 처음 hsuky세팅하는 사람만 실행
+```
+
+<br></br>
+
+```json:package.json showLineNumbers
+...
+"scripts": {
+   "postinstall": "husky install",
+}
+...
+```
+
+위 명령어는 이후에 clone 받아서 사용하는 사람들은 npm install 후에
+
+자동으로 husky install 이 될 수 있도록 하는 설정
+
+```
+npx husky add .husky/pre-commit "npm run format"
+npx husky add .husky/pre-push "npm run lint"
+```
+
+첫 번째 명령어는 commit 전에 npm run format을 실행하게 해주는 husky 파일을 추가해줍니다.
+
+즉 prettier를 실행함
+
+두 번째 명령어는 push 전에 npm run lint로 eslint를 실행하게 해줍니다.
+
+---
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  Jest 설정
+</h2>
+
+Jest는 Jasmine 위에 구축되고 Meta에서 유지 관리하는 JavaScript 테스트 프레임워크입니다.
+
+```
+npm i -D jest ts-jest @types/jest jest-environment-jsdom
+npm i -D @testing-library/jest-dom @testing-library/react @testing-library/user-event
+```
+
+<br></br>
+
+```js:jest.config.js showLineNumbers
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+module.exports = {
+    // 절대경로를 src로 인식하도록 설정 tsconfig.json파일에 baseUrl을 src로 했으면 적용
+  moduleDirectories: ['node_modules', 'src'],
+  testEnvironment: 'jsdom', // jsdom으로 수정
+  setupFilesAfterEnv: ['<rootDir>/setupTest.js'], // setupTest를 이용하여 환경 설정
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.jest.json', // tsconfig.jest.json 사용 설정
+    },
+  },
+};
+```
+
+<br></br>
+
+```json:tsconfig.jest.json showLineNumbers
+{
+  "extends": "./tsconfig.json", // tsconfig.json 설정 적용
+  "compilerOptions": {
+    "jsx": "react" // jsx 설정 react로 적용
+  }
+}
+```
+
+<br></br>
+
+```js:setupTest.js showLineNumbers
+require('@testing-library/jest-dom'); // jest-dom 모듈 로드
+```
+
+이런식으로 jest 기본설정을 설정합니다.
+
+---
+
+<h2 id="4" className={`dark:text-white text-center`}>
+  StoryBook, Styled-Components 설정
+</h2>
+
+스토리북(Storybook)은 한 문장으로 정의가 어려울 정도로 다양한 방식으로 사용되고 있는 UI 컴포넌트
+
+개발 도구입니다. 단순히 회사의 UI 라이브러리를 내부 개발자들을 위해 문서화(documentation)하기
+
+위해서 사용할 수 있고, 외부 공개용 디자인 시스템(Design System)을 개발하기 위한 기본 플랫폼으로도
+
+사용할 수 있습니다.
+
+```
+npm i styled-components @types/styled-components
+npx storybook init // 스토리북 설치
+npm i -D @storybook/addon-actions @storybook/addon-controls
+```
+
+첫번쨰 명령어는 styled-components 설치 명령어입니다.
+
+두번쨰 명령어는 storybook을 설치한다. 스토리북을 설치할 경우 루트 경로에 .storybook
+
+폴더가 생기는데 그곳에 두 개의 파일이 생성이 되는데 모두 기본 설정 파일입니다.
+
+세 번째 명령어는 storybook이 styled-components를 인식할 수 있도록 도와주는 패키지입니다.
+
+```js:.storybook/main.js showLineNumbers
+module.exports = {
+  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@storybook/addon-actions', // 이줄을 추가해줘야함
+    '@storybook/addon-controls', // 이줄을 추가해줘야함
+  ],
+  framework: '@storybook/react',
+  core: {
+    builder: '@storybook/builder-webpack5',
+  },
+};
+```
+
+이렇게 되면 styled-components를 storybook과 함께 사용할 수가 있습니다.
