@@ -1,0 +1,89 @@
+---
+title: javaScript로 Dark Mode를 구현해보자!
+date: 2022-10-23
+description: javaScript로 Dark Mode를 구현
+category: js
+---
+
+<h2 className={`dark:text-white`}>다크모드 버튼 생성 및 이벤트 생성</h2>
+
+---
+
+```js showLineNumbers
+class DarkModeButton {
+  constructor({ $target}) {
+    const $darkBtn = document.createElement("input"); // 다크버튼 생성
+    this.$darkBtn = $darkBtn;  // this에 엘리먼트 생성
+    this.$darkBtn.type = "checkbox"; // checkbox형식의 다크버튼
+
+    $darkBtn.className = "darkBtn"; // 클래스 추가
+
+    $target.appendChild($darkBtn);  // 실제 html 엘리먼트 아래에 추가
+
+    // os가 다크모드인지 판단하는 함수
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.setAttribute("color-theme", "dark");
+      $darkBtn.checked = true; // 체크박스 체크
+    } else {
+      document.documentElement.setAttribute("color-theme", "light");
+    }
+
+    // 다크모드 토글
+    $darkBtn.addEventListener("click", (e) => {
+      if (e.target.checked) {
+        document.documentElement.setAttribute("color-theme", "dark");
+      } else {
+        document.documentElement.setAttribute("color-theme", "light");
+      }
+    });
+  }
+```
+
+기본적으로 $target이라는 부모 엘리먼트에 checkbox를 class를 추가해서 생성해줍니다.
+
+다크모드 상태인지를 브라우저에서 알려면 여러 가지 방법이 있지만 아무것도 체크하지 않은
+
+초기 상태에서 OS가 다크모드인지 아닌지를 알 수가 있습니다. 12 ~ 17번쨰 줄을 보시면
+
+`window.matchMedia("(prefers-color-scheme: dark)`가 있는데 현재 OS가
+
+다크모드일경우 MediaQueryList 객체안의 <b>matches값이</b> true로 나타납니다.
+
+![as](https://user-images.githubusercontent.com/75124028/197396737-3e885661-d906-4252-8baf-a977d5382abb.gif)
+
+다크모드일 경우 최상위 엘리먼트인 document에 `color-theme='dark'`라는 속성을 넣어줍니다.
+
+아닐 경우에는 light 속성을 넣어주면 됩니다.
+
+또한 checkbox를 이용해서 20~26번째 줄을 통해 토글 기능을 만들수도 있습니다.
+
+<h2 className={`dark:text-white`}>CSS를 이용해서 실제 다크모드를 색칠하기</h2>
+
+---
+
+자 이제 최상위 엘리먼트가 Dark or Light 속성을 가지게 되었으니 css를 이용해서 색칠해 봅시다.
+
+```css
+:root[color-theme="light"] {
+  --background: #ffffff;
+  --boxColor: #000000;
+}
+
+:root[color-theme="dark"] {
+  --background: #000000;
+  --boxColor: #ffffff;
+}
+
+html {
+  background-color: var(--background); // 속성이 바뀔때마다 해당 값이 바뀐다.
+  color: var(--boxColor);
+}
+```
+
+css 파일에서 root의 속성중 <b>color-theme</b>가 light라면 --background값을 #ffffff
+
+--boxColor값을 #000000로 설정함으로써 배경색과 텍스트 색깔을 바꿔줄수가 있습니다.
+
+완성된 다크모드
+
+![js다크모드](https://user-images.githubusercontent.com/75124028/197395827-9f28ef60-2095-46a4-a790-b2f4c165099d.gif)
