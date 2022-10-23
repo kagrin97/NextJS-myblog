@@ -1,0 +1,72 @@
+---
+title: "[JS/백준]{dp, dfs}(1937) 욕심쟁이 판다"
+date: 2022-10-23
+description: "[dp, dfs] 욕심쟁이 판다"
+category: algorithm
+---
+
+<div className={`flex justify-center`}>
+  <a
+    className={`dark:text-white`}
+    target="_blank"
+    href="https://www.acmicpc.net/problem/1937"
+  >
+    백준 문제 링크
+  </a>
+</div>
+
+<h2 className={`dark:text-white`}>문제 설명</h2>
+
+단순한 dfs형식으로 2차원 배열에 이동거리를 갱신하는 방식으로 구현했을때는 시간초과가
+
+나왔다 dp[i] = dp[i]부터 갈수있는 최대 길이를 저장 하는 형태로 구현했더니 성공했다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/197339136-6ad97354-4649-462d-b764-35c70137d1fd.png"
+    width="30%"
+  />
+</div>
+
+<h2 className={`dark:text-white`}>코드</h2>
+
+```js showLineNumbers
+function dfs(x, y) {
+  if (dp[x][y] === -1) {
+    dp[x][y] = 0;
+    for (let k = 0; k < 4; k++) {
+      let nx = x + dx[k];
+      let ny = y + dy[k];
+      if (0 <= nx && 0 <= ny && nx < n && ny < n) {
+        if (board[nx][ny] > board[x][y]) {
+          dp[x][y] = Math.max(dp[x][y], dfs(nx, ny));
+        }
+      }
+    }
+  }
+  return dp[x][y] + 1;
+}
+
+let input = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const n = +input[0];
+const board = input.slice(1).map((str) => str.split(" ").map(Number));
+
+const dp = Array.from(Array(n), () => Array(n).fill(-1));
+let maxVal = 1;
+
+const dx = [0, 0, 1, -1];
+const dy = [1, -1, 0, 0];
+
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < n; j++) {
+    maxVal = Math.max(maxVal, dfs(i, j));
+  }
+}
+
+console.log(maxVal);
+```
