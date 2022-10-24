@@ -1,0 +1,298 @@
+---
+title: javaScript로 이미지 슬라이드(캐러셀이라고도 함)를 구현
+date: 2022-10-24
+description: 매우 간단하게 슬라이드를 구현합니다.
+category: js
+---
+
+이번 시간에는 바닐라 JavaScript로 <b>carousel(슬라이드)</b>를 구현하는 방법에 대해서 알아보겠습니다.
+
+프로그래머스 사이트의 사전과제관이 있는 고양이 검색사이트를 구현하면서 작성 중입니다.
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     carousel이란?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     초간단 carousel 구현
+   </a>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  carousel이란?
+</h2>
+
+carousel이란 여러 개의 이미지나 영상을 슬라이드 형태로 만들어서 버튼을 누를 때마다
+
+<b>이미지가 바뀌는 것</b>을 의미합니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/197508787-e778ffef-fbef-49a7-a3b4-da611d7d3133.gif"
+    width="70%"
+  />
+</div>
+
+캐러셀을 구현하려면 현재 보여줄 구역을 보여주고 그 구역을 벗어나는 요소는 `hidden` 요소로 취급해
+
+없애버리는 방법을 사용합니다. 또한 버튼을 눌러서 next, prev로 이동하려면 CSS에 `translate3d`를
+
+사용하면 보여줄 구역에서 잘린 부분으로 이동을 시켜줄 수가 있습니다. 저는 이미지 하나당
+
+width : 500px를 설정했기 때문에 <b>500px</b> 단위로 이미지가 달라집니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/197510593-2058baff-cb3f-4677-bddf-e0f102b4a065.png"
+    width="70%"
+  />
+</div>
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  초간단 carousel 구현
+</h2>
+
+<h3 className={`dark:text-white`}>html 설정</h3>
+
+캐러셀을 구현하기 위해서는 우선은 쭉 늘어선 이미지가 여러 개 필요한데요
+
+```html
+<section class="carouselContainer">
+  <div class="carousel">
+    <div class="carousel_item">
+      <img src="https://cdn2.thecatapi.com/images/FCNqMC83P.jpg" />
+    </div>
+
+    <div class="carousel_item">
+      <img src="https://cdn2.thecatapi.com/images/FCNqMC83P.jpg" />
+    </div>
+
+    <div class="carousel_item">
+      <img src="https://cdn2.thecatapi.com/images/LIQSvUemz.jpg" />
+    </div>
+
+    <div class="carousel_item">
+      <img src="https://cdn2.thecatapi.com/images/UrYSVFQZo.jpg" />
+    </div>
+
+    <div class="carousel_item">
+      <img src="https://cdn2.thecatapi.com/images/0iSghgPeZ.jpg" />
+    </div>
+  </div>
+</section>
+```
+
+`carouselContainer`는 캐러셀의 최상위 요소로 이미지를 중앙에 배치하기 위해서 존재합니다.
+
+그 아래의 `carousel`는 실제로 화면에 그려주고 있는 부분이라고 생각하면 됩니다.
+
+그 안의 img위에 `carousel_item`을 또 따로 만들어준 이유는 이미지마다 가로, 세로 크기가 제각각
+
+이기 때문에 div에 맞춰서 <b>이미지 크기를 맞춰주기 위해서</b> 사용했습니다.
+
+이렇게 해야지 <b>이미지끼리 달라붙어 있는 모습을 없앨 수 있습니다.</b>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/197511979-f5d01c28-9e46-49ca-bc79-e5a5e1daa009.png"
+    width="30%"
+  />
+</div>
+
+---
+
+<h3 className={`dark:text-white`}>CSS 설정</h3>
+
+캐러셀을 <b>왼쪽 오른쪽으로 슬라이드</b> 하는 방식을 사용하기 위해서는 css 설정을 만져줄 필요가 있습니다.
+
+```css
+.carouselContainer {
+  width: 500px; //현재 보여줄 구역의 width
+  height: 300px;
+  overflow-x: hidden; // 현재 구역을 제외한 부분 hidden처리
+  overflow-y: hidden;
+  margin: auto;
+}
+
+.carouselContainer > .carousel {
+  display: flex; // 이미지를 x축으로 정렬
+  transform: translate3d(0, 0, 0); // 초기에는 0위치에서 시작함
+  transition: transform 0.2s; // 부드러운 애니메이션을 위함
+}
+
+.carousel_item {
+  width: 500px; // 이미지 크기를 맞춰주기위한 width
+  height: 300px;
+}
+
+.carousel_item > img {
+  width: 500px;
+  height: 300px;
+  object-fit: contain; // 실제 이미지를 상위 div에 딱 맞춰주기위함
+}
+```
+
+flex를 사용해서 이미지를 x축으로 쭉 늘어지도록 구현했고 hidden을 줌으로써 좌우 이미지를
+
+없앨 수가 있었습니다. 또한 width를 사용함으로써 이미지의 크기를 설정해주었습니다.
+
+---
+
+<h3 className={`dark:text-white`}>JS 설정</h3>
+
+우선 prev, next 기능을 구현하기 위해서는 현재 위치 <b>index값</b>이 필요한데요
+
+```js showLineNumbers
+    index = 0
+
+    // prev 버튼을 눌렀을때 실행
+  prev() {
+    if (this.index === 0) return;
+    this.index -= 1;
+
+    this.$carousel.style.transform = `translate3d(-${
+      500 * this.index
+    }px, 0, 0)`;
+  }
+
+    // next 버튼을 눌렀을때 실행
+  next() {
+    if (this.index === 4) return;
+    this.index += 1;
+
+    this.$carousel.style.transform = `translate3d(-${
+      500 * this.index
+    }px, 0, 0)`;
+  }
+```
+
+초기의 index 값을 0으로 줍니다. 만약 0인 상태에서 prev를 눌렀을 경우 빈 값을 return 합니다.
+
+또한 저는 이미지의 개수를 최대 5개로 제한했기 때문에 index가 4일 경우 이동하지 않습니다.
+
+<b>
+  style.transform에 translate3d값을 주게 되면 실제 해당 부분으로 이동하게
+  됩니다.
+</b>
+
+index가 3일 경우 1500px으로 변경되고 1일 경우 500px로 변경이 되기 때문에 이동이 되는 것입니다.
+
+모든 코드를 보여드리면
+
+```js:Carousel.js showLineNumbers
+class Carousel {
+  index = 0;
+  catList;
+
+  constructor({ $target, initialData }) {
+    const $prevButton = document.createElement("button");
+    const $nextButton = document.createElement("button");
+    const $buttonContainer = document.createElement("section");
+
+    const $carouselContainer = document.createElement("section");
+    const $carousel = document.createElement("div");
+
+    $prevButton.className = "prevButton";
+    $nextButton.className = "nextButton";
+    $buttonContainer.classList = "buttonContainer";
+
+    $carouselContainer.className = "carouselContainer";
+    $carousel.classList = "carousel";
+
+    this.$prevButton = $prevButton;
+    this.$nextButton = $nextButton;
+    this.$buttonContainer = $buttonContainer;
+
+    this.$carouselContainer = $carouselContainer;
+    this.$carousel = $carousel;
+
+    this.$prevButton.innerText = "Prev";
+    this.$nextButton.innerText = "Next";
+
+    this.$prevButton.addEventListener("click", () => {
+      this.prev();
+    });
+
+    this.$nextButton.addEventListener("click", () => {
+      this.next();
+    });
+
+    this.$buttonContainer.appendChild(this.$prevButton);
+    this.$buttonContainer.appendChild(this.$nextButton);
+    this.$carouselContainer.appendChild(this.$carousel);
+
+    $target.appendChild(this.$carouselContainer);
+    $target.appendChild(this.$buttonContainer);
+
+    this.get50Cats();
+  }
+
+    // 고양이 50개 이미지를 받아온다음 5개만 가져오는 api함수
+  async get50Cats() {
+    try {
+      const { data } = await api.fetchCat50();
+      this.catList = data.slice(0, 5);
+      this.render();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  prev() {
+    if (this.index === 0) return;
+    this.index -= 1;
+
+    this.$carousel.style.transform = `translate3d(-${
+      500 * this.index
+    }px, 0, 0)`;
+  }
+
+  next() {
+    if (this.index === 4) return;
+    this.index += 1;
+
+    this.$carousel.style.transform = `translate3d(-${
+      500 * this.index
+    }px, 0, 0)`;
+  }
+
+  render() {
+    this.$carousel.innerHTML = this.catList
+      .map((cat, index) => {
+        return `
+                <div class='carousel_item'>
+                    <img src=${cat.url} alt=${cat.name} />
+                </div>
+              `;
+      })
+      .join("");
+  }
+}
+```
+
+---
+
+<h3 className={`dark:text-white`}>최종 완성본</h3>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/197508787-e778ffef-fbef-49a7-a3b4-da611d7d3133.gif"
+    width="70%"
+  />
+</div>
+
+이렇게 캐러셀을 구현하는데 성공을 했습니다. 저는 이분 블로그를 참고해서 구현했습니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://junjangsee.tistory.com/entry/%EC%99%84%EC%A0%84-%EC%B4%88-%EB%8B%A8%EC%88%9C%ED%95%98%EA%B2%8C-%EC%BA%90%EB%9F%AC%EC%85%80Carousel-%EA%B5%AC%ED%98%84%ED%95%B4%EB%B3%B4%EA%B8%B0"
+>
+  완전 초 단순하게 캐러셀(Carousel) 구현해보기
+</a>
