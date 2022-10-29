@@ -1,0 +1,106 @@
+---
+title: Monolith, Muliti, Mono Repo를 정말 간단하게 알아보자!
+date: 2022-10-29
+description: Monolith, Muliti, Mono Repo는 무엇인지 간단하게
+category: other
+---
+
+우테콘을 보던 도중에 `모노 레포`에 대해서 다룬 영상을 보고 모노 레포에 대해서
+
+알아보던 중 `모노리스`와 `멀티레포`가 있다는 것을 알았습니다. 정말 간단하게 알아봅시다!
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     Monolith Repo
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     Muliti repo
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     Mono repo
+   </a>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  Monolith Repo
+</h2>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/198243735-f598f500-78fa-4295-a825-f1089b0f9926.png"
+    width="70%"
+  />
+</div>
+
+모노리스 레포는 가장 기본적인 형태로 하나의 Repo안에 모든 서비스나 프로젝트가 서로
+
+존재하는것을 의미합니다.
+
+하나의 레포안에 <b>모듈 라이브러리 DevOps를 공유</b>해 서로가 직접적으로 의존하기 때문에
+
+<b>관심사분리, 설계, 리팩토링이 어려워지며</b> 작은 변경점을 build하려 할때에 모든
+프로젝트를
+
+빌드해야하기때문에 <b>엄청나게 많은 시간이</b> 걸립니다.
+
+정말 간단한 프로젝트일경우 모노리스 레포를 사용할때 좋다고 생각합니다.
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  Muliti repo
+</h2>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/198243966-743ceb6e-2332-4cef-b771-e41fc65db7e5.png"
+    width="70%"
+  />
+</div>
+
+모노리스의 단점을 없애기 위해서 등장한 방식으로 모든 프로젝트가 자신만의 Repo를 가지며 다른
+
+프로젝트와의 <b>의존성이 적어지며 각각 프로젝트만의 라이브러리, 모듈, 데브옵스를 설정할 수가 있습니다</b>
+
+하지만 새로 프로젝트를 만들 때마다 개발환경, 배포환경을 구성해야 하며 코드의 중복이 발생하며 프로젝트가
+
+늘어나면 관리가 어려워집니다. 제가 알기로는 현재 대다수의 회사의 Repo 형태가 멀티레포로 알고 있습니다.
+
+멀티레포는 기능적으로는 완벽하지만 <b>생산성이 매우 떨어지는 것이 단점</b>입니다.
+
+---
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  Mono repo
+</h2>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/198245579-19aa7e2f-e9ef-4ecd-b7d2-c5cd8f8bcd6d.png"
+    width="70%"
+  />
+</div>
+
+각각의 프로젝트는 모듈을 import 해서 사용하며 동일한 devOps를 공유하기 때문에 프로젝트가 늘어날수록
+
+멀티레포보다 생산성이 높아지며 멀티레포보다 <b>의존성 관리가 쉽습니다.</b>
+
+하지만 멀티레포보다 빌드가 느리며 아직 많은 프로젝트에서 도입이 된 방식이 아니다 보니
+
+불안정한 요소가 많으며 `workspace` 툴을 사용해서 관리해야 합니다.
+
+개인적으로 모노 레포에 대해서 알아보던 중 데브옵스와 프로젝트들을 모듈화하는 것이 모노 레포라고
+
+쓰여 있지만 아직 100퍼센트 이해가 된 것이 아니기 때문에 위의 다이어그램을 <b>참고 정도</b>로만 봐주시길 바랍니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://2021.stateofjs.com/en-US/libraries/monorepo-tools/"
+>
+  workspace 툴 랭킹을 정리한 사이트
+</a>
