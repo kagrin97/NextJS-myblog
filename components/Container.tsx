@@ -24,6 +24,10 @@ export default function Container(props) {
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <title>{meta.title}</title>
+        <meta
+          name="google-site-verification"
+          content="tHzgblVRtM5UJi1BBTUouxZXp_txiBpb0KwUytGz0rI"
+        />
 
         <meta name="Date" content={meta.date} />
         <meta name="description" content={meta.description} />
@@ -61,11 +65,6 @@ export default function Container(props) {
         <meta
           name="naver-site-verification"
           content="da98b9d3244abed109afb03767f0adf1a713f595"
-        />
-
-        <meta
-          name="google-site-verification"
-          content="tHzgblVRtM5UJi1BBTUouxZXp_txiBpb0KwUytGz0rI"
         />
       </Head>
       <NextProgress
