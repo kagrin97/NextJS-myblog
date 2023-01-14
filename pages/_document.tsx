@@ -5,6 +5,10 @@ class MyDocument extends Document {
     return (
       <Html lang="ko">
         <Head>
+          <meta
+            name="google-site-verification"
+            content="tHzgblVRtM5UJi1BBTUouxZXp_txiBpb0KwUytGz0rI"
+          />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
