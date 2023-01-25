@@ -29,11 +29,22 @@ const Other = configDocumentType("Other", "other");
 const React = configDocumentType("React", "react");
 const Types = configDocumentType("Types", "types");
 const Algorithm = configDocumentType("Algorithm", "algorithm");
+const BackEnd = configDocumentType("BackEnd", "backend");
 const DataBase = configDocumentType("DataBase", "db");
 
 export default makeSource({
   contentDirPath: "posts",
-  documentTypes: [Js, Git, Next, Other, React, Types, Algorithm, DataBase],
+  documentTypes: [
+    Js,
+    Git,
+    Next,
+    Other,
+    React,
+    Types,
+    Algorithm,
+    BackEnd,
+    DataBase,
+  ],
   mdx: {
     rehypePlugins: [rehypeCodeTitles, rehypePrism],
   },

@@ -1,0 +1,262 @@
+---
+title: test
+date: 2023-01-17
+description: mongoDB를 express와 연결합니다.
+category: backend
+---
+
+정말 오랜만에 포스트 하는 것 같습니다. 개인적인 집안 사정이 있어서 몇 달 동안 공부를 아예 하지
+
+못했습니다. 이번에 express와 mongoDB를 이용해 작은 앱을 만들면서 알게 된 점을 포스팅하겠습니다.
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     mongoDB atlas에 db를 생성하자!
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     express와 mongoDB를 연결하기
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     mongoose를 이용해 연결하기
+   </a>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  mongoDB atlas에 db를 생성하자!
+</h2>
+
+mongoDB를 사용할 때 atlas 기능을 사용하면 자신의 컴퓨터 자원을 소모하지 않고 클라우드에
+
+db를 생성해줍니다. 첫 번째로 mongoDB의 atlas에 접속해야 합니다
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.mongodb.com/atlas"
+>
+  https://www.mongodb.com/atlas
+</a>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/212909802-c69cce05-5c0b-4794-a9d0-f6cdefe20f1b.PNG"
+    width="70%"
+  />
+</div>
+
+접속하면 이렇게 나타나게 되는데 Try Free를 눌러서 시작합니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/212909868-2413475b-90fd-4426-96ba-0c2048cb76a3.PNG"
+    width="70%"
+  />
+</div>
+
+회원가입 페이지가 나타나게 되는데 저는 google 아이디로 회원가입을 했습니다.
+
+그리고서 Create 버튼이 나타나게 되는데 클릭을 하게 되면 이런 화면이 나타납니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/212909905-18b88ce7-8f48-4603-a80d-e8c4c193bf0a.PNG"
+    width="70%"
+  />
+</div>
+
+이 화면 맨 위에서 3개의 선택지가 존재하는데 무료인 shared를 선택하고 AWS server 위치는
+
+Seoul로 선택합니다. 또한 Tier 옵션에서 무료를 선택하고 Cluster Name을 따로 설정해줍니다.
+
+그렇게 되면 atlas에서 클러스터를 생성해줍니다. 시간이 조금 걸리니 다른 설정을 먼저 하겠습니다.
+
+먼저 Network Access 탭을 보시면 db와 연결을 허용할 IP주소를 설정해주어야 합니다.
+
+Add IP Address를 클릭하시면 이런 화면이 나타나는데 ADD CURRENT IP ADDRESS 버튼을 눌러서
+
+현재 local IP를 생성하거나 백엔드 IP를 추가해주시면 됩니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/212909947-63294565-0f4e-425f-a423-8c97068820a6.PNG"
+    width="70%"
+  />
+</div>
+
+그 다음으로 Database Access 탭을 누르시면 관리자를 추가할 수 있습니다.
+
+ADD NEW DATABASE USER 버튼을 클릭하시면
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/212909990-81967997-9787-4b2d-8b7f-a66b742ac219.PNG"
+    width="70%"
+  />
+</div>
+
+이런 화면이 나타나는데 Password 방식으로 사용자를 추가하고 이름, 비밀번호
+
+그리고 권한을 읽고 쓰기만을 가능하게 만드시면 됩니다.
+
+그렇게 하신 후에 Database Deployments 탭에 돌아오시면 Cluster가 생성이 되어있습니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/212910028-0b172e89-92c5-4341-a91f-1f7d39430d14.PNG"
+    width="70%"
+  />
+</div>
+
+그후 Cluster에 Connect 버튼을 누르고 app으로 연결을 누르시면
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/212910060-5050f60b-9068-4969-b97c-5694228a7b57.PNG"
+    width="70%"
+  />
+</div>
+
+DRIVER 와 그 버전을 설정할 수 있으며 중간에 URL이 나오는데 이 스크립트를 따로
+
+저장해두시면 됩니다. 제 스크립트를 보시면 abc는 유저 이름, password 태그에는 비밀번호를
+
+설정하시면 됩니다. ?retryWrites 쿼리앞에 문자열을 넣어야 하는데 그 문자열은 db의 이름이 됩니다.
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  express와 mongoDB를 연결하기
+</h2>
+
+express에 mongoDB를 연결해보겠습니다.
+
+```
+npm i express body-parser
+npm i mongodb
+```
+
+```js showLineNumbers
+// app.js
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoPractice = require("./mongo"); // mongo가져오기
+
+const app = express();
+
+app.use(bodyParser.json());
+
+app.post("/products", mongoPractice.createProduct);
+
+app.get("/products", mongoPractice.getProducts);
+
+app.listen(3000);
+```
+
+우선 app에 실질적인 mongodb 파일을 가져옵니다.
+
+```js showLineNumbers
+// mongo.js
+
+const MongoClient = require("mongodb").MongoClient;
+
+const url =
+  "mongodb+srv://<유저>:<비번>@cluster0.h9y9y4t.mongodb.net/<db이름>?retryWrites=true&w=majority";
+
+const createProduct = async (req, res, next) => {
+  const newProduct = {
+    name: req.body.name,
+    price: req.body.price,
+  };
+
+  // MongoClient인스턴스 생성
+  const client = new MongoClient(url);
+
+  try {
+    // 연결 및 collection추가후 문서 추가
+    await client.connect();
+    const db = client.db();
+    const result = db.collection("products").insertOne(newProduct);
+  } catch (error) {
+    return res.json({ message: "Could not store data." });
+  }
+
+  // 종료를 해줘야함
+  client.close();
+
+  res.json(newProduct);
+};
+```
+
+위 코드를 보시면 아시겠지만 Boilerplate code가 많은 편입니다. 더 손쉽게 연결하는
+
+방법이 존재하는데 mongoose를 이용하는 방법이 있습니다.
+
+---
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  mongoose를 이용해 연결하기
+</h2>
+
+```
+npm i mongoose
+```
+
+```js showLineNumbers
+// models/product.js
+
+const mongoose = require("mongoose");
+
+// Schema생성
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+});
+
+module.exports = mongoose.model("Product", productSchema);
+```
+
+mongoose를 사용할려면 Schema를 생성해서 사용하면 더편합니다.
+
+```js showLineNumbers
+// mongoose.js
+
+const mongoose = require("mongoose");
+
+const Product = require("./models/product");
+
+// mongoose연결 체이닝을 사용해 db연결 성공여부를 출력
+mongoose
+  .connect(
+    "mongodb+srv://<유저>:<비번>@cluster0.h9y9y4t.mongodb.net/<db이름>?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log("Connected to database!");
+  })
+  .catch(() => {
+    console.log("Connection failed!");
+  });
+
+const createProduct = async (req, res, next) => {
+  // Schema를 가져와서 상품 인스턴스 생성
+  const createdProduct = new Product({
+    name: req.body.name,
+    price: req.body.price,
+  });
+
+	try {
+	// 저장해줌(mongoDB보다 간결)
+  const result = await createdProduct.save();
+	} catch (err) {
+		...
+	}
+
+  res.json(result);
+};
+```
+
+기존 방식보다 획기적으로 줄어든 것을 볼수가 있습니다.
