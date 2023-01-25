@@ -1,0 +1,135 @@
+---
+title: Multer를 사용해 파일 조작(Node, express)
+date: 2023-01-25
+description: Multer를 이용해서 파일을 back에 저장 및 삭제하는 방법
+category: backend
+---
+
+요즘 express와 mongodb를 사용해서 백엔드 쪽을 공부하고있습니다.
+
+이미지 파일 저장을 공부하던중 Multer를 알게되어서 포스팅하겠습니다.
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     Multer가 무엇인가요?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     Multer기본 사용법
+   </a>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  Multer가 무엇인가요?
+</h2>
+
+Multer는 Node, express에서 사용 가능한 `파일 업로드 미들웨어`입니다.
+
+멀티파트 형식으로 업로드할 때 사용하는데 멀티파트는 enctype이 <b>multipart/form-dat</b> 인
+
+폼을 통해서 업로드하는 데이터의 형식을 의미합니다. 보통 <b>new FormData()</b>를 프론트엔드
+
+단에서 사용할 때 사용됩니다.
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  Multer기본 사용법
+</h2>
+
+```
+npm i multer uuid
+```
+
+제일 먼저 multer와 파일이름을 대신해줄 uuid를 설치합니다.
+
+```js:middleware/file-upload.js showLineNumbers
+const multer = require("multer");
+const uuid = require("uuid/v1");
+
+const MIME_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpeg",
+  "image/jpg": "jpg",
+};
+
+const fileUpload = multer({
+  limits: 500000,
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "uploads/images");
+    },
+
+    filename: (req, file, cb) => {
+      const ext = MIME_TYPE_MAP[file.mimetype];
+      cb(null, uuid() + "." + ext);
+    },
+  }),
+
+  fileFilter: (req, file, cb) => {
+    const isValid = !!MIME_TYPE_MAP[file.mimetype];
+    let error = isValid ? null : new Error("Invalid mime type!");
+    cb(error, isValid);
+  },
+});
+
+module.exports = fileUpload;
+```
+
+<b>MIME_TYPE_MAP</b>을 사용해서 불필요한 image/경로를 삭제합니다.
+
+<b>limits</b> : 파일 제한 용량입니다.
+
+<b>destination</b> : 파일 경로로 콜백함수를 사용해서 업로드될 폴더 위치를 설정합니다.
+
+<b>filename</b> : 파일이름입니다.
+
+<b>fileFilter</b> : 파일이 유효한지 검사하는 로직입니다.
+
+```js:router/place.js showLineNumbers
+router.post(
+  '/',
+  fileUpload.single('image'),
+  placesControllers.createPlace
+);
+
+```
+
+그 후 라우터 부분에서 컨트롤러로 이동하기 전에 미들웨어에 보내서 파일을
+
+실질적으로 저장하는 로직을 거치게 됩니다.
+
+`single메서드`는 한 개의 파일을 저장합니다. 다중 파일을 저장할 수 있는
+
+메서드는 여기서는 다루지 않습니다.
+
+```js:controller/splacesControllers.js showLineNumbers
+const createPlace = async (req, res, next) => {
+  const img = req.file.path
+}
+```
+
+파일을 db에 업데이트 하고 싶을경우 req.file.path를 참고한 값이 파일이 됩니다.
+
+```js:app.js showLineNumbers
+const fs = require("fs");
+
+app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
+});
+```
+
+파일을 삭제하고 싶을 경우 `fs.unlink` 메소드를 사용해서 삭제할 수 있습니다.
+
+위의 코드는 error가 발생했을떄 file 값이 존재할 경우 롤백하는 코드입니다.
+
+최근 백엔드를 공부하는데 처음 접하는 개념이 많아서 머리가 빙빙 도는 느낌입니다.
+
+ㅠㅠ
