@@ -1,0 +1,153 @@
+---
+title: 해쉬 라이브러리 bcrypt, bcryptjs 비교 및 사용법
+date: 2023-01-26
+description: node의 해쉬를 도와주는 라이브러리를 비교합니다
+category: backend
+---
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     bcrypt, bcryptjs의 차이점
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     bcryptjs 사용법
+   </a>
+
+---
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  bcrypt, bcryptjs의 차이점
+</h2>
+
+<br></br>
+
+`bcrypt`, `bcryptjs` 둘다 비밀번호를 해싱할때 사용하는 node용 라이브러리입니다.
+
+둘다 해쉬를 하는데 다른점은 무엇일까요?
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/214785777-473dd8e8-0278-4fd5-bee5-51ea166ab6dd.PNG"
+    width="40%"
+  />
+</div>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/214785769-3cc52e64-5357-48ac-97fd-ef98cb6e89e6.PNG"
+    width="40%"
+  />
+</div>
+
+첫 번째 사진은 bcrypt입니다 다운로드 수가 bcryptjs보다 낮습니다. 하지만 최근에
+
+업데이트했습니다. bcryptjs는 다운로드 수가 높지만 업데이트하지 않고 있고요
+
+하지만 수행 시간을 비교했을 때 bcryptjs가 bcrypt입니다 <b>1.5배</b> 더 느립니다.
+
+bcrypt는 <b>c++</b>로 구현되어 스레드 풀 방식을 사용하는 기존의 bcrypt 라이브러리에
+
+비해 <b>단일스레드로</b> 구성된 js로 구현된 bcryptjs 라이브러리가 더 느립니다.
+
+더 빠른 bcrypt를 왜 더 적응 수의 사람들이 사용할까요?
+
+그 이유는 브라우저에서는 bcrypt 라이브러리가 <b>동작하지 않습니다.</b>
+
+따라서 웹브라우저 환경에서는 bcryptjs 라이브러리가 더 많이 사용되게 된 것입니다.
+
+---
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  bcryptjs 사용법
+</h2>
+
+<br></br>
+
+<b>설치</b>
+
+```
+npm i bcryptjs
+```
+
+<br></br>
+
+<b>hash 메소드 : 암호화</b>
+
+<br></br>
+
+```js:app.js showLineNumbers
+const bcrypt = require("bcryptjs");
+
+const hashFunction = async (password) => {
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const hashedPassword2 = await bcrypt.hash(password, 12);
+  console.log(hashedPassword);
+  console.log(hashedPassword2);
+};
+
+hashFunction("1234567890");
+```
+
+해쉬하기 위해서는 `hash`메서드를 사용합니다. 첫 번째 인자는 해쉬할 문자열
+
+두 번째 인자는 <b>salt</b>라고 불리는 해쉬의 강도입니다. 숫자가 클수록 강하게 해쉬되며
+
+시간이 더 걸리게 됩니다. 일반적으로 12 정도면 적당하다고 합니다.
+
+```
+$2a$12$O3DhZs43eEPsTNvtBsfbXuF5ERKcwu4ojHMuTuuPGzXLIzOtn5qMW
+$2a$12$xQNOfJX8cBgYlX3vAeY.AO3nrrmCYBVhNLVYXPOoMSdtXQuPujmjy
+```
+
+똑같은 값을 넣어도 다른 해쉬값이 나오는 것을 확인 할수가 있습니다.
+
+<br></br>
+
+<b>compare 메소드 : 비교문</b>
+
+<br></br>
+
+```js:app.js showLineNumbers
+const bcrypt = require("bcryptjs");
+
+const hashFunction = async (password) => {
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const isValidPassword = await bcrypt.compare("1234567890", hashedPassword);
+  console.log(isValidPassword);
+  // true
+};
+
+hashFunction("1234567890");
+```
+
+사용자가 입력한 password와 db에 해쉬되어 저장된 password를 비교하기 위해서는 `compare`메서드를
+
+사용할 수 있습니다. Boolean 값을 리턴해줍니다.
+
+---
+
+참고 사이트
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.npmjs.com/package/bcrypt"
+>
+  https://www.npmjs.com/package/bcrypt
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://www.npmjs.com/package/bcryptjs"
+>
+  https://www.npmjs.com/package/bcryptjs
+</a>
