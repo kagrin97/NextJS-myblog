@@ -25,6 +25,10 @@ module.exports = {
         '"Noto Color Emoji"',
       ],
     },
+    screens: {
+      maxSm: { max: "639px" },
+      // => @media (max-width: 639px) { ... }
+    },
   },
   plugins: [
     require("@tailwindcss/typography"),

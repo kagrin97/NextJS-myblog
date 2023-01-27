@@ -1,7 +1,9 @@
 export default function BlogContents({ post, MDXComponent }) {
   return (
     <article className="mt-10 prose max-w-none">
-      <h1 className="text-green-500 text-center">{post.title}</h1>
+      <h1 className="text-green-500 text-center maxSm:text-2xl">
+        {post.title}
+      </h1>
       <h3 className="text-green-600 text-end italic">
         {post.date.slice(0, 4)}년 {post.date.slice(5, 7)}월
         {post.date.slice(8, 10)}일
