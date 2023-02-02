@@ -1,0 +1,335 @@
+---
+title: React Hook Form으로 회원가입, 로그인 구현하기!
+date: 2023-02-02
+description: typescript를 베이스로 회원가입, 로그인을 구현함
+category: react
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     React Hook Form이 무엇이며 왜 사용하는지?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     로그인 기능을 구현하자!!
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     회원가입 기능을 구현하자!!
+   </a>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  React Hook Form이 무엇이며 왜 사용하는지?
+</h2>
+
+<br></br>
+
+`React Hook Form`은 react에서 form을 더 쉽게 사용하기 위해서 만들어졌습니다.
+
+보통 회원가입 form을 하나 만들기 위해서는 이름, 이메일, 비밀번호, 에러 메시지의 상태 값과
+
+해당 상태들의 <b>정합성</b>을 판단하는 함수, 상태 값을 실시간으로 변경해줄 Handler 회원가입
+
+요청 시 필요한 submit 함수 등등 셀 수 없이 많습니다. 다른 정보가 더 필요한 회원가입 로직이면
+
+더 <b>엄청나게 많은 보일러 플레이트가 발생</b>하게 됩니다.
+
+그래서 대단한 분들이 개발하셔서 배포하신 React Hook Form을 사용하는 것이죠....
+
+저는 작은 토이프로젝트를 만들면서 <b>회원가입, 로그인 기능을 구현</b>하였습니다.
+
+잘못된 정보가 들어있을 수도 있으니 그 점은 감안해서 봐주셨으면 감사하겠습니다. ^-^
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  로그인 기능을 구현하자!!
+</h2>
+
+<br></br>
+
+우선 첫 번쨰로 로그인 기능을 구현하겠습니다. 로그인에서 필요한 상태 값은
+
+이메일, 패스워드 단 두 가지로 간단하게 먼저 React Hook Form 기능을 구현,사용하겠습니다.
+
+그전에 먼저 설치해야겠죠?
+
+```
+npm i react-hook-form
+```
+
+저희는 `useForm`훅을 사용해서 구현하겠습니다.
+
+```js:LoginForm.tsx showLineNumbers
+import React, { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+
+interface FormValue {
+  email: string;
+  password: string;
+}
+const LoginForm = (props: any) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm<FormValue>({ mode: "onChange" });
+};
+
+export default LoginForm;
+```
+
+useForm이라는 훅을 가져와서 사용할 것입니다. ts이기떄문에 FormValue라는 interface를
+
+만들었고요 로그인만 구현할 것이기 때문에 email, password만을 정의했습니다.
+
+가져오는 객체의 값이 <b>총 4 + 1</b>개인데 하나씩 설명하겠습니다.
+
+1. <b>register</b> : input 요소를 React hook form과 연결해 검증 규칙을 적용할 수
+   있게 하는 메소드
+
+2. <b>handleSubmit</b> : form을 submit했을 때 실행할 함수.
+
+3. <b>formState</b> : form state에 관한 정보를 담고 있는 객체
+
+4. <b>errors</b> : input 값들의 에러 정보를 가지고 있는 객체
+
+5. <b>getValues</b> : input 값을 가져올 수 있는 함수
+
+그리고 `useForm({ mode: "onChange" })` mode라는 것도 있는데
+
+mode를 설정함으로써 해당 모드의 register 안 검증 로직이 동작하는 규칙을 정할 수 있습니다.
+
+1. <b>onChange</b> : input 값이 바뀔 때마다 검증 로직이 동작합니다.
+
+2. <b>onBlur</b> : 포커스 상태를 잃어 버릴떄 동작합니다.
+
+3. <b>onSubmit</b> : 제출 함수가 실행될 때 동작합니다.
+
+4. <b>onTouched</b> : 첫 번째 blur 이벤트에서 동작합니다. 그 후에는 모든 change 이벤트에서
+   동작합니다.
+
+5. <b>all</b> : blur 및 change 이벤트에서 동작합니다.
+
+<h3 className={`dark:text-white`}>
+  <b>이메일 검증 로직을 우선 구현하겠습니다.</b>
+</h3>
+
+```js:LoginForm.tsx showLineNumbers
+  return (
+    // handleSubmit안에 실제로 동작할 함수를 넣음
+    <form onSubmit={handleSubmit(props.onSubmit)}>
+      <div>
+        <label htmlFor="email">이메일</label>
+        <input
+          id="email"
+          type="text"
+          placeholder="test@email.com"
+          // input의 기본 config를 작성
+          {...register("email", {
+            required: "이메일은 필수 입력입니다.",
+            pattern: {
+              value:
+                /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+              message: "이메일 형식에 맞지 않습니다.",
+            },
+          })}
+        />
+        {errors.email && <small role="alert">{errors.email.message}</small>}
+      </div>
+    </form>
+  );
+```
+
+input을 useForm과 연결하기 위해서 <b>register</b>를 사용합니다. 첫 번쨰 인수는 해당 input의
+
+<b>고유 ID</b>입니다. 두 번째로는 옵션을 객체로 설정하는데 required는 필수
+입력이며 입력하지 않을시
+
+<b>errors.email(고유 ID).message</b>에 해당 string 값이 들어가게 됩니다.
+
+<b>pattern</b>에는 해당 값 자체를 정규표현 식으로 검사할 수 있습니다.
+
+에러 메시지를 출력하기 위해서 small 태그 안에 에러 메시지를 출력합니다.
+
+<h3 className={`dark:text-white`}>
+  <b>비밀번호 검증 로직을 구현하겠습니다.</b>
+</h3>
+
+```js:LoginForm.tsx showLineNumbers
+return (
+    <div className="form-control__items">
+        <label htmlFor="password">비밀번호</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="*******"
+          {...register("password", {
+            required: "비밀번호는 필수 입력입니다.",
+            minLength: {
+              value: 7,
+              message: "7자리 이상 비밀번호를 입력하세요.",
+            },
+          })}
+        />
+        {errors.password && (
+          <small role="alert">{errors.password.message}</small>
+        )}
+      </div>
+)
+```
+
+비밀번호에는 다른 옵션을 추가하겠습니다. <b>minLength</b>라는 옵션으로
+
+최소 길이를 설정 할 수가 있습니다.
+
+우선 이 정도만 하게 된다면 이렇게 로그인 폼을 구현할 수 있습니다.
+
+저는 토이프로젝트에서 구현했기 때문에 CSS 스타일링 등이 되어있습니다.
+
+<h3 className={`dark:text-white`}>
+  <b>완성된 로그인 폼</b>
+</h3>
+
+<div className={`flex justify-center`}>
+  <video
+    controls
+    width="60%"
+    src="https://user-images.githubusercontent.com/75124028/216228905-4267fc37-5b19-493a-a86f-d90f1cbb68db.mp4"
+  ></video>
+</div>
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  회원가입 기능을 구현하자!!
+</h2>
+
+<br></br>
+
+저는 회원가입을 할 때 2가지의 input을 추가할 것인데요 사용자의 프로필 사진과, 2차 비밀번호 확인입니다.
+
+2차 비밀번호 확인을 하는 이유는 사용자가 첫 번쨰로 입력한 비밀번호 값을 잘못 입력했을떄를 대비함입니다.
+
+또한 이메일 로직을 살짝 수정했는데 실시간으로 db에 해당 이메일이 존재하는지 여부를 판단하기 위함입니다.
+
+<h3 className={`dark:text-white`}>
+  <b>우선 비밀번호 확인 로직을 구현하겠습니다.</b>
+</h3>
+
+```js:SignForm.tsx showLineNumbers
+<div>
+    <label htmlFor="password">비밀번호 확인</label>
+    <input
+        id="password"
+        type="password"
+        placeholder="*******"
+        {...register("passwordConfirm", {
+        required: "비밀번호는 필수 입력입니다.",
+        minLength: {
+            value: 7,
+            message: "7자리 이상 비밀번호를 사용하세요.",
+        },
+        validate: {
+            check: (val) => {
+            if (getValues("password") !== val) {
+                return "비밀번호가 일치하지 않습니다.";
+            }
+            },
+        },
+        })}
+    />
+    {errors.passwordConfirm && (
+        <small role="alert">{errors.passwordConfirm.message}</small>
+    )}
+</div>
+```
+
+고유ID값은 <b>passwordConfirm</b>로 설정했습니다. 여기서 보시면 validate라는 옵션이
+
+존재하는데 해당 옵션은 제가 마음대로 커스터마이징이 가능합니다. 저는 check라는 이름을
+
+설정했지만 다른 이름으로 설정하셔도 상관이없습니다. 그리고 함수를 넣게 되는데 첫 인수는
+
+해당 input의 val 값입니다. 여기서 보시면 <b>getValuse</b>함수에 고유 ID를 넣어서 password input의
+
+값을 가져왔습니다. 만약 두 개의 password input 값이 일치하지 않는다면 error가 나타납니다.
+
+두 번쨰로는 프로필 사진입니다. 사실 프로필사진 같은 경우에 useForm기능을 사용하지 않습니다.
+
+```js:SignForm.tsx showLineNumbers
+<input
+    {...register("image")}
+    id="picture"
+    type="file"
+    className="hidden"
+    accept="image/*"
+    onChange={props.savePreViewFile}
+    ref={props.imgRef}
+/>
+<small role="alert">
+    선택하지 않을 시 기본이미지가 적용됩니다.
+</small>
+```
+
+사실 image라는 고유ID를 넣었지만 사용자가 프로필 사진을 설정하지 않게 할 경우 저희 DB에
+
+존재하는 기본 프로필사진으로 대체할 것이기 때문에 검증 로직이 존재하지 않습니다.
+
+props.savePreViewFile함수는 상위 컴포넌트에서 받은 함수로 미리보기 img값을 전달해줍니다
+
+마지막으로 변경된 이메일 로직입니다.
+
+```js:SignForm.tsx showLineNumbers
+validate: {
+    check: async (email) => {
+        return props.checkExistingUser(email);
+    },
+}
+```
+
+validate 옵션 안에 check라는 함수를 만들었는데 <b>props.checkExistingUser</b>은
+
+실제 db에 http요청을 하여서 해당 이메일 사용자가 존재하는지를 판단해주는 검증 로직입니다.
+
+<h3 className={`dark:text-white`}>
+  <b>완성된 회원가입 폼</b>
+</h3>
+
+<div className={`flex justify-center`}>
+  <video
+    controls
+    width="60%"
+    src="https://user-images.githubusercontent.com/75124028/216228910-8b6f77b2-612f-467b-a5c7-e8342894c4b3.mp4"
+  ></video>
+</div>
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://react-hook-form.com/get-started"
+>
+  https://react-hook-form.com/get-started
+</a>
