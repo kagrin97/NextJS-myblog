@@ -1,0 +1,179 @@
+---
+title: cloudinary에 이미지 업로드 하기!
+date: 2023-02-10
+description: express환경에서 cloudinary에 이미지를 업로드하는 방법
+category: backend
+---
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     cloudinary란?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     cloudinary 사이트 살펴보기
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     express 환경에서 cloudinary에 img를 업로드해보자!
+   </a>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  cloudinary란?
+</h2>
+
+<br></br>
+
+Cloudinary는 웹사이트 및 모바일 애플리케이션용 이미지와 동영상을 관리, 최적화, 전송할 수 있는 플랫폼을 제공하는 클라우드 기반 서비스입니다. Cloudinary를 사용하면 미디어 자산을 클라우드에 쉽게 업로드 및 저장하고, 즉석에서 조작 및 변환할 수 있으며, 빠르고 안정적인 CDN을 통해 전 세계에 서비스를 제공할 수 있습니다.
+
+Cloudinary에서 제공하는 기능에는 이미지 및 동영상 업로드, 저장, 관리, 이미지 크기 조정, 자르기, 최적화를 위한 URL 기반 변환, 자동 형식 변환 및 최적화, 글로벌 CDN을 통한 빠른 전송 등이 있습니다. 또한 기존 애플리케이션 및 시스템과의 통합을 위한 포괄적인 API 및 관리자 기능도 제공합니다.
+
+즉 AWS의 S3처럼 이미지, 영상만을 저장해주는 클라우드 서비스입니다.
+
+물론 S3가 이미지, 영상만 저장하진 않지만요.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  cloudinary 사이트 살펴보기
+
+</h2>
+
+<br></br>
+
+<a className={`dark:text-white`} target="_blank" href="https://cloudinary.com/">
+  https://cloudinary.com/
+</a>
+
+위 주소로 가셔서 회원가입 후에 로그인을 하시면 자동으로 <b>management console</b>이 나타납니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/217997323-93a4da75-01ea-4883-950a-09e51dce43df.PNG"
+    width="70%"
+  />
+</div>
+
+보시면 <b>Programmable Media, Digital Asset Management</b> 두가지가 나오는데
+
+저희는 개발자이기 때문에 Programmable Media로 이동하면됩니다. 그후 대쉬보드로 이동하면
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/217997327-5d98e04e-fe72-45dd-92d5-98f7e3f04ff4.PNG"
+    width="70%"
+  />
+</div>
+
+저희 클라우드의 이름, <b>API key, API secret</b>가 나오는데 이 정보로 cloudinary에 접속할 수 있습니다.
+
+그리고 밑에 보시면 <b>요금정책</b>이 나타나는데 한번 알아보겠습니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/217997332-ed8a63b5-ac5f-4ee3-af91-cf38bc393310.PNG"
+    width="70%"
+  />
+</div>
+
+저는 Free Plan으로 한 달에 25 크레딧을 공짜로 제공이 됩니다. 1 크레딧은 1000번 파일 변환 가능하고
+
+1GB의 저장용량과 1GB의 대역폭을 사용할 수가 있다고 합니다.
+
+25 크레딧이니까 <b>한 달에 대충 25GB 정도가 공짜</b>이군요.
+
+PLUS로만 가입을 해도 크레딧이 10배 정도 더 많은 크레딧이 제공됩니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  express 환경에서 cloudinary에 img를 업로드해보자!
+
+</h2>
+
+<br></br>
+
+```
+npm i express cloudinary multer
+```
+
+먼저 필요한 라이브러리를 설치해줍니다.
+
+```js:app.js showLineNumbers
+const express = require('express');
+const cloudinary = require('cloudinary').v2;
+const multer = require('multer');
+// 임시 저장될 위치
+const upload = multer({ dest: 'uploads/' });
+
+// 기본 설정
+cloudinary.config({
+  cloud_name: 'YOUR_CLOUD_NAME',
+  api_key: 'YOUR_API_KEY',
+  api_secret: 'YOUR_API_SECRET'
+});
+
+const app = express();
+
+app.post('/images', upload.single('image'), (req, res) => {
+
+  cloudinary.uploader.upload(req.file.path, { resource_type: 'image' }, (error, result) => {
+    if (error) {
+      return res.status(400).send({ message: error.message });
+    }
+
+    // 임시 이미지 삭제
+    fs.unlink(req.file.path, (err) => {
+      if (err) {
+        console.error(err);
+      }
+
+      res.send({ message: 'Image uploaded successfully', imgURL: result.url });
+    });
+  });
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+```
+
+cloudinary의 기본 정보를 입력해 주어야 하는데요 제의 대시보드에 적혀있던 cloud name, API key 등등
+
+을 config해준다음 multer를 이용해서 <b>이미지를 임시로 저장</b>합니다. (uploads/, 경로로 임시 저장)
+
+그 후 `cloudinary.uploader.upload`를 사용해서 cloudinary에 임시 저장된 이미지를 업로드합니다.
+
+업로드가 성공적으로 마치게 되면 `fs.unlink`를 이용해서 임시 저장된 이미지를 삭제해줍니다.
+
+이렇게 되면 성공적으로 클라우드에 이미지가 저장되게 됩니다.
+
+만약 사용자한테 받은 이미지를 <b>resize</b> 하고 싶으면 cloudinary.uploader.upload의 2번째 인수를
+
+사용하시면 되는데요 `{ resource_type: "image", width: 300, height: 300, crop: "limit" }`
+
+옵션을 넣게 될 경우 <b>가로, 세로 최대 300px</b>을 설정하실 수 있습니다.
+
+---
+
+<br></br>
+
+최근에 chat GPT를 사용하여 코드를 만들거나 refactoring 하는데 엄청 좋습니다. 여러분도 하세요!!
+
+<br></br>
