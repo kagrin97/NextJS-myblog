@@ -31,6 +31,7 @@ const Types = configDocumentType("Types", "types");
 const Algorithm = configDocumentType("Algorithm", "algorithm");
 const BackEnd = configDocumentType("BackEnd", "backend");
 const DataBase = configDocumentType("DataBase", "db");
+const Server = configDocumentType("Server", "server");
 
 export default makeSource({
   contentDirPath: "posts",
@@ -44,6 +45,7 @@ export default makeSource({
     Algorithm,
     BackEnd,
     DataBase,
+    Server,
   ],
   mdx: {
     rehypePlugins: [rehypeCodeTitles, rehypePrism],

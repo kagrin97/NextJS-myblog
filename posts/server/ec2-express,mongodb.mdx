@@ -1,0 +1,214 @@
+---
+title: ec2에 express 앱 배포하기!! (feat. pm2)
+date: 2023-02-13
+description: aws의 ec2에 github에 있는 express, mongodb 앱을 배포합니다.
+category: server
+---
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     ec2 인스턴스 만들기
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     인스턴스와 연결하기
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     생성된 AWS EC2 인스턴스에 서버 배포하기
+   </a>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  ec2 인스턴스 만들기
+</h2>
+
+<br></br>
+
+저의 경우에는 현재 진행하고 있는 my-calendar라는 <b>토이프로젝트(MERN스택)</b>을 배포하기 위해서
+
+frontend는 github와 연동된 vercel로 배포를 진행하였고 backend(express, mongodb)는
+
+AWS의 ec2를 사용해서 서버를 생성하고 서버의 터미널에서
+
+git clone로 가져와 서버를 실행하도록 진행합니다.
+
+우선 ec2 인스턴스를 생성해봅시다.
+
+1. AWS에 회원가입이나 로그인을 해줍니다. 그 후에
+
+2. ec2인스턴스를 생성하기 위해서 ec2 카테고리로 이동한 다음에 인스턴스 시작을 눌러줍니다.
+
+3. 그러면 인스턴스의 이름을 설정하고 서버로 사용될 컴퓨터의 OS를 선택합니다. (저는 Ubuntu 20.04)
+
+4. 그리고 네트워크를 설정 탭이 존재하는데 vercel은 <b>동적 IP</b>를 사용하기 떄문에 모든 트랙픽 허용합니다.
+
+5. 그리고서 키 페어를 생성하는데 키 페어를 생성하면 AWS는 공개키를 가지고 저희는 개인 키를 소유합니다. 나중에 인스턴스에 안전하게 접근하기 위해서 지금 생성해줘야 합니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/218389804-4982fb9e-14b5-4f7e-b354-5ea61d245496.PNG"
+    width="70%"
+  />
+</div>
+
+생성된 .pem파일이 있어야 인스턴스와 연결할 수가 있기 때문에 잘 가지고 계셔야 합니다.
+
+그 후 인스턴스 시작을 누르시면 인스턴스가 생성됩니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/218389822-5ffb7156-fa9f-4f21-8bc8-7b18ce88a949.PNG"
+    width="80%"
+  />
+</div>
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  인스턴스와 연결하기
+</h2>
+
+<br></br>
+
+인스턴스와 연결하기 위해서는 터미널 환경에서 .pem파일이 필요합니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/218389842-20f4d55e-c98e-4bdc-9e1f-7f0e0558454a.PNG"
+    width="80%"
+  />
+</div>
+
+.pem파일이 들어있는 폴더로 이동한 다음에 `chmod(change+mod)`명령어로 r만 가능하게 만들어줍니다.
+
+그 후 `ssh`를 사용해서 서버와 연결해 줍니다.
+
+```
+chmod 400 <your pem key name>.pem
+ssh -i "<your pem key name>.pem" ubuntu@<your IPv4 Public IP>
+```
+
+오류가 발생할경우 `sudo`를 사용해주세요.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/218389843-6e012af2-902b-4da0-81b3-345a60cf60be.PNG"
+    width="70%"
+  />
+</div>
+
+연결이 될 경우 현재 위치가 서버로 바뀌게 됩니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  생성된 AWS EC2 인스턴스에 서버 배포하기
+</h2>
+
+<br></br>
+
+배포하고 받기위해서는 서버에 필요한 패키지를 설치해줘야합니다.
+
+```
+sudo apt update
+sudo apt install nodejs
+sudo apt install npm
+```
+
+나중에 `TextEncording`이라는 에러메시지가 나타날경우에는
+
+node 버전을 12이상으로 upgrade해주시길 바랍니다. 저도 upgrade 해주었습니다.
+
+그 후에 저는 github에 backend폴더를 생성했기때문에 git clone을 사용해
+
+서버에 backend 폴더를 가져왔습니다. 이제 node app.js만 실행하면 되지만 한가지 문제가 있습니다.
+
+그 이유는 터미널창을 종료하게 되면은 서버가 자동으로 off상태가 되기때문에 터미널을 종료해도
+
+계속 동작하도록 `pm2`라는 라이브러리를 사용해 <b>서버 무중단 배포</b>를 실행합니다.
+
+```
+npm i -g pm2
+
+pm2 start app.js
+```
+
+설치후 pm2를 사용해 js파일을 실행할경우
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/218389847-15ca6de7-126f-469f-9b4b-f079bd161d80.PNG"
+    width="80%"
+  />
+</div>
+
+이렇게 app라는 이름으로 서버가 실행되게 됩니다. <b>(status : online 확인!)</b>
+
+이제 정말로 된 것이겠죠?? 하지만 또 문제가 있습니다. ㅠㅠㅠ
+
+인스턴스 상세정보에 `퍼블릭 IPv4 DNS`를 입력해 접속을 시도하면 접속이 되지 않습니다.
+
+그 이유는 AWS에서 자동으로 <b>방화벽</b>이 세워져 있기 때문에 ec2에서 허용된 IP 주소를 기준으로
+
+트래픽을 허용하거나 거부하는 규칙이 있기 때문입니다. ( Inbound, Outbound 라고 함)
+
+그렇다면 규칙을 새로 만들어야겠죠?
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/218389839-2d4ac844-e630-478d-a833-3658e586b945.PNG"
+    width="70%"
+  />
+</div>
+
+보안 탭이 존재하는데 그중 인바운드 규칙에 보안 그룹(저는 launch-wizard-1)를 눌러줍니다.
+
+들어간후 인바운드 규칙 편집을 눌러서 모든 tcp와 포트 범위 등등 다 열어줍니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/218389841-e769bfc3-be1c-429b-b9ff-48e32b27c5ee.PNG"
+    width="70%"
+  />
+</div>
+
+그 후 인스턴스를 다시 재 실행한 다음에 퍼블릭 IPv4 DNS 주소 뒤에 저희 서버의 port 번호를
+
+입력하시면 정상적으로 서버에 접속이 가능한 것을 확인할 수 있습니다.
+
+저의 경우에 express로 서버를 실행할떄 5000포트를 사용하도록 설정해두었습니다.
+
+```
+<퍼블릭 IPv4 DNS>:5000/
+```
+
+---
+
+<br></br>
+
+<b>여담</b>
+
+<br></br>
+
+실제 토이프로젝트 설정들이 많이 존재하기 때문에 저는 .env파일을 nano or vim으로 생성했습니다.
+
+또한 vercel을 사용할 경우에는 자동으로 https로 forntend를 실행합니다. 하지만 ec2로 생성한
+
+express 앱의 경우에는 http로 동작하기 때문에 보안으로 인해서 API 요청이 block 됩니다.
+
+이 에러 같은 경우에 ec2 URL을 http -> https로 바꿔줘야 합니다.

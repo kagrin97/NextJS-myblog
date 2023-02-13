@@ -8,6 +8,7 @@ import {
   allTypes,
   allDataBases,
   allBackEnds,
+  allServers,
 } from "contentlayer/generated";
 
 const navlinks: { title: string; link: string; length?: number }[] = [
@@ -20,6 +21,7 @@ const navlinks: { title: string; link: string; length?: number }[] = [
   { title: "Algorithm", link: "/algorithm", length: allAlgorithms.length },
   { title: "BackEnd", link: "/backend", length: allBackEnds.length },
   { title: "DataBase", link: "/db", length: allDataBases.length },
+  { title: "Server", link: "/server", length: allServers.length },
 ];
 
 export default navlinks;
