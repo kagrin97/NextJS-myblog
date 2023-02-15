@@ -1,0 +1,239 @@
+---
+title: PWA 페이지에서 앱 설치를 유도해보기 (feat. React)
+date: 2023-02-15
+description: beforeinstallprompt 이벤트로 앱 설치를 더 원활하게 만들어봅시다.
+category: react
+---
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     beforeinstallprompt는 무엇일까?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     React에 적용해보기
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     실제 제 프로젝트에 적용
+   </a>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  beforeinstallprompt는 무엇일까?
+</h2>
+
+<br></br>
+
+`beforeinstallprompt` 사용자가 디바이스에 설치할 수 있는 프로그레시브 웹 앱(PWA)을 방문할 때 브라우저에서 실행되는 이벤트입니다. 이 이벤트는 앱이 사용자에게 앱을 디바이스에 독립 실행형 애플리케이션으로 설치하라는 메시지를 표시할 기회를 제공합니다.
+
+이벤트가 트리거 되면 브라우저는 일반적으로 사용자에게 앱을 설치할지 여부를 묻는 메시지를 표시합니다. <b>이벤트는 앱당 한 번만 트리거</b> 되며, 앱의 자바스크립트 코드에서
+`window.addEventListener()` 메소드를 사용하여 이벤트를 캡처하고 처리할 수 있습니다.
+
+간단하게 말해서 사용자가 pwa로 만들어진 웹 페이지를 방문했을 때 기존에 설치하려면 크롬
+
+같은 경우에는 따로 설정을 눌러서 앱 설치 버튼을 눌러야 하지만 beforeinstallprompt를
+
+사용하면 브라우저가 설치를 안 한 사용자 여부를 판단해 설치 버튼을 띄워주는 기능을 해줍니다.
+
+저도 PWA 프로젝트 하나를 만들었는데 이 기능을 집어넣었습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  React에 적용해보기
+</h2>
+
+<br></br>
+
+<h3 className={`dark:text-white`}>addEventListener에 등록하기</h3>
+<br></br>
+
+```js showLineNumbers
+useEffect(() => {
+  window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+  return () => {
+    window.removeEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt
+    );
+  };
+}, []);
+```
+
+useEffect에 의존성에 빈 배열을 넣음으로써 마운트시 한 번만 실행되도록 설정합니다. 또한 메모리
+
+누수를 방지하기 위해서 언 마운트시에는 이벤트리스너를 지워줍니다. 여기서 beforeinstallprompt는
+
+사용자가 해당 앱 설치를 하지 않았을 때만 발생하는 리스너입니다.
+
+```js showLineNumbers
+const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+const handleBeforeInstallPrompt = (event) => {
+  event.preventDefault();
+
+  setDeferredPrompt(event);
+};
+```
+
+beforeinstallprompt 리스너가 발동할 때 handleBeforeInstallPrompt 함수가 실행되면서
+
+event를 억제하고 deferredPrompt state에 <b>event 객체를 저장</b>합니다. 이제 deferredPrompt 객체를
+
+활용하면 사용자한테 설치 프롬프트를 띄워줄 수가 있습니다.
+
+```js showLineNumbers
+return (
+  <div>
+    {deferredPrompt && <button onClick={handleInstall}>Install</button>}
+  </div>
+);
+```
+
+deferredPrompt 객체가 존재할 때 null 상태가 아닐 때만 사용자한테 앱 설치 버튼을 띄워 줄 수 있습니다.
+
+또한 button 태그의 onclick event를 handleInstall함수로 받게 합니다.
+
+```js showLineNumbers
+const handleInstall = () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("사용자가 앱 설치를 동의했습니다.");
+      } else {
+        console.log("사용자가 앱 설치를 동의하지 않았습니다.");
+      }
+
+      setDeferredPrompt(null);
+    });
+  }
+};
+```
+
+handleInstall 함수에서는 우선 deferredPrompt event 객체가 존재하는지 여부를 판단 후
+
+`deferredPrompt.prompt()`를 사용해 실제로 사용자한테 설치할지를 물어봅니다.
+
+만약 설치한다고 응답을 보내면 앱을 설치하도록 실행합니다.
+
+`deferredPrompt.userChoice.then()`을 사용해서 사용자의 응답 여부를 기다립니다.
+
+<b>choiceResult.outcome</b> 값이 <b>accepted</b>일 경우 설치 동의했다는
+뜻입니다.
+
+마지막으로 deferredPrompt값을 비워줌으로써 앱 설치를 다시 띄워주지 않습니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  실제 제 프로젝트에 적용
+</h2>
+
+<br></br>
+
+```js:PWAInstallPrompt.tsx showLineNumbers
+import React, { useEffect, useState } from "react";
+import Button from "../UIElements/Button";
+
+import { RiInstallLine } from "react-icons/ri";
+
+const PWAInstallPrompt = () => {
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
+
+  const handleBeforeInstallPrompt = (event: Event) => {
+    event.preventDefault();
+    setDeferredPrompt(event);
+  };
+
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+
+      deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("사용자가 설치 프롬프트에 동의했습니다.");
+        } else {
+          console.log("사용자가 설치 프롬프트를 무시했습니다.");
+        }
+
+        setDeferredPrompt(null);
+      });
+    }
+  };
+
+  return (
+    <React.Fragment>
+      {deferredPrompt && (
+        <Button size="large" onClick={handleInstallClick}>
+          <RiInstallLine />
+        </Button>
+      )}
+    </React.Fragment>
+  );
+};
+
+export default PWAInstallPrompt;
+```
+
+위 코드는 제가 만든 프로젝트에 실제로 적용을 한 코드 전체입니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://my-calendar-mern.vercel.app/
+"
+>
+  제가 만든 프로젝트 Click ME!!
+</a>
+
+<div className={`flex justify-center`}>
+  <video
+    controls
+    width="60%"
+    src="https://user-images.githubusercontent.com/75124028/218914623-2ac68653-3016-46ec-a7d2-bffaa05c3221.mp4"
+  ></video>
+</div>
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://web.dev/i18n/ko/customize-install/"
+>
+  자신만의 인앱 설치 경험을 제공하는 방법
+</a>
