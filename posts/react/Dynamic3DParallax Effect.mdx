@@ -1,0 +1,258 @@
+---
+title: mousemove로 동적 3D 패럴랙스 효과 만들기 (feat. React)
+date: 2023-02-23
+description: mousemove이벤트를 사용해 패럴랙스 효과를 만듭니다.
+category: react
+---
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     패럴랙스 효과란?
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     React로 구현하기
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     전체 코드
+   </a>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  패럴랙스 효과란?
+</h2>
+
+<br></br>
+
+<b>패럴랙스 효과</b>는 사용자가 특정 행동을 취할 때 여러 요소가 서로 다른 속도로
+움직이도록 하여 웹페이지에 깊이와 움직임이 있는 듯한 착각을 불러일으키는 데
+사용되는 기법입니다. <b>mousemove</b> 이벤트를 이용하거나
+<b>scroll</b>에도 사용할 수가 있습니다. 이번에는 mousemove에서 패럴랙스 효과를 만들고
+글자 이미지도 3D 패럴랙스 효과를 만들어보겠습니다.
+
+<h3 className={`dark:text-white`}>데모 영상</h3>
+<br></br>
+
+<div className={`flex justify-center`}>
+  <video
+    controls
+    width="60%"
+    src="https://user-images.githubusercontent.com/75124028/220830811-76525e33-44d8-4b1f-82ba-9bc011d97709.mp4"
+  ></video>
+</div>
+
+패럴랙스 효과를 글로만 읽어서는 이해하기가 힘들어서 보여드리는 제가 만든 데모 페이지 영상입니다.
+사진은 총 4가지로 bg, dog, pipe, text 가 있습니다. Help the puppy를 보시면 마우스가 이동할 때
+텍스트가 3d로 보이는 것을 볼 수 있습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  React로 구현하기
+</h2>
+
+<br></br>
+
+```js showLineNumbers
+window.addEventListener("mousemove", handleMouseMove);
+
+const handleMouseMove = (e) => {
+  x = e.clientX - window.innerWidth / 2;
+  y = e.clientY - window.innerHeight / 2;
+  const dog = dogRef.current;
+  dog.style.transform = `translate(${x}px, ${y}px)`;
+};
+```
+
+구현 아이디어는 간단합니다. mousemove 이벤트가 발생했을 때 dog 사진을 움직이고 싶으면 <b>현재 마우스의 위치에서 최대 screen 값을 빼주면 마우스가 움직인 값을 구할 수 있습니다.</b> 그리고 사진이 화면에서 조금만 움직이게 하기 위해서 /2를 한 다음에 그 x,y값을 translate에 값으로 주면 강아지가 움직입니다. 하지만 이렇게 했을 때는 데모 영상에서처럼 자연스럽게 움직이는 것이 아니라 순간이동 하듯이 강아지가 움직입니다. 이럴 때 사용할 수 있는 것이 `requestAnimationFrame` 입니다.
+
+requestAnimationFrame은 웹 페이지에서 애니메이션 렌더링을 예약하는 데 사용되는 자바스크립트 메서드입니다.
+
+기존에는 웹 페이지의 애니메이션은 브라우저가 애니메이션을 렌더링할 준비가 되었는지 여부와 관계없이 고정된 간격으로 애니메이션 코드를 실행하는 setInterval 또는 setTimeout 메서드를 사용하여 생성되었습니다. 이에 따라 애니메이션에 일관성이 없고 끊김 현상이 발생할 수 있었습니다.
+
+requestAnimationFrame은 더 부드럽고 유동적인 애니메이션을 보다 효율적으로 생성하는 방법을 제공합니다. 이 기능은 브라우저가 화면을 다시 칠하기 직전에 다음 프레임 업데이트 시 requestAnimationFrame에 매개변수로 전달된 함수를 호출하는 방식으로 작동합니다. 이렇게 하면 브라우저가 애니메이션을 렌더링할 준비가 되었을 때 <b>가장 최적의 타이밍에 애니메이션을 실행할 수 있습니다.</b>
+
+requestAnimationFrame은 특히 모바일 기기에서 전력 소비에 최적화되어 불필요한 배터리 사용량을 줄일 수 있다는 추가적인 이점도 있습니다.
+
+```js showLineNumbers
+const handleMouseMove = (e) => {
+  x = e.clientX - window.innerWidth / 2;
+  y = e.clientY - window.innerHeight / 2;
+};
+
+const loop = () => {
+  const dog = dogRef.current;
+  const speed = 0.009;
+
+  mx += (x - mx) * speed;
+  my += (y - my) * speed;
+
+  dog.style.transform = `translate(${mx / 9}px, ${my / 9}px)`;
+
+  window.requestAnimationFrame(loop);
+};
+
+useEffect(() => {
+  window.addEventListener("mousemove", handleMouseMove);
+
+  loop();
+
+  return () => {
+    window.removeEventListener("mousemove", handleMouseMove);
+  };
+}, []);
+```
+
+requestAnimationFrame를 사용하기 위해서 loop이라는 함수를 실행해 이벤트가 끊기지 않고 계속 재귀 되도록 설정합니다. 또한 마우스가 이동한 값만큼 천천히 움직이게 하기 위해서 mx += (x - mx) \* speed 코드를 구현함으로써 천천히 이동됩니다. speed 값이 낮을수록 값이 더 작게 변하기 때문에 애니메이션이 더 느려집니다.
+
+<div className={`flex justify-center`}>
+  <video
+    controls
+    width="60%"
+    src="https://user-images.githubusercontent.com/75124028/220830818-98ad3de2-b3a5-4076-968f-b940f20e3c9a.mp4"
+  ></video>
+</div>
+
+mx, my 값이 변하고 있습니다.
+
+<h3 className={`dark:text-white`}>text 3d 구현</h3>
+<br></br>
+
+3d로 구현하기 위해서는 `translate3d, rotate3d, transform-style, perspective` 값이 필요합니다.
+
+<b>translate3d</b> : 3D 공간에서 요소를 이동할 수 있는 CSS 변형 함수입니다. 이 함수는
+세 가지 인수를 받습니다 translate3d(x, y, z) 여기서 x는 요소를 변환할 수평 거리,
+y는 수직 거리, z는 z축을 따라 이동하는 거리를 나타냅니다.
+
+<b>rotate3d</b> : 컴퓨터 그래픽 및 3D 모델링의 함수로, 3D 공간에서 임의의 축을 중심으로
+객체 또는 객체 그룹을 회전할 수 있습니다.
+
+<b>transform-style</b> : preserve-3d는 요소의 자식을 3D 공간에 렌더링할지 2D 평면에
+평평하게 렌더링할지 정의하는 데 사용되는 CSS 속성입니다. 요소에 preserve-3d를 적용하면
+해당 요소의 하위 요소는 3D 위치와 서로의 관계를 보존하는 3D 좌표계로 렌더링됩니다.
+이를 통해 복잡한 3D 효과와 애니메이션을 만들 수 있습니다.
+
+<b>perspective</b> : 3D 공간에서 뷰어와 z=0 평면(요소가 렌더링되는 평면) 사이의 거리를
+정의하는 데 사용되는 CSS 속성입니다. 이 속성은 3D로 변환된 요소의 모양에 영향을 미치며
+요소에 적용되는 원근 왜곡의 양을 결정합니다. 100px 값은 뷰어가 z=0 평면에서 100픽셀
+떨어진 위치에 있음을 나타냅니다. 원근 값을 높이면 원근 왜곡의 양이 증가하여 물체가
+더 멀리 보이게 되고, 값을 낮추면 왜곡이 감소하여 물체가 더 가깝게 보입니다. 이 값이
+낮을수록 작은 움직임에도 더 크게 움직인다고 생각하면 됩니다.
+
+```css showLineNumbers
+.textWrap {
+  transform-style: preserve-3d;
+  perspective: 100px;
+}
+```
+
+```js showLineNumbers
+const loop = () => {
+  const text3d = text3dRef.current;
+  const speed = 0.009;
+
+  mx += (x - mx) * speed;
+  my += (y - my) * speed;
+
+  text3d.style.transform = `translate3d(${-mx}px,${-my}px,0) rotate3d(0,1,0,${-mx}deg)`;
+};
+
+return (
+  <div className="textWrap">
+    <img src="A/text.png" className="text3d" ref={text3dRef} />
+  </div>
+);
+```
+
+div태그안에 img를 넣은후 img태그에 translate3d값을 loop로 값을 변경해주면 완성입니다.
+추가로 mx, my값을 /2, /3등을 사용해 이미지마다 이동실킬수있는 거리를 정할수 있습니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  전체 코드
+</h2>
+
+```js showLineNumbers
+import React, { useEffect, useRef } from "react";
+
+import "./A.css";
+
+export default function A() {
+  const dogRef = useRef(null);
+  const bgRef = useRef(null);
+  const text3dRef = useRef(null);
+  const pipeRef = useRef(null);
+
+  let x = 0;
+  let y = 0;
+  let mx = 0;
+  let my = 0;
+
+  const handleMouseMove = (e) => {
+    x = e.clientX - window.innerWidth / 2;
+    y = e.clientY - window.innerHeight / 2;
+  };
+
+  const loop = () => {
+    const dog = dogRef.current;
+    const bg = bgRef.current;
+    const text3d = text3dRef.current;
+    const pipe = pipeRef.current;
+    const speed = 0.009;
+
+    mx += (x - mx) * speed;
+    my += (y - my) * speed;
+    dog.style.transform = `translate(${mx / 9}px, ${my / 9}px)`;
+
+    bg.style.transform = `translate(${mx / 8}px, ${-(my / 8)}px)`;
+    text3d.style.transform = `translate3d(${-(mx / 5)}px,${-(
+      my / 5
+    )}px,0) rotate3d(0,1,0,${-mx / 50}deg)`;
+    pipe.style.transform = `translate(${mx / 4}px, ${my / 3}px)`;
+
+    window.requestAnimationFrame(loop);
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+
+    loop();
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  return (
+    <div className="container">
+      <img src="A/dog.png" className="dog" alt="강아지" ref={dogRef} />
+      <div className="textWrap">
+        <img
+          src="A/text.png"
+          className="text3d"
+          alt="fix nothing"
+          ref={text3dRef}
+        />
+      </div>
+      <img src="A/back.jpg" className="bg" alt="배경" ref={bgRef} />
+      <img src="A/pipe.png" className="pipe" alt="파이프" ref={pipeRef} />
+    </div>
+  );
+}
+```
