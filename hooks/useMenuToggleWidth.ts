@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useMenuToggleWidth = (breakpoint = 600) => {
+const useMenuToggleWidth = (breakpoint = 800) => {
   const [showMenuWith, setshowMenuWith] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
 

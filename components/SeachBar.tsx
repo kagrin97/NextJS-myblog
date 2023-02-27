@@ -11,7 +11,7 @@ export default function SeachBar({ searchTitle, onChangeSearchTitle }) {
         placeholder="포스터의 제목을 입력하세요. 😎"
       />
       <style jsx>{`
-        @media only screen and (max-width: 599px) {
+        @media only screen and (max-width: 800px) {
           form {
             width: 95%;
           }

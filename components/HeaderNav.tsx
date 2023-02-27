@@ -8,7 +8,7 @@ import navlinks from "data/navlinks";
 
 import useMenuToggleWidth from "hooks/useMenuToggleWidth";
 
-export default function Nav() {
+export default function HeaderNav() {
   const path = useRouter().pathname;
 
   const [menu, setMenu] = useState(false);

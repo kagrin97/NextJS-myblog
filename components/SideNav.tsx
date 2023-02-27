@@ -9,7 +9,7 @@ const SideNav = () => {
   const path = "/" + useRouter().pathname.split("/")[1];
 
   return (
-    <nav className="flex justify-between flex-wrap p-6 mr-2 sticky top-20 dark:bg-neutral-800 ">
+    <nav className="flex items-start justify-between flex-wrap p-6 mr-2 sticky top-20 dark:bg-neutral-800 ">
       <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
         <div className="text-sm lg:flex-grow">
           {navlinks.map((nav) => (

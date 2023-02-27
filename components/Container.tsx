@@ -4,7 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 import metadata from "data/metadata";
-import Nav from "components/Nav";
+import HeaderNav from "components/HeaderNav";
 import SideNav from "components/SideNav";
 import useMenuToggleWidth from "hooks/useMenuToggleWidth";
 
@@ -87,16 +87,23 @@ export default function Container(props) {
             </span>
           </button>
         </Link>
-        <Nav />
+        <HeaderNav />
       </header>
       <div className={`flex w-full max-w-3xl mt-10`}>
         {!showMenuWidth && (
-          <aside className={`w-200`}>
+          <aside className={`w-1/5`}>
             <SideNav />
           </aside>
         )}
-        <section className={`w-full `}>{props.children}</section>
+        <section className={`w-4/5`}>{props.children}</section>
       </div>
+      <style jsx>{`
+        @media only screen and (max-width: 800px) {
+          section {
+            width: 100%;
+          }
+        }
+      `}</style>
     </main>
   );
 }
