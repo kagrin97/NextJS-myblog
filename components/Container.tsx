@@ -95,15 +95,8 @@ export default function Container(props) {
             <SideNav />
           </aside>
         )}
-        <section className={`w-4/5`}>{props.children}</section>
+        <section className={`w-4/5 max800:w-full`}>{props.children}</section>
       </div>
-      <style jsx>{`
-        @media only screen and (max-width: 800px) {
-          section {
-            width: 100%;
-          }
-        }
-      `}</style>
     </main>
   );
 }

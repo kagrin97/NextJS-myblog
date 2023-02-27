@@ -28,6 +28,9 @@ module.exports = {
     screens: {
       maxSm: { max: "639px" },
       // => @media (max-width: 639px) { ... }
+      max800: {
+        max: "800px",
+      },
     },
   },
   plugins: [
