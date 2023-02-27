@@ -6,15 +6,11 @@ import Image from "next/image";
 
 import navlinks from "data/navlinks";
 
-import useMenuToggleWidth from "hooks/useMenuToggleWidth";
-
 export default function HeaderNav() {
   const path = useRouter().pathname;
 
   const [menu, setMenu] = useState(false);
   const { theme, setTheme } = useTheme();
-
-  const showMenuWidth = useMenuToggleWidth();
 
   const toggleMenu = (e: any) => {
     const text = e.target.innerText;
@@ -62,7 +58,7 @@ export default function HeaderNav() {
           <a className={`hover:text-green-400`}>Home</a>
         </Link>
       </div>
-      {showMenuWidth && (
+      {!(window.innerWidth >= 800) && (
         <button
           onClick={() => toggleMenu}
           className={` hover:text-green-400 ${menu ? "text-green-400" : ""}`}
