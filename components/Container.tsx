@@ -5,6 +5,8 @@ import Link from "next/link";
 
 import metadata from "data/metadata";
 import Nav from "components/Nav";
+import SideNav from "components/SideNav";
+import useMenuToggleWidth from "hooks/useMenuToggleWidth";
 
 import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
@@ -18,6 +20,8 @@ export default function Container(props) {
     url: metadata.url,
     ...props.customMeta,
   };
+
+  const showMenuWidth = useMenuToggleWidth();
 
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
@@ -85,8 +89,14 @@ export default function Container(props) {
         </Link>
         <Nav />
       </header>
-
-      <section className={`w-full max-w-3xl mt-10`}>{props.children}</section>
+      <div className={`flex w-full max-w-3xl mt-10`}>
+        {!showMenuWidth && (
+          <aside className={`w-200`}>
+            <SideNav />
+          </aside>
+        )}
+        <section className={`w-full `}>{props.children}</section>
+      </div>
     </main>
   );
 }
