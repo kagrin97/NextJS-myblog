@@ -76,6 +76,7 @@ export default function Container(props) {
               height={40}
               objectFit={`cover`}
               className={`rounded-full hover:animate-spin`}
+              priority={true}
             />
             <span
               className={`mx-3 font-semibssold italic text-lg text-green-400`}

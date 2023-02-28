@@ -16,6 +16,7 @@ export default function Home() {
             layout={`responsive`}
             objectFit="cover"
             className={`rounded-3xl`}
+            priority
           />
           <article
             className={`flex-col absolute top-14 font-extrabold italic text-white text-base md:text-3xl text flex justify-center w-full drop-shadow-lg`}
@@ -42,7 +43,7 @@ export default function Home() {
               className={`rounded-3xl hover:cursor-pointer`}
             />
           </Link>
-          <h1 className="text-2xl my-10">언제나 공부중인 민규</h1>
+          <h1 className="font-bold text-2xl my-10">언제나 공부중인 민규</h1>
           <h2 className="text-xl">
             저는 다른 개발자들의 prototype이 되는것이 꿈입니다.
           </h2>
