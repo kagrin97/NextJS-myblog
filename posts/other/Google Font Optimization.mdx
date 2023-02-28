@@ -1,0 +1,215 @@
+---
+title: 구글폰트 최적화해서 성능을 올려보자!
+date: 2023-02-28
+description: 기존 구글폰트 용량을 낮추어봅시다(optimization).
+category: other
+---
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     구글폰트 최적화를 하는 이유
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     구글 폰트 확장자
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     실제로 적용해보자!
+   </a>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  구글폰트 최적화를 하는 이유
+</h2>
+
+<br></br>
+
+최근에 제 블로그를 <b>Light house</b>를 돌려보았는데 예전과는 다르게 점수가 매우 낮게
+
+나오고 있었습니다. 그래서 뒤져 보니까 이런 경고를 보내고 있더군요.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/221779933-cf87a29d-8470-4e5c-b6fb-0c68eea06075.PNG"
+    width="100%"
+  />
+</div>
+
+전송 크기가 너무 커져서 렌더링 시간이 오래 걸리게 되었던 것이었습니다.
+
+보니까 <b>...woff (fonts.gstatic.com)</b> 이게 머지? 하던 도중 찾아보니까 구글 폰트 때문이었습니다.
+
+제가 사용하는 `Noto Sans Korean`의 용량이 너무 높았기 때문에 저는 용량을 줄여야 했습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  폰트 확장자
+</h2>
+
+<br></br>
+
+폰트 확장자의 종류는 대표적으로 6가지가 있습니다.
+
+1. <b>WOFF2(웹 오픈 글꼴 형식 2)</b>: Google 글꼴에 권장되는 형식입니다. 이전
+   WOFF 형식에 비해 압축률이 뛰어나며 모든 최신 브라우저에서 사용할 수 있습니다.
+
+2. <b>WOFF(웹 오픈 폰트 포맷)</b>: WOFF2 이전에 도입된 이전 형식입니다. 여전히
+   널리 사용되고 있으며 대부분의 최신 브라우저에서 사용할 수 있습니다.
+
+3. <b>TTF(트루타입 글꼴)</b>: 원래 Apple과 Microsoft에서 개발한 글꼴 형식입니다.
+   다양한 장치 및 운영 체제에서 사용할 수 있는 일반적인 글꼴 형식입니다.
+
+4. <b>OTF(OpenType Font)</b> : 1990년대 후반에 Microsoft와 Adobe에서 트루타입 글꼴
+   형식의 후속으로 개발한 글꼴 형식입니다. 오픈타입 글꼴은 라틴어, 키릴 문자, 그리스
+   문자 등 다양한 문자와 언어 지원은 물론 합자, 대체 문자 등의 고급 타이포그래피
+   기능을 포함할 수 있습니다.
+
+5. <b>EOT(임베디드 오픈타입)</b>: Microsoft에서 Internet Explorer 용으로 특별히
+   개발한 글꼴 형식입니다. 대부분의 최신 브라우저에서 WOFF 및 WOFF2를 지원하므로
+   현재는 거의 사용되지 않습니다.
+
+6. <b>SVG(확장할 수 있는 벡터 그래픽)</b>: 웹에서 글꼴을 표시하는 데 사용할 수
+   있는 벡터 그래픽 형식입니다. 위에 나열된 다른 형식보다 글꼴에 덜 일반적으로
+   사용됩니다.
+
+구글 폰트를 WOFF2로 CONVERT 해서 용량을 줄이겠습니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  실제로 적용해보자!
+</h2>
+
+<br></br>
+
+저는 처음에 구글 폰트(otf)를 다운로드한 다음에 <b>otf to woff2</b> 한 다음에 적용하면 될 거라고
+
+생각했었습니다. 용량도 획기적으로 줄었고요. <b>3000KB -> 9KB</b> 하지만 무슨 이유에선지 실제로
+
+적용은 되지가 않더라고요 (이것 때문에 몇 시간을...) 아무래도 optimization 중에 손실이
+
+발생하는 것 같았습니다. 그러던 중 한 사이트를 발견했는데요
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://gwfh.mranftl.com/fonts"
+>
+  google-webfonts-helper
+</a>
+
+`Google webfonts helper`는 웹 개발자가 프로젝트에서 Google 글꼴을 쉽게 사용하고 맞춤 설정할 수 있도록 도와주는 무료 오픈소스 온라인 도구입니다.
+
+이 도구는 다음과 같은 여러 기능을 제공합니다:
+
+- 글꼴 무게, 스타일 및 하위 집합 사용자 지정하기
+
+- 웹사이트 성능 향상을 위해 글꼴 로딩을 최적화한 CSS 코드 생성
+
+- 로컬에서 사용할 글꼴 파일 다운로드
+
+- 다양한 글꼴과 설정으로 텍스트 미리보기 제공
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/221779936-578b2daa-e085-40ab-ada7-f15e6d3a5fce.PNG"
+    width="100%"
+  />
+</div>
+
+이제 사이트로 이동해서 Noto Sans KR를 검색한 다음에 Korean에 check 해줍니다.
+
+그리고 저는 regular를 또한 check 할게요.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/221779940-fbbbadda-76c5-4dbc-ae61-ba788c0da805.PNG"
+    width="100%"
+  />
+</div>
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/221779943-6015b36f-5977-4d2e-a8fa-ff0f575f9e29.PNG"
+    width="100%"
+  />
+</div>
+
+그 후 보시면 CSS 파일에 적용할 <b>@font-face</b> 형식이 두 가지가 있습니다.
+
+<b>Best, Modern</b> 방식으로 Best 방식은 모든 웹에 호환이 되도록 설정된 코드이고요
+
+Modern 방식은 woff2, woff만을 지원하는 웹 브라우저만이 호환이 되도록 설정한 코드입니다.
+
+저는 Modern을 사용하도록 하겠습니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/221779918-1033c8ca-212c-4aab-975b-6ba4bb549767.PNG"
+    width="100%"
+  />
+</div>
+
+그 후 다운로드를 받아 주신 후 zip 파일을 압축해제 해주시면 woff2, woff 파일 2개가 존재합니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/221779925-dcbf3c4f-66c2-4053-bacb-6fc18c4ece3d.PNG"
+    width="100%"
+  />
+</div>
+
+기존 <b>3600KB에서 500KB</b>정도로 용량이 많이 낮아진 것을 볼 수 있습니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/221779930-554908ec-874f-4f95-8a74-401597e6d50e.PNG"
+    width="100%"
+  />
+</div>
+
+저는 Public 폴더 아래에 font 폴더를 형성하고 @font-face가 있는 font.css와 woff2, woff파일을
+
+한곳에 몰아넣어 주었습니다.
+
+```css:global.css showLineNumbers
+@import url("../public/font/font.css");
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+}
+```
+
+그 후에 font-family에 Noto Sans KR를 적용해주면 끝입니다.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  href="https://shylog.com/googlefonts-and-webfont-optimization/"
+>
+  구글폰트와 웹폰트 최적화
+</a>
