@@ -6,27 +6,26 @@ import Image from "next/image";
 
 import navlinks from "data/navlinks";
 
+import Backdrop from "components/Backdrop";
+import SideDrawer from "components/SideDrawer";
+import useResizeWidth from "hooks/useResizeWidth";
+
 export default function HeaderNav() {
   const path = useRouter().pathname;
 
-  const [menu, setMenu] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  const toggleMenu = (e: any) => {
-    const text = e.target.innerText;
-    if (text === "Menu") {
-      setMenu((menu) => !menu);
-    } else {
-      setMenu(false);
-    }
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+
+  const openDrawerHandler = () => {
+    setDrawerIsOpen(true);
   };
 
-  useEffect(() => {
-    window.addEventListener("click", toggleMenu);
-    return () => {
-      window.removeEventListener("click", toggleMenu);
-    };
-  }, []);
+  const closeDrawerHandler = () => {
+    setDrawerIsOpen(false);
+  };
+
+  const widthSize = useResizeWidth();
 
   return (
     <nav className={`flex flex-row items-center mr-5`}>
@@ -58,38 +57,34 @@ export default function HeaderNav() {
           <a className={`hover:text-green-400`}>Home</a>
         </Link>
       </div>
-      {!(window.innerWidth >= 800) && (
-        <button
-          onClick={() => toggleMenu}
-          className={` hover:text-green-400 ${menu ? "text-green-400" : ""}`}
-        >
+
+      {!(widthSize >= 800) && (
+        <button onClick={openDrawerHandler} className={` hover:text-green-400`}>
           Menu
         </button>
       )}
 
-      <div
-        className={`${
-          menu
-            ? "absolute top-20 right-3 bg-white z-10 dark:bg-neutral-600"
-            : "hidden"
-        } pl-5 rounded-lg`}
-      >
-        {navlinks.map((nav) => (
-          <Link href={nav.link} key={nav.title}>
-            <div className={`hover:cursor-pointer hover:text-green-400 `}>
-              <a
-                href={nav.link}
-                className={`mr-5 flex justify-between ${
-                  nav.link === path ? "text-green-400" : ""
-                }`}
+      {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
+      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
+        <div className={`m-auto`}>
+          {navlinks.map((nav) => (
+            <Link href={nav.link} key={nav.title}>
+              <div
+                className={`hover:cursor-pointer hover:text-green-400 mb-5 text-3xl`}
               >
-                <span className="mr-4">{nav.title}</span>
-                <span>+{nav?.length}</span>
-              </a>
-            </div>
-          </Link>
-        ))}
-      </div>
+                <a
+                  href={nav.link}
+                  className={` flex justify-center ${
+                    nav.link === path ? "text-green-400" : ""
+                  }`}
+                >
+                  <span className="mr-4">{nav.title}</span>
+                </a>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </SideDrawer>
     </nav>
   );
 }

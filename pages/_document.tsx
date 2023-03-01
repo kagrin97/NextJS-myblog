@@ -14,6 +14,8 @@ class MyDocument extends Document {
             content="da98b9d3244abed109afb03767f0adf1a713f595"
           />
         </Head>
+        <div id="drawer-hook" />
+        <div id="backdrop-hook" />
         <body className="bg-gray-100 dark:bg-neutral-800 text-black  dark:text-white">
           <Main />
           <NextScript />

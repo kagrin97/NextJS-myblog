@@ -6,6 +6,7 @@ import Link from "next/link";
 import metadata from "data/metadata";
 import HeaderNav from "components/HeaderNav";
 import SideNav from "components/SideNav";
+import useResizeWidth from "hooks/useResizeWidth";
 
 import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
@@ -19,6 +20,8 @@ export default function Container(props) {
     url: metadata.url,
     ...props.customMeta,
   };
+
+  const widthSize = useResizeWidth();
 
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
@@ -65,7 +68,7 @@ export default function Container(props) {
       />
       <ProgressBar bgcolor="#22c55e" />
       <header
-        className={`w-full max-w-3xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10 bg-gray-100 dark:bg-neutral-800 bg-opacity-80 dark:bg-opacity-80`}
+        className={`w-full max-w-5xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10 bg-gray-100 dark:bg-neutral-800 bg-opacity-80 dark:bg-opacity-80`}
       >
         <Link href="/" passHref>
           <button className={`flex flex-row items-center ml-2 `}>
@@ -87,8 +90,8 @@ export default function Container(props) {
         </Link>
         <HeaderNav />
       </header>
-      <div className={`flex w-full max-w-3xl mt-10`}>
-        {window.innerWidth >= 800 && (
+      <div className={`flex w-full max-w-5xl mt-10`}>
+        {widthSize >= 800 && (
           <aside className={`w-1/5 min-h-screen`}>
             <SideNav />
           </aside>

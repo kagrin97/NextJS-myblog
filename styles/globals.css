@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import url("../public/font/font.css");
+@import url("./transition.css");
 
 body {
   font-family: "Noto Sans KR", sans-serif;
