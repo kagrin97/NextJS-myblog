@@ -52,9 +52,34 @@ export default function HeaderNav() {
           />
         )}
       </button>
+      {theme === "light" ? (
+        <Link href="https://github.com/kagrin97">
+          <a target="_blank">
+            <Image
+              src={`/github-green.png`}
+              alt="깃허브"
+              width={30}
+              height={30}
+              className={`hover:cursor-pointer rounded-full`}
+            />
+          </a>
+        </Link>
+      ) : (
+        <Link href="https://github.com/kagrin97">
+          <a target="_blank">
+            <Image
+              src={`/github-green-dark.png`}
+              alt="깃허브"
+              width={30}
+              height={30}
+              className={`hover:cursor-pointer rounded-full`}
+            />
+          </a>
+        </Link>
+      )}
       <div className={`mr-5`}>
         <Link href={"/"} key={"Home"}>
-          <a className={`hover:text-green-400`}>Home</a>
+          <a className={`ml-4 hover:text-green-400`}>Home</a>
         </Link>
       </div>
 
