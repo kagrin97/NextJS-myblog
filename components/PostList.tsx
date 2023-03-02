@@ -1,4 +1,3 @@
-import Link from "next/link";
 import BlogPost from "components/BlogPost";
 
 export default function PostList({ searchPosts, posts }) {

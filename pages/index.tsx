@@ -35,13 +35,15 @@ export default function Home() {
             className={`rounded-full`}
           />
           <Link href="https://github.com/kagrin97">
-            <Image
-              src={`/github.png`}
-              alt="깃허브"
-              width={40}
-              height={40}
-              className={`rounded-3xl hover:cursor-pointer`}
-            />
+            <a>
+              <Image
+                src={`/github.png`}
+                alt="깃허브"
+                width={40}
+                height={40}
+                className={`rounded-3xl hover:cursor-pointer`}
+              />
+            </a>
           </Link>
           <h1 className="font-bold text-2xl my-10">언제나 공부중인 민규</h1>
           <h2 className="text-xl">
