@@ -24,7 +24,7 @@ export default function Home() {
                   date={post.date}
                   title={post.title}
                   des={post.description}
-                  slug={post.slug}
+                  slug={`${post.type.toLowerCase()}/${post.slug}`}
                 >
                   {post.type}
                 </BlogPost>
