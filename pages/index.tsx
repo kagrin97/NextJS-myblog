@@ -1,58 +1,37 @@
-import Image from "next/image";
-import Link from "next/link";
+import React from "react";
 
-import Container from "../components/Container";
+import Container from "components/Container";
+import BlogPost from "components/BlogPost";
+
+import { allDocuments } from "contentlayer/generated";
 
 export default function Home() {
+  const sortedByDate = allDocuments.sort((item1: any, item2) => {
+    return new Date(item2.date).getTime() - new Date(item1.date).getTime();
+  });
+
+  const fiveMostRecent = sortedByDate.slice(0, 7);
   return (
     <Container>
-      <div className={`my-5 w-full`}>
-        <section className={`relative`}>
-          <Image
-            src={`/배너.jpg`}
-            alt="대표 이미지"
-            width={`100%`}
-            height={45}
-            layout={`responsive`}
-            objectFit="cover"
-            className={`rounded-3xl`}
-            priority
-          />
-          <article
-            className={`flex-col absolute top-14 font-extrabold italic text-white text-base md:text-3xl text flex justify-center w-full drop-shadow-lg`}
-          >
-            <span className={`ml-3 mb-3`}>MinGyu-Kang Development Blog</span>
-            <span className={`ml-3`}>개발을 위한 개발생활</span>
-          </article>
-        </section>
-        <div className={`absolute bottom-5 left-5 animate-pulse`}></div>
-        <section className="mt-10 text-center">
-          <Image
-            src={`/아바타.jpg`}
-            alt="깃허브"
-            width={100}
-            height={100}
-            className={`rounded-full`}
-          />
-          <Link href="https://github.com/kagrin97">
-            <a>
-              <Image
-                src={`/github.png`}
-                alt="깃허브"
-                width={40}
-                height={40}
-                className={`rounded-3xl hover:cursor-pointer`}
-              />
-            </a>
-          </Link>
-          <h1 className="font-bold text-2xl my-10">언제나 공부중인 민규</h1>
-          <h2 className="text-xl">
-            저는 다른 개발자들의 prototype이 되는것이 꿈입니다.
-          </h2>
-          <p className="my-10 opacity-50">
-            GitHub버튼을 클릭하면 제 GitHub으로 이동됩니다!
-          </p>
-        </section>
+      <div className={`my-10 w-full`}>
+        <h1 className={`text-2xl font-black text-center`}>LATEST ARTICLES</h1>
+
+        {fiveMostRecent.length && (
+          <div>
+            {fiveMostRecent.map((post, index) => (
+              <React.Fragment key={index}>
+                <BlogPost
+                  date={post.date}
+                  title={post.title}
+                  des={post.description}
+                  slug={post.slug}
+                >
+                  {post.type}
+                </BlogPost>
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </div>
     </Container>
   );
