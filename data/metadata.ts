@@ -1,4 +1,13 @@
-const metadata = {
+interface MetadataType {
+  type: string;
+  title: string;
+  description: string;
+  author: string;
+  url: string;
+  date?: string;
+}
+
+const metadata: MetadataType = {
   type: "blog",
   title: "Kang's blog",
   description: "개발자로서의 개발을 위한 개발생활",
@@ -6,4 +15,54 @@ const metadata = {
   url: "https://kagrin97-blog.vercel.app/",
 };
 
-export default metadata;
+interface StructuredDataType {
+  "@context": string;
+  "@type": string;
+  headline: string;
+  description: string;
+  author: {
+    "@type": string;
+    name: string;
+  };
+  keywords: string;
+  url: string;
+  datePublished?: string;
+  publisher: {
+    "@type": string;
+    name: string;
+  };
+  articleSection: string;
+  articleTag: string;
+}
+
+const handleStructuredData = (customMeta) => {
+  const structuredData: StructuredDataType = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: metadata.title,
+    description: metadata.description,
+    author: {
+      "@type": "Person",
+      name: metadata.author,
+    },
+    keywords: "blog, react, javascript, algorithm",
+    url: metadata.url,
+    publisher: {
+      "@type": "Organization",
+      name: "Kang Blog",
+    },
+    articleSection: "Technology",
+    articleTag: "React",
+  };
+
+  if (customMeta) {
+    structuredData.headline = customMeta.title;
+    structuredData.description = customMeta.description;
+    structuredData.datePublished = customMeta.date;
+    structuredData.url = window.location.href;
+  }
+
+  return structuredData;
+};
+
+export default handleStructuredData;
