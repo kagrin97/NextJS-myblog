@@ -40,14 +40,14 @@ export default function Container(props) {
             <Image
               src={`/round.webp`}
               alt="로고"
-              width={40}
-              height={40}
+              width={35}
+              height={35}
               objectFit={`cover`}
               className={`rounded-full hover:animate-spin`}
               priority={true}
             />
             <span
-              className={`mx-3 font-semibssold italic text-lg text-green-400`}
+              className={`mx-3 font-semibssold italic text-lg max800:text-sm text-green-400`}
             >
               Kang blog
             </span>

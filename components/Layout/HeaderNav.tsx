@@ -10,6 +10,9 @@ import Backdrop from "components/UIElements/Backdrop";
 import SideDrawer from "./SideDrawer";
 import useResizeWidth from "hooks/useResizeWidth";
 
+import { RiMenu3Line } from "react-icons/ri";
+import { AiOutlineHome } from "react-icons/ai";
+
 export default function HeaderNav() {
   const path = "/" + useRouter().pathname.split("/")[1];
 
@@ -36,7 +39,7 @@ export default function HeaderNav() {
       >
         {theme === "light" ? (
           <Image
-            src={`/달.png`}
+            src={`/해.png`}
             alt={"라이트다크모드로 전환하는 버튼"}
             width={50}
             height={50}
@@ -44,7 +47,7 @@ export default function HeaderNav() {
           />
         ) : (
           <Image
-            src={`/해.png`}
+            src={`/달.png`}
             alt={"라이트다크모드로 전환하는 버튼"}
             width={50}
             height={50}
@@ -77,15 +80,20 @@ export default function HeaderNav() {
           </a>
         </Link>
       )}
-      <div className={`mr-5`}>
+      <div className={`mx-5`}>
         <Link href={"/"} key={"Home"}>
-          <a className={`ml-4 hover:text-green-400`}>Home</a>
+          <a className={`hover:text-green-400`}>
+            <AiOutlineHome size="25px" />
+          </a>
         </Link>
       </div>
 
       {!(widthSize >= 800) && (
-        <button onClick={openDrawerHandler} className={` hover:text-green-400`}>
-          Menu
+        <button
+          className="menu-btn hover:text-green-400"
+          onClick={openDrawerHandler}
+        >
+          <RiMenu3Line size="22px" />
         </button>
       )}
 
@@ -99,7 +107,7 @@ export default function HeaderNav() {
               >
                 <a
                   href={nav.link}
-                  className={` flex justify-center ${
+                  className={`flex justify-center ${
                     nav.link === path ? "text-green-400" : ""
                   }`}
                 >
