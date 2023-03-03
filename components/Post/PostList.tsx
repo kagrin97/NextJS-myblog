@@ -1,4 +1,4 @@
-import BlogPost from "components/BlogPost";
+import BlogPost from "./BlogPost";
 
 export default function PostList({ searchPosts, posts }) {
   return (

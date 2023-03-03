@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import navlinks from "data/navlinks";
-import Profile from "./Profile";
+import Profile from "components/UIElements/Profile";
 
 const SideNav = () => {
   const path = "/" + useRouter().pathname.split("/")[1];

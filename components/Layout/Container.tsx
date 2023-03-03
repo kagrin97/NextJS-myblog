@@ -4,8 +4,8 @@ import Head from "next/head";
 import Link from "next/link";
 
 import handleStructuredData from "data/metadata";
-import HeaderNav from "components/HeaderNav";
-import SideNav from "components/SideNav";
+import HeaderNav from "./HeaderNav";
+import SideNav from "./SideNav";
 import useResizeWidth from "hooks/useResizeWidth";
 
 import NextProgress from "next-progress";

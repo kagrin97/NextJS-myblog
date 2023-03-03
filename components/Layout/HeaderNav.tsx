@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
@@ -6,12 +6,12 @@ import Image from "next/image";
 
 import navlinks from "data/navlinks";
 
-import Backdrop from "components/Backdrop";
-import SideDrawer from "components/SideDrawer";
+import Backdrop from "components/UIElements/Backdrop";
+import SideDrawer from "./SideDrawer";
 import useResizeWidth from "hooks/useResizeWidth";
 
 export default function HeaderNav() {
-  const path = useRouter().pathname;
+  const path = "/" + useRouter().pathname.split("/")[1];
 
   const { theme, setTheme } = useTheme();
 
