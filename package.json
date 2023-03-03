@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "rm -rf public/robots.txt public/sitemap*.xml & next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "next-sitemap",
+    "postbuild": "next-sitemap --config next-sitemap.config.js",
     "devs": "next dev -H ::"
   },
   "dependencies": {
