@@ -59,7 +59,7 @@ CRA를 사용할 때 불필요한 의존성을 너무 많이 설치해서 번들
 <h3 className={`dark:text-white`}>기본 React 설정</h3>
 <br></br>
 
-```
+```bash
 npm init -y // package.json파일 생성
 npm i react react-dom react-router-dom // react 필수 패키지 설치
 ```
@@ -117,7 +117,7 @@ export default App;
 
 자바스크립트의 슈퍼셋이기 때문에 자바스크립트로 작성된 프로그램이 타입스크립트 프로그램으로 동작합니다.
 
-```
+```bash
 npm i -D typescript @types/react @types/react-dom // 타입 패키지 설치
 tsc --init // tsconfig.json 파일 생성
 ```
@@ -158,7 +158,7 @@ JavaScript 코드로 변환하는 데 주로 사용되는 무료 오픈 소스 J
 <br></br>
 <b>babel을 사용하는데 필요한 패키지 설치</b>
 
-```
+```bash
 npm i -D babel-loader @babel/core @babel/preset-env
 npm i -D @babel/preset-react @babel/preset-typescript
 ```
@@ -184,7 +184,7 @@ module.exports = {
 <br></br>
 <b>webpack 필수 패키지 설치</b>
 
-```
+```bash
 npm i -D webpack webpack-cli webpack-dev-server webpack-merge
 npm i -D html-webpack-plugin ts-loader
 ```
@@ -296,7 +296,7 @@ start : `개발옵션`으로 build폴더에 파일 생성
 
 ESLint는 자바스크립트 코드에서 발견되는 문제시되는 패턴들을 식별하기 위한 정적 코드 분석 도구입니다.
 
-```
+```bash
 npm i -D eslint eslint-config-react-app eslint-config-prettier
 ```
 
@@ -351,7 +351,7 @@ Prettier. 코드 포멧터(Code Formatter)란 개발자가 작성한 코드를 �
 
 코딩 스타일을 따르도록 변환해주는 도구를 말합니다.
 
-```
+```bash
 npm i -D prettier
 ```
 
@@ -384,7 +384,7 @@ husky는 깃 훅에 따라 원하는 동작을 하게 도와주는 패키지입�
 
 git add나 commit, push가 시행되기 전이나 후에 원하는 스크립트를 실행시켜주죠.
 
-```
+```bash
 npm i -D husky
 npx husky install // 처음 hsuky세팅하는 사람만 실행
 ```
@@ -403,7 +403,7 @@ npx husky install // 처음 hsuky세팅하는 사람만 실행
 
 자동으로 husky install 이 될 수 있도록 하는 설정
 
-```
+```bash
 npx husky add .husky/pre-commit "npm run format"
 npx husky add .husky/pre-push "npm run lint"
 ```
@@ -422,7 +422,7 @@ npx husky add .husky/pre-push "npm run lint"
 
 Jest는 Jasmine 위에 구축되고 Meta에서 유지 관리하는 JavaScript 테스트 프레임워크입니다.
 
-```
+```bash
 npm i -D jest ts-jest @types/jest jest-environment-jsdom
 npm i -D @testing-library/jest-dom @testing-library/react @testing-library/user-event
 ```
@@ -477,7 +477,7 @@ require('@testing-library/jest-dom'); // jest-dom 모듈 로드
 
 사용할 수 있습니다.
 
-```
+```bash
 npm i styled-components @types/styled-components
 npx storybook init // 스토리북 설치
 npm i -D @storybook/addon-actions @storybook/addon-controls

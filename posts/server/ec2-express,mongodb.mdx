@@ -94,7 +94,7 @@ git clone로 가져와 서버를 실행하도록 진행합니다.
 
 그 후 `ssh`를 사용해서 서버와 연결해 줍니다.
 
-```
+```bash
 chmod 400 <your pem key name>.pem
 ssh -i "<your pem key name>.pem" ubuntu@<your IPv4 Public IP>
 ```
@@ -124,7 +124,7 @@ ssh -i "<your pem key name>.pem" ubuntu@<your IPv4 Public IP>
 
 배포하고 받기위해서는 서버에 필요한 패키지를 설치해줘야합니다.
 
-```
+```bash
 sudo apt update
 sudo apt install nodejs
 sudo apt install npm
@@ -142,7 +142,7 @@ node 버전을 12이상으로 upgrade해주시길 바랍니다. 저도 upgrade �
 
 계속 동작하도록 `pm2`라는 라이브러리를 사용해 <b>서버 무중단 배포</b>를 실행합니다.
 
-```
+```bash
 npm i -g pm2
 
 pm2 start app.js
@@ -193,7 +193,7 @@ pm2 start app.js
 
 저의 경우에 express로 서버를 실행할떄 5000포트를 사용하도록 설정해두었습니다.
 
-```
+```bash
 <퍼블릭 IPv4 DNS>:5000/
 ```
 

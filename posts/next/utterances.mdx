@@ -41,8 +41,7 @@ ex) kagrin97/NextJS-blog
 
 <h2 className={`dark:text-white`}>3. 코드로 구현하기</h2>
 
-```
-// components/Comments.tsx
+```js:components/Comments.tsx showLineNumbers
 import React, { useEffect, useRef } from "react";
 
 const Comments = () => {
@@ -75,8 +74,7 @@ scrip를 가지고와서 속성값을 수정하는데
 sript에 repo, issue-term 속성이 없기 때문에 setAttribute를  
 이용해서 속성을 추가하는 것이죠.
 
-```
-// pages/blog/[sulg].tsx
+```js:pages/blog/[sulg].tsx showLineNumbers
 import Comments from "components/Comments";
 
 return (

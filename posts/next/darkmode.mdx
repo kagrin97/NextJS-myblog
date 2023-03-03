@@ -13,8 +13,8 @@ tailwind.config.js를수정할 필요가있습니다.
 
 <h2 className={`dark:text-white`}>1. tailwind.config.js 수정</h2>
 
-```
-// tailwind.config.js
+```js:tailwind.config.js showLineNumbers
+
 module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
@@ -35,8 +35,7 @@ module.exports = {
 \_document파일은 \_app파일 다음에 실행되며 폰트를 추가하거나  
 다크모드를 설정하거나 공통적으로 적용할 HTML 마크업을 다룹니다.
 
-```
-// pages/_document.tsx
+```js:pages/_document.tsx showLineNumbers
 import Document, { Html, Head, Main, NextScript } from "next/document";
 
 class MyDocument extends Document {
@@ -64,15 +63,14 @@ export default MyDocument;
 \_document파일의 Html 태그의 className을 "light"와  
 "dark"로 바꿔주는 패키지가 있습니다. next-themes라는 이름이죠
 
-```
+```bash
 npm install next-themes
 ```
 
 next-themes 패키지 적용 방법을 알아보겠습니다.  
 먼저 \_app.tsx파일을 다음과 같이 수정합니다.
 
-```
-// _app.tsx
+```js:_app.tsxt.tsx showLineNumbers
 import "tailwindcss/tailwind.css";
 import "~/styles/globals.css";
 import { ThemeProvider }from "next-themes";
@@ -94,8 +92,7 @@ ThemeProvider를 attribute를 "class"로 지정해서 추가했습니다.
 
 <h2 className={`dark:text-white`}>4. 다크 모드로 전환 버튼 추가</h2>
 
-```
-// Nav.tsx
+```js:Nav.tsx showLineNumbers
 ..
 const { theme, setTheme } = useTheme();
 ..

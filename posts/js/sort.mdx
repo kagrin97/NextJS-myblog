@@ -11,7 +11,7 @@ category: js
 
 기본적으로 js의 sort 함수는 각 문자열의 첫번째 자리부터 유니코드를 비교해서 정렬을해줍니다
 
-```
+```js showLineNumbers
 var numbers = [1, 10, 2, 20, 3, 30];
 numbers.sort();
 
@@ -27,7 +27,7 @@ console.log(numbers); // [1,10,2,20,3,30]
 
 정수값으로 정렬을 할때는 sort(compare함수)를 사용해야 합니다
 
-```
+```js showLineNumbers
 var numbers = [1, 10, 2, 20, 3, 30];
 
 numbers.sort(function compare(a, b) {
@@ -47,14 +47,14 @@ return 값이 음수가 되면 a가 b앞으로 정렬되고
 평소에 알고있던 python의 정렬과 매우 달라서 당황을 했습니다. 그래서 여러번 실험결과
 기본적으로 a와 b가 순서가 반대라는 것을 발견했습니다.
 
-```
-var a = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
-strings.sort((a,b) => console.log(a,b));
+```js showLineNumbers
+var a = ["a", "b", "c", "d", "e", "f"];
+strings.sort((a, b) => console.log(a, b));
 ```
 
 위의 코드를 실행 시키면
 
-```
+```js showLineNumbers
 b a     index: 2 1
 c b     index: 3 2
 d c     index: 4 3
