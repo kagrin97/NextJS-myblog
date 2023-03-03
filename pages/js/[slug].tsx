@@ -1,7 +1,7 @@
-import Container from "components/Container";
-import Comments from "components/Comments";
-import TopBtn from "components/TopBtn";
-import BlogContents from "components/BlogContents";
+import Container from "components/Layout/Container";
+import Comments from "components/Post/Comments";
+import TopBtn from "components/UIElements/TopBtn";
+import BlogContents from "components/Post/BlogContents";
 
 import { makeMeta } from "utils/makeMeta";
 

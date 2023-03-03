@@ -1,7 +1,7 @@
 import React from "react";
 
-import Container from "components/Container";
-import BlogPost from "components/BlogPost";
+import Container from "components/Layout/Container";
+import BlogPost from "components/Post/BlogPost";
 
 import { allDocuments } from "contentlayer/generated";
 
@@ -14,7 +14,11 @@ export default function Home() {
   return (
     <Container>
       <div className={`my-10 w-full`}>
-        <h1 className={`text-2xl font-black text-center`}>LATEST ARTICLES</h1>
+        <h1
+          className={`text-2xl font-black text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600`}
+        >
+          LATEST ARTICLES
+        </h1>
 
         {fiveMostRecent.length && (
           <div>
