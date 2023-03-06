@@ -8,12 +8,24 @@ body {
   font-family: "Noto Sans KR", sans-serif;
 }
 
+b {
+  @apply text-emerald-800;
+  @apply dark:text-emerald-400;
+}
+
 .prose :where(code):not(:where([class~="not-prose"] *)) {
   color: rgb(235, 87, 87);
   padding: 0.2em 0.4em;
   font-size: 85%;
   background-color: rgba(175, 184, 193, 0.2);
   border-radius: 6px;
+}
+
+.prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+  @apply text-stone-800;
+  @apply dark:text-stone-200;
+  border-radius: 6px;
+  border-color: green;
 }
 
 code:last-child::after,
