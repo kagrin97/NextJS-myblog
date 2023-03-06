@@ -5,6 +5,7 @@ interface MetadataType {
   author: string;
   url: string;
   date?: string;
+  image: string;
 }
 
 const metadata: MetadataType = {
@@ -13,6 +14,7 @@ const metadata: MetadataType = {
   description: "개발자로서의 개발을 위한 개발생활",
   author: "kagrin97",
   url: "https://kagrin97-blog.vercel.app/",
+  image: "/배너.jpg",
 };
 
 interface StructuredDataType {
@@ -33,6 +35,15 @@ interface StructuredDataType {
   };
   articleSection: string;
   articleTag: string;
+  image: string;
+  ogType: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  twitterCard: string;
+  twitterTitle: string;
+  twitterDescription: string;
+  twitterImage: string;
 }
 
 const handleStructuredData = (customMeta) => {
@@ -52,7 +63,17 @@ const handleStructuredData = (customMeta) => {
       name: "Kang Blog",
     },
     articleSection: "Technology",
-    articleTag: "React",
+    articleTag: "Programming",
+
+    image: metadata.image,
+    ogType: "article",
+    ogTitle: metadata.title,
+    ogDescription: metadata.description,
+    ogImage: metadata.image,
+    twitterCard: "summary_large_image",
+    twitterTitle: metadata.title,
+    twitterDescription: metadata.description,
+    twitterImage: metadata.image,
   };
 
   if (customMeta) {
@@ -60,6 +81,10 @@ const handleStructuredData = (customMeta) => {
     structuredData.description = customMeta.description;
     structuredData.datePublished = customMeta.date;
     structuredData.url = window.location.href;
+    structuredData.ogTitle = customMeta.title;
+    structuredData.ogDescription = customMeta.description;
+    structuredData.twitterTitle = customMeta.title;
+    structuredData.twitterDescription = customMeta.description;
   }
 
   return structuredData;
