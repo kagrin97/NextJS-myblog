@@ -1,0 +1,220 @@
+---
+title: OpenGraphPreview(링크미리보기) 만들기 (feat. NextJS)
+date: 2023-03-07
+description: 앵커 태그의 href 주소로 GET 요청을 전송하여 OpenGraph 미리보기를 만드는 프로세스를 구현합니다.
+category: nextjs
+---
+
+---
+
+<h2 className={`dark:text-white text-center`}>목차</h2>
+
+1. <a href="#1" className={`dark:text-white`}>
+     OpenGraphPreview(링크미리보기)는 무엇인가
+   </a>
+2. <a href="#2" className={`dark:text-white`}>
+     실제로 구현해보자!
+   </a>
+3. <a href="#3" className={`dark:text-white`}>
+     여담
+   </a>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  OpenGraphPreview(링크미리보기)는 무엇인가
+</h2>
+
+<br></br>
+
+<b>OpenGraphPreview(링크미리보기)</b>는 URL의 제목, 설명, 사진 등이 포함된
+컴포넌트라고 보시면 됩니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/223355235-eb605dd8-19f8-4d40-9fc7-0835126f9174.PNG"
+    width="100%%"
+  />
+</div>
+
+평소 인터넷 서핑을 하다 보면 티스토리, 벨로그로 블로그를 포스팅하시는 분들을 보면 URL을 공유
+
+했을 때 URL 카드가 예쁘게 만들어져서 렌더링 되어 있더라고요 저는 제가 직접 만든 블로그를 운영하다 보니
+
+OpenGraphPreview를 직접 만들 수 밖에 없었습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  실제로 구현해보자!
+</h2>
+
+<br></br>
+
+<h3 className={`dark:text-white`}>1. CORS에러 처리하기</h3>
+<br></br>
+
+우선 첫 번째로 URL의 <b>og정보를 가져와야 합니다.</b> og에는 title, image, description 3가지를 가져와서
+
+Card를 만든 건데요. og 정보는 axios의 get을 사용하면 html 정보를 가져올 수가 있습니다.
+
+하지만 `axios.get`을 사용하게 되면 <b>cors에러</b>가 발생하게 됩니다. cors에러를 제거하기 위해서는
+
+`/api` 폴더를 사용하면 되는데요 어떻게 처리되는 것일까요?
+
+기본적으로 Next·JS는 /api 폴더의 API 경로에 대해 <b>CORS(출처 간 리소스 공유)를 자동으로 처리</b>합니다.
+즉, 명시적으로 달리 구성하지 않는 한 기본적으로 다른 오리진(도메인)에서의 요청이 허용됩니다.
+
+이는 Next. JS 서버가 클라이언트와 API 사이에서 프록시 역할을 하여 요청과 응답의 헤더를 가로채서 수정할 수 있기 때문입니다. 서버는 응답에 Access-Control-Allow-Origin: \* 헤더를 응답에 추가하여 모든 오리진이 API에 액세스할 수 있도록 합니다.
+
+```js:pages/api/proxy.js showLineNumbers
+import axios from "axios";
+
+export default async (req, res) => {
+  try {
+    const url = req.query.url;
+    const response = await axios.get(url);
+    res.send(response.data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("링크의 정보를 가져오는데 실패했습니다.");
+  }
+};
+```
+
+/api/proxy.js 미들웨어 서버를 만들어서 response.data 리턴하겠습니다.
+
+<br></br>
+
+<h3 className={`dark:text-white`}>2. HTML을 얻고 OG정보를 뽑기</h3>
+<br></br>
+
+이제 a 태그들을 모아 순회를 돌면서 해당 elements의 href 값을 받아오겠습니다.
+
+```js showLineNumbers
+const $linkList = document.querySelectorAll("#link");
+    $linkList.forEach(async (el, index) => {
+        const urlPath = el.href;
+        const response = await axios.get(
+          `/api/proxy?url=${encodeURIComponent(urlPath)}`
+        );
+        const html = response.data;
+        ...
+```
+
+저의 경우에는 id 값이 link인 값을을 링크 미리보기 카드로 만들 예정입니다. `encodeURIComponent`는 무엇일까요?
+
+encodeURIComponent는 특정 문자를 해당 퍼센트로 인코딩된 값으로 대체하여 문자열을 인코딩하는 데 사용되는 JavaScript 함수입니다. 이렇게 인코딩된 문자열은 모든 특수 문자가 올바르게 인코딩되고 URL 구조를 방해하거나 오류를 일으키지 않도록 보장하므로 URL에 안전하게 포함될 수 있습니다.
+
+이렇게 뽑아온 HTML 파일을 파싱해야 합니다. <b>파싱을 더 쉽게 해주는 패키지를 하나 소개하겠습니다.</b>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.npmjs.com/package/cheerio"
+>
+  https://www.npmjs.com/package/cheerio
+</a>
+
+<br></br>
+
+`Cheerio`는 빠르고 가볍고 유연한 라이브러리로, Node.js 환경에서 <b>HTML 및 XML 문서를 파싱하고 조작</b>할 수 있습니다. 문서에서 요소를 선택하고 조작하기 위한 jQuery와 유사한 구문을 제공하여 HTML 및 XML 페이지에서 정보를 추출하고 문서에서 다양한 변환 및 조작을 쉽게 수행할 수 있습니다.
+
+저는 title, image, description 3가지를 뽑아오겠습니다.
+
+```js showLineNumbers
+import cheerio from "cheerio";
+
+const $ = cheerio.load(html);
+const ogTitle =
+  $('meta[property="og:title"]').attr("content") || $("title").text();
+const ogDescription = $('meta[property="og:description"]').attr("content");
+const ogImage = $('meta[property="og:image"]').attr("content");
+```
+
+이런식으로 특정 meta 태그를 가져올수도 있고 title태그의 text값도 가져올수가 있습니다.
+
+<br></br>
+
+<h3 className={`dark:text-white`}>3. Element를 변경하기</h3>
+<br></br>
+
+저는 `OpenGraphPreview` 컴포넌트를 생성하고 문자열로 렌더링할수있게 변형한다음에
+
+`el.outerHTML` 값에 렌더링된 문자열을 넣어서 OpenGraphPreview 렌더링 할 예정입니다.
+
+```js showLineNumbers
+import OpenGraphPreview from "../UIElements/OpenGraphPreview";
+
+const OpenGraphPreview = ({ urlPath, ogTitle, ogDescription, ogImage }) => {
+  return (
+    <a href={urlPath}>
+      <title>{ogTitle}</title>
+      <description>{ogDescription}</ escription>
+      <img src={ogImage} />
+    </a>
+  )
+}
+
+const $linkList = document.querySelectorAll("#link");
+    $linkList.forEach(async (el, index) => {
+      ...
+      ...
+      const aHtml = ReactDOMServer.renderToString(
+          <OpenGraphPreview
+            urlPath={urlPath}
+            ogTitle={ogTitle}
+            ogDescription={ogDescription}
+            ogImage={ogImage}
+          />
+        );
+
+        el.outerHTML = aHtml
+    })
+```
+
+대략적인 형태는 이렇습니다. OpenGraphPreview 컴포넌트를 생성하고 해당 컴포넌트를
+
+`ReactDOMServer.renderToString`를 사용해서 문자열로 렌더링할 수 있게 변형 후 el를 변경합니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/223355229-342f74cc-bac3-41f2-8e27-0c247e4c8e80.PNG"
+    width="100%%"
+  />
+</div>
+
+완성된 OpenGraphPreview
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  여담
+</h2>
+
+<br></br>
+
+이번에 OpenGraphPreview를 구현하면서 처음에는 금방 할 수 있을 거라고 생각했었습니다. 하지만 예상치 못한 난관이 많더군요.
+
+첫 번째는 예상치 못한 cors에러가 있고 두 번쨰는 next/image의 Image 컴포넌트였습니다. 보통 next에서 img태그대신 Image를
+
+사용하는데 저도 그렇게 적용해 보려고 했습니다만 Invalid 에러가 나타나더라고요. 그래서 next-config.js에 image를 와일드카드
+
+형식으로 어떤 url이든지 Image로 렌더링하려고 했습니다. 하지만 되지 않더라고요 그래서 저는 그냥 img 태그를 사용했습니다.
+
+그 밖에도 og태그가 없을때는 title정보만 가지고 렌더링한다던지 여러가지 생각할만한 부분이 많아서 꽤 어려운 도전이였습니다.
+
+대부분 blog article에 a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수 있으니 발견하시면 알려주세요 ^.^
