@@ -27,15 +27,12 @@ export default function Container(props) {
         />
 
         <meta name="description" content={structuredData.description} />
-        <meta name="by" content={structuredData.author} />
-        <meta property="og:type" content={structuredData.type} />
-        <meta property="og:title" content={structuredData.title} />
+        <meta property="og:title" content={structuredData.headline} />
         <meta property="og:description" content={structuredData.description} />
-        <meta property="og:site_name" content={structuredData.author} />
         <meta property="og:url" content={structuredData.url} />
         <meta property="og:image" content={structuredData.image} />
 
-        <meta name="twitter:title" content={structuredData.title} />
+        <meta name="twitter:title" content={structuredData.headline} />
         <meta name="twitter:description" content={structuredData.description} />
       </Head>
       <NextProgress
