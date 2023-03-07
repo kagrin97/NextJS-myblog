@@ -1,10 +1,23 @@
 import { AiOutlineLink } from "react-icons/ai";
 
-const OpenGraphPreview = ({ urlPath, ogTitle, ogDescription, ogImage }) => {
+interface PropseType {
+  urlPath: string;
+  ogTitle: string;
+  ogDescription?: string;
+  ogImage?: string;
+}
+
+const OpenGraphPreview = ({
+  urlPath,
+  ogTitle,
+  ogDescription,
+  ogImage,
+}: PropseType) => {
   if (ogTitle && ogDescription && ogImage) {
     return (
       <a
         href={urlPath}
+        rel="noreferrer"
         target="_blank"
         className="my-4 flex justify-around rounded-md shadow-lg dark:shadow-cyan-500/50 overflow-hidden h-44 max800:h-32 dark:bg-neutral-900"
       >
@@ -31,6 +44,7 @@ const OpenGraphPreview = ({ urlPath, ogTitle, ogDescription, ogImage }) => {
         <a
           href={urlPath}
           target="_blank"
+          rel="noreferrer"
           className="my-4 shadow-lg dark:shadow-cyan-500/50 rounded-md w-3/5 h-16  dark:bg-neutral-900"
         >
           <div className="h-full w-full flex justify-evenly items-center">

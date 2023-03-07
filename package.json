@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "rm -rf ./public/sitemap-0.xml ./public/sitemap.xml &&next lint",
     "postbuild": "next-sitemap --config next-sitemap.config.js",
     "devs": "next dev -H ::"
   },

@@ -9,7 +9,7 @@ import OpenGraphPreview from "../UIElements/OpenGraphPreview";
 export default function BlogContents({ post, MDXComponent }) {
   const handlerOpenGraphPreview = () => {
     const $linkList = document.querySelectorAll("#link");
-    $linkList.forEach(async (el, index) => {
+    $linkList.forEach(async (el: any, index) => {
       try {
         const urlPath = el.href;
         const response = await axios.get(
