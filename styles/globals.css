@@ -13,6 +13,8 @@ b {
   @apply dark:text-emerald-400;
 }
 
+/* 목차 part */
+
 .mokcha {
   display: flex;
   justify-content: center;
@@ -68,6 +70,8 @@ b {
 .prose :where(a):not(:where([class~="not-prose"] *)) {
   text-decoration: none;
 }
+
+/* code block part */
 
 .prose :where(code):not(:where([class~="not-prose"] *)) {
   color: rgb(235, 87, 87);
