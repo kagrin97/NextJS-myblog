@@ -18,6 +18,7 @@ const OpenGraphPreview = ({
       <a
         href={urlPath}
         rel="noreferrer"
+        id="link"
         target="_blank"
         className="my-4 flex justify-around rounded-md shadow-lg dark:shadow-cyan-500/50 overflow-hidden h-44 max800:h-32 dark:bg-neutral-900"
       >
@@ -44,6 +45,7 @@ const OpenGraphPreview = ({
         <a
           href={urlPath}
           target="_blank"
+          id="link"
           rel="noreferrer"
           className="my-4 shadow-lg dark:shadow-cyan-500/50 rounded-md w-3/5 h-16  dark:bg-neutral-900"
         >

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import ReactDOMServer from "react-dom/server";
-import Image from "next/image";
 
 import axios from "axios";
 
@@ -24,8 +23,9 @@ export default function BlogContents({ post, MDXComponent }) {
           "content"
         );
         const ogImage = $('meta[property="og:image"]').attr("content");
+        let aHtml: string = "";
         if (ogTitle && ogDescription && ogImage) {
-          const aHtml = ReactDOMServer.renderToString(
+          aHtml = ReactDOMServer.renderToString(
             <OpenGraphPreview
               urlPath={urlPath}
               ogTitle={ogTitle}
@@ -33,23 +33,42 @@ export default function BlogContents({ post, MDXComponent }) {
               ogImage={ogImage}
             />
           );
-
-          el.outerHTML = aHtml;
         } else if (ogTitle) {
-          const aHtml = ReactDOMServer.renderToString(
+          aHtml = ReactDOMServer.renderToString(
             <OpenGraphPreview urlPath={urlPath} ogTitle={ogTitle} />
           );
-          el.outerHTML = aHtml;
         }
+
+        el.outerHTML = aHtml;
       } catch (err) {
         console.log(err);
       }
     });
   };
 
+  const handlerChapterScroll = () => {
+    const links = document.querySelectorAll('a[href^="#"]');
+
+    links.forEach((link) => {
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        const linkId = link.getAttribute("href")?.slice(1);
+        if (linkId) {
+          const target = document.getElementById(linkId);
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+            });
+          }
+        }
+      });
+    });
+  };
+
   useEffect(() => {
     if (MDXComponent) {
       handlerOpenGraphPreview();
+      handlerChapterScroll();
     }
   }, []);
   return (
@@ -62,7 +81,9 @@ export default function BlogContents({ post, MDXComponent }) {
         {post.date.slice(8, 10)}일
       </h3>
       <article className={`w-full dark:text-slate-50 text-neutral-900`}>
-        <MDXComponent />
+        <div>
+          <MDXComponent />
+        </div>
       </article>
     </article>
   );

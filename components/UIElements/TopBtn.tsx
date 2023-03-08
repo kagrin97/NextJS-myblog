@@ -16,10 +16,22 @@ export default function TopBtn() {
     window.removeEventListener("scroll", handleScroll);
   };
 
+  const scrollToTop = (event) => {
+    event.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <>
       {isScroll && (
-        <a href="#" className="fixed bottom-5 right-5">
+        <a
+          href="#"
+          className="fixed bottom-5 right-5 z-10"
+          onClick={scrollToTop}
+        >
           <Image
             src={`/top.png`}
             alt="top버튼"
