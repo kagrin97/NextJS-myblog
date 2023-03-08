@@ -12,11 +12,7 @@ const PostCategorySlug = (post) => {
   const customMeta = makeMeta(post);
   return (
     <Container customMeta={customMeta} className="relative">
-      <BlogContents
-        post={post}
-        MDXComponent={MDXComponent}
-        key={post.body.code}
-      />
+      <BlogContents post={post} MDXComponent={MDXComponent} />
       <TopBtn />
       <Comments />
     </Container>

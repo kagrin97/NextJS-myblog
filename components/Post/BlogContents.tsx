@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import ReactDOMServer from "react-dom/server";
+import Image from "next/image";
 
 import axios from "axios";
 
@@ -51,7 +52,6 @@ export default function BlogContents({ post, MDXComponent }) {
       handlerOpenGraphPreview();
     }
   }, []);
-
   return (
     <article className="mt-10 prose max-w-none">
       <h1 className="text-green-500 text-center maxSm:text-2xl">

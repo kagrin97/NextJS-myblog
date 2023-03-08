@@ -13,6 +13,58 @@ b {
   @apply dark:text-emerald-400;
 }
 
+.mokcha {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mokcha-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 0 2rem;
+  border-radius: 20px;
+  border-width: 4px;
+  @apply border-sky-200;
+  @apply shadow-md;
+  @apply shadow-green-400;
+
+  @apply dark:border-lime-200;
+}
+
+.mokcha-container h2 {
+  margin-top: 1.5rem;
+  @apply dark:text-white;
+}
+
+.mokcha-container a:last-child {
+  margin-bottom: 2rem;
+}
+
+.mokcha-container__list {
+  margin-bottom: 2rem;
+}
+
+.mokcha-container__list {
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+  border-radius: 10px;
+  @apply dark:text-white;
+  @apply shadow-sm;
+  @apply shadow-black;
+  @apply dark:shadow-green-400;
+}
+
+.mokcha-container__list:hover {
+  @apply dark:shadow-white;
+  @apply shadow-md;
+}
+
+.prose :where(ol):not(:where([class~="not-prose"] *)) {
+  margin: 0;
+}
+
 .prose :where(a):not(:where([class~="not-prose"] *)) {
   text-decoration: none;
 }

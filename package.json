@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "rm -rf ./public/sitemap-0.xml ./public/sitemap.xml &&next lint",
+    "build": "rm -rf ./public/sitemap-0.xml ./public/sitemap.xml && next build",
     "postbuild": "next-sitemap --config next-sitemap.config.js",
+    "start": "next start",
+    "lint": "next lint",
     "devs": "next dev -H ::"
   },
   "dependencies": {
