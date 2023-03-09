@@ -1,38 +1,28 @@
-import Container from "components/Layout/Container";
-import Comments from "components/Post/Comments";
-import TopBtn from "components/UIElements/TopBtn";
-import BlogContents from "components/Post/BlogContents";
+import React from "react";
 
-import { makeMeta } from "utils/makeMeta";
+import { InferGetStaticPropsType } from "next";
+
+import PostCategorySlug from "components/Post/PostCategorySlug";
 
 import { allJs } from "contentlayer/generated";
-import { InferGetStaticPropsType } from "next";
-import { useMDXComponent } from "next-contentlayer/hooks";
 
-export default function Post({
+import { Post } from "types/posts";
+
+export default function Slug({
   post,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const MDXComponent = useMDXComponent(post.body.code);
-  const customMeta = makeMeta(post);
-
-  return (
-    <Container customMeta={customMeta} className="relative">
-      <BlogContents post={post} MDXComponent={MDXComponent} />
-      <TopBtn />
-      <Comments />
-    </Container>
-  );
+  return <PostCategorySlug {...post} />;
 }
 
 export const getStaticPaths = async () => {
   return {
-    paths: allJs.map((p) => ({ params: { slug: p.slug } })),
+    paths: allJs.map((p: Post) => ({ params: { slug: p.slug } })),
     fallback: false,
   };
 };
 
 export const getStaticProps = async ({ params }) => {
-  const post = allJs.find((p) => p.slug === params.slug);
+  const post = allJs.find((p: Post) => p.slug === params.slug);
   return {
     props: {
       post,

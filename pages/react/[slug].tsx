@@ -6,7 +6,9 @@ import PostCategorySlug from "components/Post/PostCategorySlug";
 
 import { allReacts } from "contentlayer/generated";
 
-export default function Post({
+import { Post } from "types/posts";
+
+export default function Slug({
   post,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return <PostCategorySlug {...post} />;
@@ -14,13 +16,13 @@ export default function Post({
 
 export const getStaticPaths = async () => {
   return {
-    paths: allReacts.map((p) => ({ params: { slug: p.slug } })),
+    paths: allReacts.map((p: Post) => ({ params: { slug: p.slug } })),
     fallback: false,
   };
 };
 
 export const getStaticProps = async ({ params }) => {
-  const post = allReacts.find((p) => p.slug === params.slug);
+  const post = allReacts.find((p: Post) => p.slug === params.slug);
   return {
     props: {
       post,

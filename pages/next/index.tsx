@@ -5,6 +5,8 @@ import PostCategoryMain from "components/Post/PostCategoryMain";
 
 import { allNexts } from "contentlayer/generated";
 
+import { Post } from "types/posts";
+
 export default function NextJs({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -13,7 +15,7 @@ export default function NextJs({
 
 export const getStaticProps = async () => {
   let posts = allNexts.sort(
-    (a, b) => Number(new Date(b.date)) - Number(new Date(a.date))
+    (a: Post, b: Post) => Number(new Date(b.date)) - Number(new Date(a.date))
   );
 
   return {

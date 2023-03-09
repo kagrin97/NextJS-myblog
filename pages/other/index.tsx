@@ -5,6 +5,8 @@ import PostCategoryMain from "components/Post/PostCategoryMain";
 
 import { allOthers } from "contentlayer/generated";
 
+import { Post } from "types/posts";
+
 export default function Other({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -13,7 +15,7 @@ export default function Other({
 
 export const getStaticProps = async () => {
   let posts = allOthers.sort(
-    (a, b) => Number(new Date(b.date)) - Number(new Date(a.date))
+    (a: Post, b: Post) => Number(new Date(b.date)) - Number(new Date(a.date))
   );
 
   return {
