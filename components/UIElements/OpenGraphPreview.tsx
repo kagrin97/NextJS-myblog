@@ -11,7 +11,7 @@ const OpenGraphPreview = ({
   urlPath,
   ogTitle,
   ogDescription = "설명이 존재하지 않습니다.",
-  ogImage = "../../not-found-img.png",
+  ogImage = "../../imgs/not-found-img.png",
 }: Props) => {
   return (
     <a

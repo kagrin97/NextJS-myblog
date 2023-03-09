@@ -6,7 +6,7 @@ const ProfilePicture = () => {
     <div className="relative w-4/5 h-20 rounded-lg overflow-hidden">
       <Image
         className="object-cover object-center w-full h-full"
-        src="/avatar.jpg"
+        src="/imgs/avatar.jpg"
         alt="Profile Picture"
         layout="fill"
       />

@@ -31,7 +31,7 @@ export default function TopBtn() {
           onClick={scrollToTop}
         >
           <Image
-            src={`/top.png`}
+            src={`/imgs/top.png`}
             alt="top버튼"
             width={40}
             height={40}

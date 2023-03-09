@@ -57,7 +57,7 @@ export default function Container(props: ContainerProps) {
         <Link href="/" passHref>
           <button className={`flex flex-row items-center ml-2 `}>
             <Image
-              src={`/round.webp`}
+              src={`/imgs/round.webp`}
               alt="로고"
               width={35}
               height={35}

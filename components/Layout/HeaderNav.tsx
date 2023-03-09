@@ -42,7 +42,7 @@ export default function HeaderNav() {
         className="mr-3 animate-pulse"
       >
         <Image
-          src={theme === "light" ? "/해.png" : "/달.png"}
+          src={theme === "light" ? "/imgs/해.png" : "/imgs/달.png"}
           alt="Toggle light/dark mode"
           width={50}
           height={50}
@@ -54,7 +54,9 @@ export default function HeaderNav() {
         <a target="_blank">
           <Image
             src={
-              theme === "light" ? "/github-green.png" : "/github-green-dark.png"
+              theme === "light"
+                ? "/imgs/github-green.png"
+                : "/imgs/github-green-dark.png"
             }
             alt="Github"
             width={30}
