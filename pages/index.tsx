@@ -1,16 +1,22 @@
 import React from "react";
-
 import Container from "components/Layout/Container";
 import BlogPost from "components/Post/BlogPost";
-
+import { Post } from "types/posts";
 import { allDocuments } from "contentlayer/generated";
 
-export default function Home() {
-  const sortedByDate = allDocuments.sort((item1: any, item2) => {
-    return new Date(item2.date).getTime() - new Date(item1.date).getTime();
-  });
+type SortedPosts = Post[];
 
-  const fiveMostRecent = sortedByDate.slice(0, 7);
+function sortPostsByDate(posts: Post[]): Post[] {
+  return posts.sort((post1: Post, post2: Post) => {
+    return new Date(post2.date).getTime() - new Date(post1.date).getTime();
+  });
+}
+
+export default function Home() {
+  const allPosts: Post[] = allDocuments;
+  const sortedByDate: SortedPosts = sortPostsByDate(allPosts);
+  const mostRecentPosts: Post[] = sortedByDate.slice(0, 7);
+
   return (
     <Container>
       <div className={`my-10 w-full`}>
@@ -20,9 +26,9 @@ export default function Home() {
           LATEST ARTICLES
         </h1>
 
-        {fiveMostRecent.length && (
+        {mostRecentPosts.length > 0 && (
           <div>
-            {fiveMostRecent.map((post, index) => (
+            {mostRecentPosts.map((post: Post, index: number) => (
               <React.Fragment key={index}>
                 <BlogPost
                   date={post.date}
