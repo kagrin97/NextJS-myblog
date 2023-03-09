@@ -1,7 +1,5 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 export default function TopBtn() {
   const [isScroll, setIsScroll] = useState(false);
@@ -18,8 +16,7 @@ export default function TopBtn() {
     window.removeEventListener("scroll", handleScroll);
   };
 
-  const scrollToTop = (event) => {
-    event.preventDefault();
+  const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -29,11 +26,7 @@ export default function TopBtn() {
   return (
     <React.Fragment>
       {isScroll && (
-        <a
-          href="#"
-          className="fixed bottom-5 right-5 z-10"
-          onClick={scrollToTop}
-        >
+        <a className="fixed bottom-5 right-5 z-10" onClick={scrollToTop}>
           <Image
             src={`/top.png`}
             alt="top버튼"
