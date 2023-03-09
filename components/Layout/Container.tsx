@@ -11,14 +11,12 @@ import useResizeWidth from "hooks/useResizeWidth";
 import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
 
+import { MetadataType } from "data/metadata";
+
 interface ContainerProps {
-  customMeta: {
-    title: string;
-    description: string;
-    url: string;
-    image: string;
-  };
-  children: React.ReactNode;
+  customMeta?: MetadataType;
+  children?: React.ReactNode;
+  className?: string | undefined | null | false | Record<string, boolean>;
 }
 
 export default function Container(props: ContainerProps) {

@@ -33,10 +33,7 @@ export default function BlogContents({ post, MDXComponent }) {
     }
   };
 
-  const handleLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    link: HTMLAnchorElement
-  ) => {
+  const handleLinkClick = (event: MouseEvent, link: HTMLAnchorElement) => {
     event.preventDefault();
     const linkId = link.getAttribute("href")?.slice(1);
     if (linkId) {
@@ -58,10 +55,8 @@ export default function BlogContents({ post, MDXComponent }) {
       const links = document.querySelectorAll('a[href^="#"]');
       links.forEach((link) => {
         if (link instanceof HTMLAnchorElement) {
-          link.addEventListener(
-            "click",
-            (event: React.MouseEvent<HTMLAnchorElement>) =>
-              handleLinkClick(event, link)
+          link.addEventListener("click", (event: MouseEvent) =>
+            handleLinkClick(event, link)
           );
         }
       });

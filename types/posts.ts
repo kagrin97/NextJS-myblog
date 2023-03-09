@@ -6,4 +6,6 @@ export interface Post {
     flattenedPath: string;
   };
   _id: string;
+  slug: string;
+  type: string;
 }

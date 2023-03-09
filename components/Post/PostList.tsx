@@ -8,7 +8,7 @@ interface Props {
   posts: Post[];
 }
 
-export default function PostList({ searchPosts, posts }: Props): Element {
+export default function PostList({ searchPosts, posts }: Props) {
   const postsToRender = searchPosts.length ? searchPosts : posts;
 
   return (

@@ -1,4 +1,4 @@
-interface MetadataType {
+export interface MetadataType {
   type: string;
   title: string;
   description: string;
@@ -8,7 +8,7 @@ interface MetadataType {
   image: string;
 }
 
-const metadata: MetadataType = {
+export const metadata: MetadataType = {
   type: "blog",
   title: "Kang's blog",
   description: "개발자로서의 개발을 위한 개발생활",

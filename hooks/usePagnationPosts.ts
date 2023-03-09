@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Post } from "types/posts";
 
 interface PaginationPosts {
-  newPosts: Post;
+  newPosts: Post[];
   pageCount: number;
   curPage: number;
   setCurPage: (page: number) => void;

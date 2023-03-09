@@ -12,7 +12,9 @@ export default function Pagination({
   curPage,
 }: PaginationProps) {
   const onChangePage = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-    setCurPage(+e.target.innerText);
+    if (e.target instanceof HTMLElement) {
+      setCurPage(+e.target.innerText);
+    }
   };
 
   const getPageClass = (isActive: boolean) =>

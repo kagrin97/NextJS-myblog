@@ -11,6 +11,7 @@ import { useMDXComponent } from "next-contentlayer/hooks";
 const PostCategorySlug = (post) => {
   const MDXComponent = useMDXComponent(post.body.code);
   const customMeta = makeMeta(post);
+  console.log(customMeta);
   return (
     <Container customMeta={customMeta} className="relative">
       <BlogContents post={post} MDXComponent={MDXComponent} />
