@@ -1,3 +1,5 @@
+import React from "react";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -25,7 +27,7 @@ export default function TopBtn() {
   };
 
   return (
-    <>
+    <React.Fragment>
       {isScroll && (
         <a
           href="#"
@@ -41,6 +43,6 @@ export default function TopBtn() {
           />
         </a>
       )}
-    </>
+    </React.Fragment>
   );
 }

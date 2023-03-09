@@ -1,3 +1,5 @@
+import React from "react";
+
 import BlogPost from "./BlogPost";
 
 export default function PostList({ searchPosts, posts }) {

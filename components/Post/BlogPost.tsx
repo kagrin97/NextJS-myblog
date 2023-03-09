@@ -1,6 +1,7 @@
+import React from "react";
 import Link from "next/link";
 
-interface PropsType {
+interface Props {
   date: string;
   title: string;
   des: string;
@@ -8,7 +9,7 @@ interface PropsType {
   children?: any;
 }
 
-export default function BlogPost(props: PropsType) {
+export default function BlogPost(props: Props) {
   return (
     <div className="w-full my-7 transition ease-in-out hover:-translate-x-1.5 hover:text-green-400/80">
       <Link href={`/${props.slug}`} passHref>

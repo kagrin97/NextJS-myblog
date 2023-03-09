@@ -1,4 +1,5 @@
 import "styles/globals.css";
+import React from "react";
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }
 
   if (typeof window === "undefined") {
-    return <></>;
+    return <React.Fragment></React.Fragment>;
   } else {
     return (
       <ThemeProvider attribute="class">

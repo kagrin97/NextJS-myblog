@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function SeachBar({ searchTitle, onChangeSearchTitle }) {
   return (
     <form className={`fixed w-3/5 max-w-2xl flex mt-4 max800:w-11/12`}>

@@ -1,3 +1,4 @@
+import React from "react";
 import Container from "components/Layout/Container";
 import Comments from "components/Post/Comments";
 import TopBtn from "components/UIElements/TopBtn";

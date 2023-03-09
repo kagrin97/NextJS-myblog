@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 import PostList from "components/Post/PostList";
 import Container from "components/Layout/Container";
