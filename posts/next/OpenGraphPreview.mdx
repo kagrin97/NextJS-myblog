@@ -14,13 +14,18 @@ category: nextjs
       1. OpenGraphPreview(링크미리보기)는 무엇인가
     </a>
     <a href="#2" className="mokcha-container__list">
-      2. 실제로 구현해보자!
+      2. 구현
       <p>1. CORS에러 처리하기</p>
       <p>2. HTML을 얻고 OG정보를 뽑기</p>
       <p>3. Element를 변경하기</p>
     </a>
     <a href="#3" className="mokcha-container__list">
       3. 여담
+    </a>
+    <a href="#4" className="mokcha-container__list">
+      4. 예상치 못한 트러블 슈팅
+      <p>1. 에러의 원인</p>
+      <p>2. 문제 해결 </p>
     </a>
   </div>
 </div>
@@ -30,7 +35,7 @@ category: nextjs
 <br></br>
 
 <h2 id="1" className={`dark:text-white text-center`}>
-  OpenGraphPreview(링크미리보기)는 무엇인가
+  <span>1. </span>OpenGraphPreview(링크미리보기)는 무엇인가
 </h2>
 
 <br></br>
@@ -58,7 +63,7 @@ OpenGraphPreview를 직접 만들 수 밖에 없었습니다.
 <br></br>
 
 <h2 id="2" className={`dark:text-white text-center`}>
-  실제로 구현해보자!
+  <span>2. </span>구현
 </h2>
 
 <br></br>
@@ -206,19 +211,97 @@ const $linkList = document.querySelectorAll("#link");
 <br></br>
 
 <h2 id="3" className={`dark:text-white text-center`}>
-  여담
+  <span>3. </span>여담
 </h2>
 
 <br></br>
 
-이번에 OpenGraphPreview를 구현하면서 처음에는 금방 할 수 있을 거라고 생각했었습니다. 하지만 예상치 못한 난관이 많더군요.
+이번에 OpenGraphPreview를 구현하면서 처음에는 금방 할 수 있을 거라고 생각했었습니다.
 
-첫 번째는 예상치 못한 cors에러가 있고 두 번쨰는 next/image의 Image 컴포넌트였습니다. 보통 next에서 img태그대신 Image를
+하지만 예상치 못한 난관이 많더군요. 첫 번째는 예상치 못한 cors에러가 있고 두 번쨰는
 
-사용하는데 저도 그렇게 적용해 보려고 했습니다만 Invalid 에러가 나타나더라고요. 그래서 next-config.js에 image를 와일드카드
+next/image의 Image 컴포넌트였습니다. 보통 next에서 img태그대신 Image를 사용하는데 저도 그렇게
 
-형식으로 어떤 url이든지 Image로 렌더링하려고 했습니다. 하지만 되지 않더라고요 그래서 저는 그냥 img 태그를 사용했습니다.
+적용해 보려고 했습니다만 Invalid 에러가 나타나더라고요. 그래서 next-config.js에 image를 와일드카드
 
-그 밖에도 og태그가 없을때는 title정보만 가지고 렌더링한다던지 여러가지 생각할만한 부분이 많아서 꽤 어려운 도전이였습니다.
+형식으로 어떤 url이든지 Image로 렌더링하려고 했습니다. 하지만 되지 않더라고요.
 
-대부분 blog article에 a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수 있으니 발견하시면 알려주세요 ^.^
+그래서 저는 그냥 img 태그를 사용했습니다. 그 밖에도 og태그가 없을때는 title정보만 가지고
+
+렌더링한다던지 여러가지 생각할만한 부분이 많아서 꽤 어려운 도전이였습니다. 대부분 blog article에
+
+a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수 있으니 발견하시면 알려주세요 ^.^
+
+---
+
+<h2 id="4"></h2>
+
+<br></br>
+
+<h2 id="4" className={`dark:text-white text-center`}>
+  <div>4. 예상치 못한 트러블 슈팅</div>
+</h2>
+
+<br></br>
+
+<h3 className={`dark:text-white`}>1. 에러의 원인</h3>
+<br></br>
+
+이 포스터를 작성한 그다음 날 블로그 글을 둘러 보던 중 <b>뒤로가기를 클릭하면 에러가 발생한다는 사실</b>을 알게 되었습니다. 에러의 내용은
+
+`NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.`
+
+처음에는 제가 el을 변경하여서 이전 페이지 DOM을 복구하려고 할 때 에러가 발생한다고 생각했습니다.
+
+하지만 <b>어떨떄는 에러가 발생하고 어떨 때는 제대로 작동이 되었습니다.</b> 계속 시도해본 결과 알아낸 사실은
+
+블로그의 목차를 클릭하였을 때 해당 목차로 이동하는데 URL 뒤에 해당 목차의 ID 값이 붙은 후
+
+뒤로가기가 수행되면 에러가 발생한다는 사실이었습니다. 해당 문제를 해결하는 방법은 총 <b>3가지</b>가 존재합니다.
+
+1. a 태그 대신 Link 컴포넌트를 사용하는 방법
+
+2. a 태그를 div 태그로 감싸는 방법
+
+3. a 태그 event를 중지하고 scrollIntoView를 사용하는 방법
+
+<br></br>
+<h3 className={`dark:text-white`}>2. 문제 해결</h3>
+<br></br>
+
+3가지의 방법이 존재하지만 제 블로그들을 작성할 때 <b>mdx에서 작성</b>하기 때문에 next의 Link 태그를
+
+사용할 수 없었습니다. 그리고 div 태그를 감싸는 방법 대신 3번쨰 방법을 이용해서 문제를 해결하려면..
+
+1. 목차 역할을 하는 a 태그에 click event를 붙여줍니다.
+
+2. 해당 event 발생 시 event.preventDefault를 수행해 event를 중지합니다.
+
+3. a 태그의 href 값을 찾은 다음 해당 값의 id를 가진 목차로 이동합니다.
+
+문제를 해결하는 함수 구현 👇
+
+```js showLineNumbers
+const handlerChapterScroll = () => {
+  // a 태그의 href 값 앞에 #이 붙은 태그를 가져옵니다.
+  const links = document.querySelectorAll('a[href^="#"]');
+
+  links.forEach((link) => {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      // #을 제거한 href를 가져옵니다.
+      const linkId = link.getAttribute("href")?.slice(1);
+      if (linkId) {
+        // id값과 일치하는 목차를 가져옵니다.
+        const target = document.getElementById(linkId);
+        if (target) {
+          // 해당 목차로 scroll 됩니다.
+          target.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
+      }
+    });
+  });
+};
+```
