@@ -1,18 +1,24 @@
 import { useState } from "react";
 
-export default function usePagnationPosts({ posts }) {
-  const [curPage, setCurPage] = useState(1);
-  const LIMIT_ITEM = 10;
-  let newPosts;
+import { Post } from "types/posts";
 
-  if (curPage === 1) {
-    newPosts = posts.slice(0, LIMIT_ITEM);
-  } else {
-    const startItem = (curPage - 1) * LIMIT_ITEM;
-    newPosts = posts.slice(startItem, startItem + LIMIT_ITEM);
-  }
+interface PaginationPosts {
+  newPosts: Post;
+  pageCount: number;
+  curPage: number;
+  setCurPage: (page: number) => void;
+}
 
-  const pageCount = Math.ceil(posts.length / LIMIT_ITEM);
+export default function usePaginationPosts({
+  posts,
+}: {
+  posts: Post[];
+}): PaginationPosts {
+  const [curPage, setCurPage] = useState<number>(1);
+  const LIMIT_ITEM: number = 10;
+  const startItem: number = (curPage - 1) * LIMIT_ITEM;
+  const newPosts: Post[] = posts.slice(startItem, startItem + LIMIT_ITEM);
+  const pageCount: number = Math.ceil(posts.length / LIMIT_ITEM);
 
   return { newPosts, pageCount, curPage, setCurPage };
 }

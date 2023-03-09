@@ -1,15 +1,7 @@
 import React from "react";
 import BlogPost from "./BlogPost";
 
-interface Post {
-  date: string;
-  title: string;
-  description: string;
-  _raw: {
-    flattenedPath: string;
-  };
-  _id: string;
-}
+import { Post } from "types/posts";
 
 interface Props {
   searchPosts: Post[];

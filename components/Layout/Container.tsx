@@ -21,7 +21,7 @@ interface ContainerProps {
   children: React.ReactNode;
 }
 
-export default function Container(props: ContainerProps): Element {
+export default function Container(props: ContainerProps) {
   const widthSize = useResizeWidth();
   const structuredData = handleStructuredData(props.customMeta);
 

@@ -15,7 +15,7 @@ import navlinks, { Navlinks } from "data/navlinks";
 
 type Theme = "dark" | "light";
 
-export default function HeaderNav(): Element {
+export default function HeaderNav() {
   const router = useRouter();
   const path = `/${router.pathname.split("/")[1]}`;
   const { theme, setTheme } = useTheme<Theme>();

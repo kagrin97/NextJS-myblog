@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import navlinks from "data/navlinks";
+import navlinks, { Navlinks } from "data/navlinks";
 import Profile from "components/UIElements/Profile";
 
 const SideNav = () => {
@@ -14,7 +14,7 @@ const SideNav = () => {
       <Profile />
       <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
         <div className="text-sm lg:flex-grow">
-          {navlinks.map((nav) => (
+          {navlinks.map((nav: Navlinks) => (
             <Link href={nav.link} key={nav.title}>
               <div className={`hover:cursor-pointer hover:text-green-400 mt-4`}>
                 <a
