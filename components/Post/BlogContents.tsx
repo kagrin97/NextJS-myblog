@@ -81,9 +81,7 @@ export default function BlogContents({ post, MDXComponent }) {
         {post.date.slice(8, 10)}일
       </h3>
       <article className={`w-full dark:text-slate-50 text-neutral-900`}>
-        <div>
-          <MDXComponent />
-        </div>
+        <MDXComponent />
       </article>
     </article>
   );

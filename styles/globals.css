@@ -63,6 +63,11 @@ b {
   @apply shadow-md;
 }
 
+.mokcha-container__list p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
 .prose :where(ol):not(:where([class~="not-prose"] *)) {
   margin: 0;
 }
