@@ -26,7 +26,10 @@ export default function TopBtn() {
   return (
     <React.Fragment>
       {isScroll && (
-        <a className="fixed bottom-5 right-5 z-10" onClick={scrollToTop}>
+        <a
+          className="fixed bottom-5 right-5 z-10 hover:cursor-pointer"
+          onClick={scrollToTop}
+        >
           <Image
             src={`/top.png`}
             alt="top버튼"

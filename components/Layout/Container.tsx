@@ -11,7 +11,17 @@ import useResizeWidth from "hooks/useResizeWidth";
 import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
 
-export default function Container(props) {
+interface ContainerProps {
+  customMeta: {
+    title: string;
+    description: string;
+    url: string;
+    image: string;
+  };
+  children: React.ReactNode;
+}
+
+export default function Container(props: ContainerProps): Element {
   const widthSize = useResizeWidth();
   const structuredData = handleStructuredData(props.customMeta);
 

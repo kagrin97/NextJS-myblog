@@ -11,7 +11,13 @@ import {
   allServers,
 } from "contentlayer/generated";
 
-const navlinks: { title: string; link: string; length?: number }[] = [
+export interface Navlinks {
+  title: string;
+  link: string;
+  length?: number;
+}
+
+const navlinks: Navlinks[] = [
   { title: "JavaScript", link: "/js", length: allJs.length },
   { title: "TypeScript", link: "/types", length: allTypes.length },
   { title: "NextJS", link: "/next", length: allNexts.length },
