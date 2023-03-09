@@ -24,20 +24,15 @@ export default function BlogContents({ post, MDXComponent }) {
         );
         const ogImage = $('meta[property="og:image"]').attr("content");
         let aHtml: string = "";
-        if (ogTitle && ogDescription && ogImage) {
-          aHtml = ReactDOMServer.renderToString(
-            <OpenGraphPreview
-              urlPath={urlPath}
-              ogTitle={ogTitle}
-              ogDescription={ogDescription}
-              ogImage={ogImage}
-            />
-          );
-        } else if (ogTitle) {
-          aHtml = ReactDOMServer.renderToString(
-            <OpenGraphPreview urlPath={urlPath} ogTitle={ogTitle} />
-          );
-        }
+
+        aHtml = ReactDOMServer.renderToString(
+          <OpenGraphPreview
+            urlPath={urlPath}
+            ogTitle={ogTitle}
+            ogDescription={ogDescription}
+            ogImage={ogImage}
+          />
+        );
 
         el.outerHTML = aHtml;
       } catch (err) {
