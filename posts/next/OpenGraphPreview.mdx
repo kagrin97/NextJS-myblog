@@ -257,7 +257,13 @@ a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수
 
 블로그의 목차를 클릭하였을 때 해당 목차로 이동하는데 URL 뒤에 해당 목차의 ID 값이 붙은 후
 
-뒤로가기가 수행되면 에러가 발생한다는 사실이었습니다. 해당 문제를 해결하는 방법은 총 <b>3가지</b>가 존재합니다.
+뒤로가기가 수행되면 에러가 발생한다는 사실이었습니다.
+
+<div className={`step-by-step`}>
+
+<h3>
+  해당 문제를 해결하는 방법은 총 <b>3가지</b>
+</h3>
 
 1. a 태그 대신 Link 컴포넌트를 사용하는 방법
 
@@ -265,19 +271,27 @@ a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수
 
 3. a 태그 event를 중지하고 scrollIntoView를 사용하는 방법
 
+</div>
+
 <br></br>
 <h3 className={`dark:text-white`}>2. 문제 해결</h3>
 <br></br>
 
 3가지의 방법이 존재하지만 제 블로그들을 작성할 때 <b>mdx에서 작성</b>하기 때문에 next의 Link 태그를
 
-사용할 수 없었습니다. 그리고 div 태그를 감싸는 방법 대신 3번쨰 방법을 이용해서 문제를 해결하려면..
+사용할 수 없었습니다. 그리고 div 태그를 감싸는 방법 대신 3번쨰 방법을 사용하겠습니다.
+
+<div className={`step-by-step`}>
+
+<h3>3번째 방법 step by step</h3>
 
 1. 목차 역할을 하는 a 태그에 click event를 붙여줍니다.
 
 2. 해당 event 발생 시 event.preventDefault를 수행해 event를 중지합니다.
 
 3. a 태그의 href 값을 찾은 다음 해당 값의 id를 가진 목차로 이동합니다.
+
+</div>
 
 문제를 해결하는 함수 구현 👇
 

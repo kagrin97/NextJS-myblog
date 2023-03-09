@@ -89,4 +89,69 @@ return (
 ```
 
 그리고 만들어진 Comments를 사용하고싶은 곳에다가 집어 넣으면  
-완성이됩니다. (완성이된 댓글기능 ↓)
+완성이됩니다.
+
+---
+
+<h2 className={`dark:text-white`}>
+  4. 다크 모드일때 댓글창 theme 변경하는 방법
+</h2>
+
+저는 `next-theme`을 사용해서 현재 브라우저의 theme 정보를 토글 할수있습니다.
+
+해당 패키지를 사용해서 댓글창 theme를 변경하는 방법을 설명하자면...
+
+<div className={`step-by-step`}>
+
+<h3>step by step</h3>
+
+1. theme 정보가 변경되면 Comments 컴포넌트를 새로 생성합니다.
+
+2. 새로 생성될 Comments 컴포넌트에 theme에 따라 Comments theme를 변경합니다.
+
+3. 기존에 존재하는 Comments를 삭제합니다.
+
+</div>
+
+구현 된 코드 👇
+
+```js showLineNumbers
+import React, { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
+
+export default function Comments() {
+  const ref = useRef(null);
+  const { theme } = useTheme();
+
+  const makeComments = () => {
+    const script = document.createElement("script");
+
+    script.src = "https://utteranc.es/client.js";
+    script.async = false;
+    script.setAttribute("repo", "kagrin97/NextJS-myblog");
+    script.setAttribute("issue-term", "title");
+
+    // browser theme에 따라서 Comments theme을 변경해줍니다.
+    if (theme === "dark") {
+      script.setAttribute("theme", "dark-blue");
+    } else {
+      script.setAttribute("theme", "github-light");
+    }
+    script.setAttribute("label", "blog-comment");
+    ref.current.appendChild(script);
+  };
+
+  const removeExistedComments = () => {
+    const existingScript = ref.current.querySelector(".utterances");
+    if (existingScript) {
+      existingScript.remove();
+    }
+  };
+  useEffect(() => {
+    makeComments();
+    removeExistedComments();
+  }, [theme]);
+
+  return <div ref={ref}></div>;
+}
+```

@@ -13,6 +13,20 @@ b {
   @apply dark:text-emerald-400;
 }
 
+.step-by-step {
+  border-radius: 50px;
+  border-width: 2px;
+  @apply border-orange-400;
+}
+.step-by-step ol {
+  margin-left: 1rem;
+}
+
+.step-by-step h3 {
+  text-align: center;
+  @apply dark:text-white;
+}
+
 /* 목차 part */
 
 .mokcha {
