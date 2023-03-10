@@ -26,7 +26,6 @@ export default function Container(props: ContainerProps) {
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
-        <link rel="icon" href="/favicon.ico" />
         <title>{structuredData.headline}</title>
 
         <script
@@ -54,17 +53,8 @@ export default function Container(props: ContainerProps) {
       >
         <Link href="/" passHref>
           <button className={`flex flex-row items-center ml-2 `}>
-            <Image
-              src={`/imgs/round.webp`}
-              alt="로고"
-              width={35}
-              height={35}
-              objectFit={`cover`}
-              className={`rounded-full hover:animate-spin`}
-              priority={true}
-            />
             <span
-              className={`mx-3 font-semibssold italic text-lg max800:text-sm text-green-400`}
+              className={`mx-3 font-semibssold italic text-lg max800:text-sm text-green-500`}
             >
               Kang blog
             </span>

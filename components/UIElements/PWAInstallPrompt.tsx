@@ -47,7 +47,7 @@ const PWAInstallPrompt = () => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <Image src="/icons/icon-48x48.png" width="32px" height="32px" />
+          <Image src="/icons/icon-48x48.png" width="42px" height="42px" />
           <p className="ml-2">이 사이트의 앱을 설치하세요.</p>
         </div>
         <div className="flex items-center">

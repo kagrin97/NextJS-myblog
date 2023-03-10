@@ -50,11 +50,7 @@ category: nextjs
   />
 </div>
 
-평소 인터넷 서핑을 하다 보면 티스토리, 벨로그로 블로그를 포스팅하시는 분들을 보면 URL을 공유
-
-했을 때 URL 카드가 예쁘게 만들어져서 렌더링 되어 있더라고요 저는 제가 직접 만든 블로그를 운영하다 보니
-
-OpenGraphPreview를 직접 만들 수 밖에 없었습니다.
+평소 인터넷 서핑을 하다 보면 티스토리, 벨로그로 블로그를 포스팅하시는 분들을 보면 URL을 공유 했을 때 URL 카드가 예쁘게 만들어져서 렌더링 되어 있더라고요 저는 제가 직접 만든 블로그를 운영하다 보니 OpenGraphPreview를 직접 만들 수 밖에 없었습니다.
 
 ---
 
@@ -71,13 +67,9 @@ OpenGraphPreview를 직접 만들 수 밖에 없었습니다.
 <h3 className={`dark:text-white`}>1. CORS에러 처리하기</h3>
 <br></br>
 
-우선 첫 번째로 URL의 <b>og정보를 가져와야 합니다.</b> og에는 title, image, description 3가지를 가져와서
+우선 첫 번째로 URL의 <b>og정보를 가져와야 합니다.</b> og에는 title, image, description 3가지를 가져와서 Card를 만든 건데요. og 정보는 axios의 get을 사용하면 html 정보를 가져올 수가 있습니다.
 
-Card를 만든 건데요. og 정보는 axios의 get을 사용하면 html 정보를 가져올 수가 있습니다.
-
-하지만 `axios.get`을 사용하게 되면 <b>cors에러</b>가 발생하게 됩니다. cors에러를 제거하기 위해서는
-
-`/api` 폴더를 사용하면 되는데요 어떻게 처리되는 것일까요?
+하지만 `axios.get`을 사용하게 되면 <b>cors에러</b>가 발생하게 됩니다. cors에러를 제거하기 위해서는 `/api` 폴더를 사용하면 되는데요 어떻게 처리되는 것일까요?
 
 기본적으로 Next·JS는 /api 폴더의 API 경로에 대해 <b>CORS(출처 간 리소스 공유)를 자동으로 처리</b>합니다.
 즉, 명시적으로 달리 구성하지 않는 한 기본적으로 다른 오리진(도메인)에서의 요청이 허용됩니다.
@@ -157,9 +149,7 @@ const ogImage = $('meta[property="og:image"]').attr("content");
 <h3 className={`dark:text-white`}>3. Element를 변경하기</h3>
 <br></br>
 
-저는 `OpenGraphPreview` 컴포넌트를 생성하고 문자열로 렌더링할수있게 변형한다음에
-
-`el.outerHTML` 값에 렌더링된 문자열을 넣어서 OpenGraphPreview 렌더링 할 예정입니다.
+저는 `OpenGraphPreview` 컴포넌트를 생성하고 문자열로 렌더링할수있게 변형한 다음에 `el.outerHTML` 값에 렌더링된 문자열을 넣어서 OpenGraphPreview 렌더링 할 예정입니다.
 
 ```js showLineNumbers
 import OpenGraphPreview from "../UIElements/OpenGraphPreview";
@@ -191,9 +181,7 @@ const $linkList = document.querySelectorAll("#link");
     })
 ```
 
-대략적인 형태는 이렇습니다. OpenGraphPreview 컴포넌트를 생성하고 해당 컴포넌트를
-
-`ReactDOMServer.renderToString`를 사용해서 문자열로 렌더링할 수 있게 변형 후 el를 변경합니다.
+대략적인 형태는 이렇습니다. OpenGraphPreview 컴포넌트를 생성하고 해당 컴포넌트를 `ReactDOMServer.renderToString`를 사용해서 문자열로 렌더링할 수 있게 변형 후 el를 변경합니다.
 
 <div className={`flex justify-center`}>
   <img
@@ -216,21 +204,7 @@ const $linkList = document.querySelectorAll("#link");
 
 <br></br>
 
-이번에 OpenGraphPreview를 구현하면서 처음에는 금방 할 수 있을 거라고 생각했었습니다.
-
-하지만 예상치 못한 난관이 많더군요. 첫 번째는 예상치 못한 cors에러가 있고 두 번쨰는
-
-next/image의 Image 컴포넌트였습니다. 보통 next에서 img태그대신 Image를 사용하는데 저도 그렇게
-
-적용해 보려고 했습니다만 Invalid 에러가 나타나더라고요. 그래서 next-config.js에 image를 와일드카드
-
-형식으로 어떤 url이든지 Image로 렌더링하려고 했습니다. 하지만 되지 않더라고요.
-
-그래서 저는 그냥 img 태그를 사용했습니다. 그 밖에도 og태그가 없을때는 title정보만 가지고
-
-렌더링한다던지 여러가지 생각할만한 부분이 많아서 꽤 어려운 도전이였습니다. 대부분 blog article에
-
-a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수 있으니 발견하시면 알려주세요 ^.^
+이번에 OpenGraphPreview를 구현하면서 처음에는 금방 할 수 있을 거라고 생각했었습니다. 하지만 예상치 못한 난관이 많더군요. 첫 번째는 예상치 못한 cors에러가 있고 두 번쨰는 next/image의 Image 컴포넌트였습니다. 보통 next에서 img태그대신 Image를 사용하는데 저도 그렇게 적용해 보려고 했습니다만 Invalid 에러가 나타나더라고요. 그래서 next-config.js에 image를 와일드카드 형식으로 어떤 url이든지 Image로 렌더링하려고 했습니다. 하지만 되지 않더라고요. 그래서 저는 그냥 img 태그를 사용했습니다. 그 밖에도 og태그가 없을때는 title정보만 가지고 렌더링한다던지 여러가지 생각할만한 부분이 많아서 꽤 어려운 도전이였습니다. 대부분 blog article에 a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수 있으니 발견하시면 알려주세요 ^.^
 
 ---
 
@@ -247,17 +221,9 @@ a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수
 <h3 className={`dark:text-white`}>1. 에러의 원인</h3>
 <br></br>
 
-이 포스터를 작성한 그다음 날 블로그 글을 둘러 보던 중 <b>뒤로가기를 클릭하면 에러가 발생한다는 사실</b>을 알게 되었습니다. 에러의 내용은
+이 포스터를 작성한 그다음 날 블로그 글을 둘러 보던 중 <b>뒤로가기를 클릭하면 에러가 발생한다는 사실</b>을 알게 되었습니다. 에러의 내용은 `NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.`
 
-`NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.`
-
-처음에는 제가 el을 변경하여서 이전 페이지 DOM을 복구하려고 할 때 에러가 발생한다고 생각했습니다.
-
-하지만 <b>어떨떄는 에러가 발생하고 어떨 때는 제대로 작동이 되었습니다.</b> 계속 시도해본 결과 알아낸 사실은
-
-블로그의 목차를 클릭하였을 때 해당 목차로 이동하는데 URL 뒤에 해당 목차의 ID 값이 붙은 후
-
-뒤로가기가 수행되면 에러가 발생한다는 사실이었습니다.
+처음에는 제가 el을 변경하여서 이전 페이지 DOM을 복구하려고 할 때 에러가 발생한다고 생각했습니다. 하지만 <b>어떨떄는 에러가 발생하고 어떨 때는 제대로 작동이 되었습니다.</b> 계속 시도해본 결과 알아낸 사실은 블로그의 목차를 클릭하였을 때 해당 목차로 이동하는데 URL 뒤에 해당 목차의 ID 값이 붙은 후 뒤로가기가 수행되면 에러가 발생한다는 사실이었습니다.
 
 <div className={`step-by-step`}>
 
@@ -277,9 +243,7 @@ a태그를 OpenGraphPreview로 변경했지만 아직 덜된 부분이 있을수
 <h3 className={`dark:text-white`}>2. 문제 해결</h3>
 <br></br>
 
-3가지의 방법이 존재하지만 제 블로그들을 작성할 때 <b>mdx에서 작성</b>하기 때문에 next의 Link 태그를
-
-사용할 수 없었습니다. 그리고 div 태그를 감싸는 방법 대신 3번쨰 방법을 사용하겠습니다.
+3가지의 방법이 존재하지만 제 블로그들을 작성할 때 <b>mdx에서 작성</b>하기 때문에 next의 Link 태그를 사용할 수 없었습니다. 그리고 div 태그를 감싸는 방법 대신 3번쨰 방법을 사용하겠습니다.
 
 <div className={`step-by-step`}>
 
