@@ -10,9 +10,7 @@ const withPWA = require("next-pwa")({
   buildExcludes: [/middleware-manifest.json$/],
 });
 
-const withContentlayerSettings = withContentlayer({
-  /* Contentlayer configuration options go here */
-});
+const withContentlayerSettings = withContentlayer({});
 
 const nextConfig = withPWA(withContentlayerSettings);
 

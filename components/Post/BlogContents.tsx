@@ -72,7 +72,7 @@ export default function BlogContents({ post, MDXComponent }) {
         {post.date.slice(0, 4)}년 {post.date.slice(5, 7)}월
         {post.date.slice(8, 10)}일
       </h3>
-      <article className="w-full dark:text-slate-50 text-neutral-900">
+      <article className="w-full dark:text-slate-50 text-neutral-900 text-justify px-4">
         <MDXComponent />
       </article>
     </article>
