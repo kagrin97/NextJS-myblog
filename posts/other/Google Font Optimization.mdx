@@ -32,9 +32,7 @@ category: other
 
 <br></br>
 
-최근에 제 블로그를 <b>Light house</b>를 돌려보았는데 예전과는 다르게 점수가 매우 낮게
-
-나오고 있었습니다. 그래서 뒤져 보니까 이런 경고를 보내고 있더군요.
+최근에 제 블로그를 <b>Light house</b>를 돌려보았는데 예전과는 다르게 점수가 매우 낮게 나오고 있었습니다. 그래서 뒤져 보니까 이런 경고를 보내고 있더군요.
 
 <div className={`flex justify-center`}>
   <img
@@ -43,11 +41,7 @@ category: other
   />
 </div>
 
-전송 크기가 너무 커져서 렌더링 시간이 오래 걸리게 되었던 것이었습니다.
-
-보니까 <b>...woff (fonts.gstatic.com)</b> 이게 머지? 하던 도중 찾아보니까 구글 폰트 때문이었습니다.
-
-제가 사용하는 `Noto Sans Korean`의 용량이 너무 높았기 때문에 저는 용량을 줄여야 했습니다.
+전송 크기가 너무 커져서 렌더링 시간이 오래 걸리게 되었던 것이었습니다. 보니까 <b>...woff (fonts.gstatic.com)</b> 이게 머지? 하던 도중 찾아보니까 구글 폰트 때문이었습니다. 제가 사용하는 `Noto Sans Korean`의 용량이 너무 높았기 때문에 저는 용량을 줄여야 했습니다.
 
 ---
 
@@ -99,13 +93,7 @@ category: other
 
 <br></br>
 
-저는 처음에 구글 폰트(otf)를 다운로드한 다음에 <b>otf to woff2</b> 한 다음에 적용하면 될 거라고
-
-생각했었습니다. 용량도 획기적으로 줄었고요. <b>3000KB -> 9KB</b> 하지만 무슨 이유에선지 실제로
-
-적용은 되지가 않더라고요 (이것 때문에 몇 시간을...) 아무래도 optimization 중에 손실이
-
-발생하는 것 같았습니다. 그러던 중 한 사이트를 발견했는데요
+저는 처음에 구글 폰트(otf)를 다운로드한 다음에 <b>otf to woff2</b> 한 다음에 적용하면 될 거라고 생각했었습니다. 용량도 획기적으로 줄었고요. <b>3000KB -> 9KB</b> 하지만 무슨 이유에선지 실제로 적용은 되지가 않더라고요 (이것 때문에 몇 시간을...) 아무래도 optimization 중에 손실이 발생하는 것 같았습니다. 그러던 중 한 사이트를 발견했는데요
 
 <a
   className={`dark:text-white`}
@@ -135,9 +123,7 @@ category: other
   />
 </div>
 
-이제 사이트로 이동해서 Noto Sans KR를 검색한 다음에 Korean에 check 해줍니다.
-
-그리고 저는 regular를 또한 check 할게요.
+이제 사이트로 이동해서 Noto Sans KR를 검색한 다음에 Korean에 check 해줍니다. 그리고 저는 regular를 또한 check 할게요.
 
 <div className={`flex justify-center`}>
   <img
@@ -153,13 +139,7 @@ category: other
   />
 </div>
 
-그 후 보시면 CSS 파일에 적용할 <b>@font-face</b> 형식이 두 가지가 있습니다.
-
-<b>Best, Modern</b> 방식으로 Best 방식은 모든 웹에 호환이 되도록 설정된 코드이고요
-
-Modern 방식은 woff2, woff만을 지원하는 웹 브라우저만이 호환이 되도록 설정한 코드입니다.
-
-저는 Modern을 사용하도록 하겠습니다.
+그 후 보시면 CSS 파일에 적용할 <b>@font-face</b> 형식이 두 가지가 있습니다. <b>Best, Modern</b> 방식으로 Best 방식은 모든 웹에 호환이 되도록 설정된 코드이고요 Modern 방식은 woff2, woff만을 지원하는 웹 브라우저만이 호환이 되도록 설정한 코드입니다. 저는 Modern을 사용하도록 하겠습니다.
 
 <div className={`flex justify-center`}>
   <img
@@ -186,9 +166,7 @@ Modern 방식은 woff2, woff만을 지원하는 웹 브라우저만이 호환이
   />
 </div>
 
-저는 Public 폴더 아래에 font 폴더를 형성하고 @font-face가 있는 font.css와 woff2, woff파일을
-
-한곳에 몰아넣어 주었습니다.
+저는 Public 폴더 아래에 font 폴더를 형성하고 @font-face가 있는 font.css와 woff2, woff파일을 한곳에 몰아넣어 주었습니다.
 
 ```css:global.css showLineNumbers
 @import url("../public/font/font.css");

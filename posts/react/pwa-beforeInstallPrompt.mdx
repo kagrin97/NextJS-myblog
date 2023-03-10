@@ -37,13 +37,7 @@ category: react
 이벤트가 트리거 되면 브라우저는 일반적으로 사용자에게 앱을 설치할지 여부를 묻는 메시지를 표시합니다. <b>이벤트는 앱당 한 번만 트리거</b> 되며, 앱의 자바스크립트 코드에서
 `window.addEventListener()` 메소드를 사용하여 이벤트를 캡처하고 처리할 수 있습니다.
 
-간단하게 말해서 사용자가 pwa로 만들어진 웹 페이지를 방문했을 때 기존에 설치하려면 크롬
-
-같은 경우에는 따로 설정을 눌러서 앱 설치 버튼을 눌러야 하지만 beforeinstallprompt를
-
-사용하면 브라우저가 설치를 안 한 사용자 여부를 판단해 설치 버튼을 띄워주는 기능을 해줍니다.
-
-저도 PWA 프로젝트 하나를 만들었는데 이 기능을 집어넣었습니다.
+간단하게 말해서 사용자가 pwa로 만들어진 웹 페이지를 방문했을 때 기존에 설치하려면 크롬 같은 경우에는 따로 설정을 눌러서 앱 설치 버튼을 눌러야 하지만 beforeinstallprompt를 사용하면 브라우저가 설치를 안 한 사용자 여부를 판단해 설치 버튼을 띄워주는 기능을 해줍니다. 저도 PWA 프로젝트 하나를 만들었는데 이 기능을 집어넣었습니다.
 
 ---
 
@@ -73,11 +67,7 @@ useEffect(() => {
 }, []);
 ```
 
-useEffect에 의존성에 빈 배열을 넣음으로써 마운트시 한 번만 실행되도록 설정합니다. 또한 메모리
-
-누수를 방지하기 위해서 언 마운트시에는 이벤트리스너를 지워줍니다. 여기서 beforeinstallprompt는
-
-사용자가 해당 앱 설치를 하지 않았을 때만 발생하는 리스너입니다.
+useEffect에 의존성에 빈 배열을 넣음으로써 마운트시 한 번만 실행되도록 설정합니다. 또한 메모리 누수를 방지하기 위해서 언 마운트시에는 이벤트리스너를 지워줍니다. 여기서 beforeinstallprompt는 사용자가 해당 앱 설치를 하지 않았을 때만 발생하는 리스너입니다.
 
 ```js showLineNumbers
 const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -89,11 +79,7 @@ const handleBeforeInstallPrompt = (event) => {
 };
 ```
 
-beforeinstallprompt 리스너가 발동할 때 handleBeforeInstallPrompt 함수가 실행되면서
-
-event를 억제하고 deferredPrompt state에 <b>event 객체를 저장</b>합니다. 이제 deferredPrompt 객체를
-
-활용하면 사용자한테 설치 프롬프트를 띄워줄 수가 있습니다.
+beforeinstallprompt 리스너가 발동할 때 handleBeforeInstallPrompt 함수가 실행되면서 event를 억제하고 deferredPrompt state에 <b>event 객체를 저장</b>합니다. 이제 deferredPrompt 객체를 활용하면 사용자한테 설치 프롬프트를 띄워줄 수가 있습니다.
 
 ```js showLineNumbers
 return (
@@ -103,9 +89,7 @@ return (
 );
 ```
 
-deferredPrompt 객체가 존재할 때 null 상태가 아닐 때만 사용자한테 앱 설치 버튼을 띄워 줄 수 있습니다.
-
-또한 button 태그의 onclick event를 handleInstall함수로 받게 합니다.
+deferredPrompt 객체가 존재할 때 null 상태가 아닐 때만 사용자한테 앱 설치 버튼을 띄워 줄 수 있습니다. 또한 button 태그의 onclick event를 handleInstall함수로 받게 합니다.
 
 ```js showLineNumbers
 const handleInstall = () => {
@@ -125,18 +109,9 @@ const handleInstall = () => {
 };
 ```
 
-handleInstall 함수에서는 우선 deferredPrompt event 객체가 존재하는지 여부를 판단 후
+handleInstall 함수에서는 우선 deferredPrompt event 객체가 존재하는지 여부를 판단 후 `deferredPrompt.prompt()`를 사용해 실제로 사용자한테 설치할지를 물어봅니다.
 
-`deferredPrompt.prompt()`를 사용해 실제로 사용자한테 설치할지를 물어봅니다.
-
-만약 설치한다고 응답을 보내면 앱을 설치하도록 실행합니다.
-
-`deferredPrompt.userChoice.then()`을 사용해서 사용자의 응답 여부를 기다립니다.
-
-<b>choiceResult.outcome</b> 값이 <b>accepted</b>일 경우 설치 동의했다는
-뜻입니다.
-
-마지막으로 deferredPrompt값을 비워줌으로써 앱 설치를 다시 띄워주지 않습니다.
+만약 설치한다고 응답을 보내면 앱을 설치하도록 실행합니다. `deferredPrompt.userChoice.then()`을 사용해서 사용자의 응답 여부를 기다립니다. <b>choiceResult.outcome</b> 값이 <b>accepted</b>일 경우 설치 동의했다는 뜻입니다. 마지막으로 deferredPrompt값을 비워줌으로써 앱 설치를 다시 띄워주지 않습니다.
 
 ---
 
