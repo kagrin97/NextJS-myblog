@@ -10,7 +10,7 @@ export interface MetadataType {
 
 export const metadata: MetadataType = {
   type: "blog",
-  title: "Kang's blog",
+  title: "Kang blog",
   description: "개발자로서의 개발을 위한 개발생활",
   author: "kagrin97",
   url: "https://kagrin97-blog.vercel.app/",

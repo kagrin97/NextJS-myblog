@@ -14,6 +14,21 @@ class MyDocument extends Document {
             name="naver-site-verification"
             content="da98b9d3244abed109afb03767f0adf1a713f595"
           />
+          <link rel="manifest" href="/manifest.json" />
+          <link
+            href="/icons/favicon-16x16.png"
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+          />
+          <link
+            href="/icons/favicon-32x32.png"
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+          />
+          <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+          <meta name="theme-color" content="#24B95E" />
         </Head>
         <div id="drawer-hook" />
         <div id="backdrop-hook" />
