@@ -22,7 +22,7 @@ interface ContainerProps {
 export default function Container(props: ContainerProps) {
   const widthSize = useResizeWidth();
   const structuredData = handleStructuredData(props.customMeta);
-
+  console.log(structuredData.datePublished);
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
@@ -41,6 +41,11 @@ export default function Container(props: ContainerProps) {
 
         <meta name="twitter:title" content={structuredData.headline} />
         <meta name="twitter:description" content={structuredData.description} />
+
+        <meta
+          property="article:published_time"
+          content={structuredData.datePublished}
+        ></meta>
       </Head>
       <NextProgress
         color="#22c55e"
