@@ -9,7 +9,7 @@ import Pagnation from "components/UIElements/Pagnation";
 import usePagnationPosts from "hooks/usePagnationPosts";
 import useSearchPosts from "hooks/useSearchPosts";
 
-const PostCategoryMain = ({ allDoc, posts }) => {
+const PostCategoryMain = ({ allDoc, posts, structuredData }) => {
   const { searchTitle, searchPosts, onChangeSearchTitle, getSearchPosts } =
     useSearchPosts(allDoc);
 
@@ -22,7 +22,7 @@ const PostCategoryMain = ({ allDoc, posts }) => {
   }, [searchTitle]);
 
   return (
-    <Container>
+    <Container structuredData={structuredData}>
       <SeachBar
         searchTitle={searchTitle}
         onChangeSearchTitle={onChangeSearchTitle}

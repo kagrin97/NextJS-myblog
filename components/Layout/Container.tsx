@@ -2,7 +2,6 @@ import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 
-import handleStructuredData from "data/metadata";
 import HeaderNav from "./HeaderNav";
 import SideNav from "./SideNav";
 import useResizeWidth from "hooks/useResizeWidth";
@@ -10,26 +9,24 @@ import useResizeWidth from "hooks/useResizeWidth";
 import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
 
-import { MetadataType } from "data/metadata";
-
+import { StructuredDataType } from "data/metadata";
 interface ContainerProps {
-  customMeta?: MetadataType;
+  structuredData?: StructuredDataType;
   children?: React.ReactNode;
   className?: string | undefined | null | false | Record<string, boolean>;
 }
 
-export default function Container(props: ContainerProps) {
+export default function Container({
+  structuredData,
+  children,
+  className,
+}: ContainerProps) {
   const widthSize = useResizeWidth();
-  const structuredData = handleStructuredData(props.customMeta);
+
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
         <title>{structuredData.headline}</title>
-
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
 
         <meta name="description" content={structuredData.description} />
         <meta property="og:title" content={structuredData.headline} />
@@ -44,6 +41,10 @@ export default function Container(props: ContainerProps) {
           property="article:published_time"
           content={structuredData.datePublished}
         ></meta>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
       </Head>
       <NextProgress
         color="#22c55e"
@@ -71,7 +72,7 @@ export default function Container(props: ContainerProps) {
             <SideNav />
           </aside>
         )}
-        <section className={`w-4/5 max800:w-full`}>{props.children}</section>
+        <section className={`w-4/5 max800:w-full`}>{children}</section>
       </div>
     </main>
   );

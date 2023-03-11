@@ -1,9 +1,12 @@
 import React from "react";
+import { InferGetStaticPropsType } from "next";
+
 import Container from "components/Layout/Container";
 import BlogPost from "components/Post/BlogPost";
 import { Post } from "types/posts";
-import { allDocuments } from "contentlayer/generated";
+import handleStructuredData from "data/metadata";
 
+import { allDocuments } from "contentlayer/generated";
 type SortedPosts = Post[];
 
 function sortPostsByDate(posts: Post[]): Post[] {
@@ -12,13 +15,15 @@ function sortPostsByDate(posts: Post[]): Post[] {
   });
 }
 
-export default function Home() {
+export default function Home(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
   const allPosts: Post[] = allDocuments;
   const sortedByDate: SortedPosts = sortPostsByDate(allPosts);
   const mostRecentPosts: Post[] = sortedByDate.slice(0, 7);
 
   return (
-    <Container>
+    <Container structuredData={props.structuredData}>
       <div className={`my-10 w-full`}>
         <h1
           className={`text-2xl font-black text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600`}
@@ -46,3 +51,12 @@ export default function Home() {
     </Container>
   );
 }
+
+export const getStaticProps = async () => {
+  const structuredData = handleStructuredData();
+  return {
+    props: {
+      structuredData,
+    },
+  };
+};

@@ -4,15 +4,12 @@ import Comments from "components/Post/Comments";
 import TopBtn from "components/UIElements/TopBtn";
 import BlogContents from "components/Post/BlogContents";
 
-import { makeMeta } from "utils/makeMeta";
-
 import { useMDXComponent } from "next-contentlayer/hooks";
 
-const PostCategorySlug = (post) => {
+const PostCategorySlug = ({ post, structuredData }) => {
   const MDXComponent = useMDXComponent(post.body.code);
-  const customMeta = makeMeta(post);
   return (
-    <Container customMeta={customMeta} className="relative">
+    <Container structuredData={structuredData} className="relative">
       <BlogContents post={post} MDXComponent={MDXComponent} />
       <TopBtn />
       <Comments />

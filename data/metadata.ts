@@ -80,7 +80,7 @@ const handleStructuredData = (customMeta) => {
     structuredData.headline = customMeta.title;
     structuredData.description = customMeta.description;
     structuredData.datePublished = customMeta.date;
-    structuredData.url = window.location.href;
+    structuredData.url = structuredData.url + customMeta.url;
     structuredData.ogTitle = customMeta.title;
     structuredData.ogDescription = customMeta.description;
     structuredData.twitterTitle = customMeta.title;

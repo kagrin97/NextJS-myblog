@@ -6,5 +6,6 @@ export const makeMeta = (post) => {
     title: post.title,
     description: post.description,
     date: new Date(post.date).toISOString(),
+    url: post._raw.flattenedPath,
   };
 };
