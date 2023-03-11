@@ -19,9 +19,6 @@ b {
   padding: 0 1rem;
   @apply border-orange-400;
 }
-.step-by-step ol {
-  margin-left: 1rem;
-}
 
 .step-by-step h3 {
   text-align: center;

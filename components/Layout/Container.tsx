@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -22,7 +21,6 @@ interface ContainerProps {
 export default function Container(props: ContainerProps) {
   const widthSize = useResizeWidth();
   const structuredData = handleStructuredData(props.customMeta);
-  console.log(structuredData.datePublished);
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
