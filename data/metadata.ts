@@ -17,7 +17,7 @@ export const metadata: MetadataType = {
   image: "/배너.jpg",
 };
 
-interface StructuredDataType {
+export interface StructuredDataType {
   "@context": string;
   "@type": string;
   headline: string;
@@ -46,7 +46,7 @@ interface StructuredDataType {
   twitterImage: string;
 }
 
-const handleStructuredData = (customMeta) => {
+const handleStructuredData = (customMeta?) => {
   const structuredData: StructuredDataType = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
