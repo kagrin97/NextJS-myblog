@@ -7,19 +7,20 @@
 - [3. 폴더 구조](#3-폴더-구조)
   - 폴더구조 설명
   - 폴더 트리
-- [4. 주안점](#4-주안점)
-- [5. 한계점](#5-한계점)
+- [4. 한계점](#4-한계점)
 
 ### 라이트하우스 지표
 
 ![성능표](<public/%EC%84%B1%EB%8A%A5%EC%A7%80%ED%91%9C(ligthHosue).PNG>)
 
 ### 기술 스택
+
 <div>
 <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextjs&logoColor=white">
 <img src="https://img.shields.io/badge/contentlayer-8D5A9E?style=for-the-badge&logo=contentlayer&logoColor=white">
 <img src="https://img.shields.io/badge/tailwind-3484D2?style=for-the-badge&logo=tailwind&logoColor=white">
 <img src="https://img.shields.io/badge/vercel-68BC71?style=for-the-badge&logo=vercel&logoColor=black">
+<img src="https://img.shields.io/badge/PWA-5A0FC8.svg?style=for-the-badge&logo=PWA&logoColor=white">
 </div>
 
 ## 1. 구현된 기능
@@ -34,6 +35,8 @@
 
   - [x] 포스터를 누르면 포스터의 내용을 가져옵니다.(포스터는 mdx 입니다.)
 
+  - [x] article에서 url 정보가 존재할경우 해당 url의 og정보를 가져와 OpenGraphPreview를 생성합니다.
+
 - ### 1-2) 다른 모든 기능
 
   ***
@@ -43,6 +46,12 @@
   - [x] utterances를 사용해 댓글기능을 구현했습니다.
 
   - [x] 기존 tailwind 코드 태그에 스타일을 새로 적용시켰습니다. in globals.css
+
+  - [x] PWA가 적용되어서 앱을 설치하지 않은 사용자가 접속할시 설치 스낵바가 나타납니다.
+
+  - [x] bulild시 자동으로 sitemap을 새로 생성합니다.
+
+  - [x] Google search console에서 크롤링하기 쉽게 JSON-LD가 Head에 포함되어있습니다.
 
 ## 2. 사용한 프레임워크및 라이브러리
 
@@ -66,96 +75,104 @@
 
   라이트모드와 다크모드를 구현하기 위해 현재 테마 정보를 가져오기위해 사용했습니다.
 
+- ### **cheerio**
+
+  OpenGraphPreview를 생성할떄 필요한 og정보를 html에서 더 쉽게 추출하기 위해서 사용했습니다.
+
 ## 3. 폴더 구조
 
 - ### 3-1) 폴더 구조 설명
 
   ***
 
-  | 폴더           | 용도                                                  |
-  | -------------- | ----------------------------------------------------- |
-  | **data**       | 기본 META 데이터와 각 페이지 URL정보를 모았습니다.    |
-  | **components** | 페이지 안에서 자주 쓰이는 컴포넌트를 모아 놓았습니다. |
-  | **pages**      | 각각 페이지를 담당하는 파일 폴더입니다.               |
-  | **posts**      | 포스터파일인 mdx파일을 모아놓은 폴더입니다.           |
-  | **public**     | 리소스 파일을 모아놓은 폴더입니다.                    |
+  | 폴더           | 용도                                                      |
+  | -------------- | --------------------------------------------------------- |
+  | **data**       | 기본 META 데이터와 각 페이지 URL정보를 모았습니다.        |
+  | **components** | 페이지 안에서 자주 쓰이는 컴포넌트를 모아 놓았습니다.     |
+  | **pages**      | 각각 페이지를 담당하는 파일 폴더입니다.                   |
+  | **posts**      | 각각 카테고리 포스터파일인 mdx파일을 모아놓은 폴더입니다. |
+  | **public**     | 리소스 파일을 모아놓은 폴더입니다.                        |
 
 - ### 3-2) 폴더 트리
 
   ***
 
- ```
-  NextJS-myblog
+```
+NextJS-myblog
 ├─ package-lock.json
 ├─ data
 │  ├─ metadata.ts
 │  └─ navlinks.ts
 ├─ contentlayer.config.ts
+├─ types
+│  └─ posts.ts
 ├─ .gitignore
 ├─ .babelrc
 ├─ package.json
 ├─ next-sitemap.config.js
+├─ postTemplate.mdx
 ├─ README.md
 ├─ styles
+│  ├─ transition.css
 │  └─ globals.css
 ├─ tailwind.config.js
 ├─ postcss.config.js
+├─ .husky
+│  └─ husky-config
+│     ├─ _
+│     │  ├─ .gitignore
+│     │  └─ husky.sh
+│     └─ pre-commit
 ├─ posts
+│  ├─ backend
 │  ├─ types
 │  ├─ react
 │  ├─ git
+│  ├─ server
 │  ├─ other
+│  ├─ db
 │  ├─ next
 │  ├─ js
 │  └─ algorithm
 ├─ tsconfig.json
+├─ hooks
+├─ utils
 ├─ components
-│  ├─ BlogPost.tsx
-│  ├─ TopBtn.tsx
-│  ├─ Container.tsx
-│  ├─ PostList.tsx
-│  ├─ Nav.tsx
-│  ├─ Comments.tsx
-│  └─ SeachBar.tsx
+│  ├─ UIElements
+│  ├─ Layout
+│  └─ Post
 ├─ pages
+│  ├─ backend
 │  ├─ types
 │  ├─ react
 │  ├─ git
 │  ├─ _app.tsx
+│  ├─ server
 │  ├─ other
+│  ├─ db
 │  ├─ _document.tsx
 │  ├─ next
 │  ├─ index.tsx
 │  ├─ js
-│  └─ algorithm
+│  ├─ algorithm
+│  └─ api
+│     └─ proxy.ts
 ├─ public
-│  ├─ 배너.jpg
-│  ├─ round.webp
-│  ├─ react
-│  ├─ 성능지표(ligthHosue).PNG
-│  ├─ github.png
-│  ├─ other
-│  ├─ 아바타.jpg
-│  ├─ top.png
-│  ├─ 해.png
-│  ├─ top1.svg
-│  ├─ favicon.ico
-│  ├─ next
-│  ├─ js
-│  ├─ 달.png
+│  ├─ sitemap-0.xml
+│  ├─ imgs
+│  ├─ font
+│  ├─ robots.txt
+│  ├─ icons
+│  ├─ sw.js
+│  ├─ sitemap.xml
+│  ├─ workbox-588899ac.js
+│  └─ manifest.json
 ├─ .eslintrc.json
 ├─ next.config.js
 └─ next-env.d.ts
- ```
+```
 
-## 4. 주안점
+## 4. 한계점 개선할점
 
-블로그는 노출이 많이 될수록 좋기 때문에 seo에 유리한 nextjs와 메타태그 사용했습니다.
-
-그리고 빠른 성능을 위해서 contentlayer를 사용해 빠른 로딩을 구현했습니다.
-
-## 5. 한계점 개선할점
-
-아직 게시글이 적어서인지 meta정보가 부족해서인지 구글사이트맵에서의 방문자 수가 적습니다.
-
-더 많은 포스터를 작성하고 발전해서 더 많은 방문자를 달성 해보이겠습니다.
+페이지마다 getStaticProps로 메타태그를 동적으로 생성했지만 초기 html에 해당 메타태그가 생성되지 않는것으로 확인되고있습니다.
+따라서 카카오톡같은 곳에서 url이 공유될때 og정보를 \_document에 default 메타태그를 생성했습니다.
