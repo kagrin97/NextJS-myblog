@@ -13,18 +13,28 @@ export default function BlogContents({ post, MDXComponent }) {
       );
       const html = response.data;
       const $ = cheerio.load(html);
-      const ogTitle =
-        $('meta[property="og:title"]').attr("content") || $("title").text();
-      const ogDescription = $('meta[property="og:description"]').attr(
-        "content"
-      );
-      const ogImage = $('meta[property="og:image"]').attr("content");
+
+      const jsonLD = $('script[type="application/json"]').text();
+      const structuredData = jsonLD
+        ? JSON.parse(jsonLD)?.props?.pageProps?.structuredData
+        : {};
+
+      const meta = (property: string) =>
+        $(`meta[property="${property}"]`).attr("content");
+      const title = $("title").text();
+
+      const ogTitle = structuredData.ogTitle || meta("og:title") || title;
+      const ogDescription =
+        structuredData.ogDescription || meta("og:description");
+      const ogImage = structuredData.ogImage || meta("og:image");
+
       const aHtml = ReactDOMServer.renderToString(
         <OpenGraphPreview
           urlPath={urlPath}
           ogTitle={ogTitle}
           ogDescription={ogDescription}
           ogImage={ogImage}
+          URL={urlPath}
         />
       );
       el.outerHTML = aHtml;

@@ -1,6 +1,6 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
-
+import { metadata } from "data/metadata";
 class MyDocument extends Document {
   render() {
     return (
@@ -21,9 +21,14 @@ class MyDocument extends Document {
             type="image/png"
             sizes="48x48"
           />
-
           <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
           <meta name="theme-color" content="#24B95E" />
+
+          <meta name="description" content={metadata.description} />
+          <meta property="og:title" content={metadata.title} />
+          <meta property="og:description" content={metadata.description} />
+          <meta property="og:url" content={metadata.url} />
+          <meta property="og:image" content={metadata.image} />
         </Head>
         <div id="drawer-hook" />
         <div id="backdrop-hook" />

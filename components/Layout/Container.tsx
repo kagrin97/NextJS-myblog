@@ -10,6 +10,7 @@ import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
 
 import { StructuredDataType } from "data/metadata";
+import axios from "axios";
 interface ContainerProps {
   structuredData?: StructuredDataType;
   children?: React.ReactNode;
