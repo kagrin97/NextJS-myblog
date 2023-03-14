@@ -30,7 +30,7 @@ const OpenGraphPreview = ({
         <p className="max800:text-sm text-gray-500 dark:text-gray-400 line-clamp-3 max800:line-clamp-2 max800:mb-1">
           {ogDescription}
         </p>
-        <small className="max800:text-xs text-gray-400 dark:text-gray-500 line-clamp-2 max800:mb-2">
+        <small className="max800:text-xs text-gray-400 dark:text-gray-500 line-clamp-1 max800:mb-2">
           {URL}
         </small>
       </div>

@@ -23,10 +23,10 @@ export default function BlogContents({ post, MDXComponent }) {
         $(`meta[property="${property}"]`).attr("content");
       const title = $("title").text();
 
-      const ogTitle = structuredData.ogTitle || meta("og:title") || title;
+      const ogTitle = structuredData?.ogTitle || meta("og:title") || title;
       const ogDescription =
-        structuredData.ogDescription || meta("og:description");
-      const ogImage = structuredData.ogImage || meta("og:image");
+        structuredData?.ogDescription || meta("og:description");
+      const ogImage = structuredData?.ogImage || meta("og:image");
 
       const aHtml = ReactDOMServer.renderToString(
         <OpenGraphPreview
@@ -39,7 +39,7 @@ export default function BlogContents({ post, MDXComponent }) {
       );
       el.outerHTML = aHtml;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

@@ -1,0 +1,320 @@
+---
+title: 자바스크립트의 Map 객체 효율적인 데이터 관리를 위한 해결책
+date: 2023-03-14
+description: 자바스크립트에서 데이터를 효율적으로 관리하기 위한 Map 객체에 대해 알아봅시다. 이 객체를 사용하면 빠르고 간편하게 데이터를 저장하고 검색할 수 있습니다.
+category: js
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. Map 객체란?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. Map 객체의 메소드
+      <p>1. set(key, value)</p>
+      <p>2. get(key)</p>
+      <p>3. has(key)</p>
+      <p>4. delete(key)</p>
+      <p>5. clear()</p>
+      <p>6. flatMap(callback)</p>
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. Map 객체와 관련된 주의사항
+      <p>1. 키의 중복</p>
+      <p>2. 객체 키의 주의사항</p>
+      <p>3. 메모리 누수</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. Map 객체란?</div>
+</h2>
+
+<br></br>
+
+Map 객체란, key-value 쌍으로 이루어진 자바스크립트 객체입니다. 이 객체를 사용하면 배열과 유사하게 데이터를 저장하고 관리할 수 있지만, 배열과는 달리 인덱스 대신 key를 사용합니다. <b>key는 일반적으로 문자열, 숫자, 심지어 객체 등 어떤 데이터 타입도 사용할 수 있습니다.</b>
+
+Map 객체는 <b>ES6</b>부터 추가된 새로운 데이터 타입 중 하나입니다. 이전에는 객체를 이용해 key-value 쌍을 저장했지만, 객체를 이용할 경우 key가 문자열이 아닌 다른 데이터 타입일 경우 문제가 발생할 수 있습니다. 예를 들어, <b>객체의 key로 숫자를 사용하면 숫자가 문자열로 변환되어 저장</b>됩니다. 이러한 문제를 해결하기 위해 Map 객체가 도입되었습니다.
+
+Map 객체는 다음과 같은 특징을 가지고 있습니다.
+
+- key-value 쌍으로 이루어져 있음
+- key에는 어떤 데이터 타입도 사용 가능
+- 객체의 크기를 쉽게 파악할 수 있음
+- 다양한 메서드를 제공하여 데이터를 쉽게 추가, 삭제, 수정할 수 있음
+- 순서가 보존되기 때문에, <b>추가된 순서대로 요소를 순회</b>할 수 있음
+
+Map 객체는 특히 검색에 용이합니다. key를 이용하여 데이터를 검색하기 때문에, 객체나 배열에 비해 훨씬 빠르고 효율적으로 데이터를 검색할 수 있습니다. 또한, Map 객체는 객체의 크기를 쉽게 파악할 수 있기 때문에, 데이터의 크기가 매우 큰 경우에도 적합합니다.
+
+이러한 특징으로 인해 Map 객체는 자바스크립트에서 데이터를 관리하는데 매우 유용한 객체 중 하나입니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. Map 객체의 메소드</div>
+</h2>
+
+<br></br>
+
+<h3 className={`dark:text-white`}>1. set(key, value)</h3>
+<br></br>
+
+Map 객체의 `set()` 메서드는 key-value 쌍을 추가하거나, 기존 key에 대응하는 value를 업데이트합니다. 만약 key가 이미 존재하는 경우, 해당 key에 대응하는 value가 업데이트 됩니다. 이 메서드는 다음과 같은 형태로 사용됩니다.
+
+```js
+map.set(key, value);
+```
+
+여기서 map은 Map 객체를 가리키는 변수이고, key는 value를 식별할 수 있는 유일한 값입니다. value는 key에 대응하는 값입니다.
+
+아래는 set() 메서드를 사용한 예시 코드입니다.
+
+```js
+const myMap = new Map();
+
+myMap.set("name", "John");
+myMap.set("age", 30);
+myMap.set("job", "developer");
+
+console.log(myMap); // Map(3) { 'name' => 'John', 'age' => 30, 'job' => 'developer' }
+
+myMap.set("age", 35);
+myMap.set("hobby", "reading");
+
+console.log(myMap); // Map(4) { 'name' => 'John', 'age' => 35, 'job' => 'developer', 'hobby' => 'reading' }
+```
+
+위 코드에서는 먼저 Map 객체를 생성하고, set() 메서드를 이용해 key-value 쌍을 추가했습니다. 그 다음 set() 메서드를 이용해 이미 존재하는 key에 대응하는 value를 업데이트하고, 새로운 key-value 쌍을 추가했습니다. 마지막으로 Map 객체를 출력해보면, key-value 쌍이 모두 추가되어 있는 것을 확인할 수 있습니다.
+
+Map 객체의 set() 메서드는 데이터를 추가하거나 업데이트할 때 매우 유용한 메서드입니다. set() 메서드를 이용해 key-value 쌍을 추가하거나 업데이트하면, Map 객체 내부에서 쉽게 데이터를 관리할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2. get(key)</h3>
+<br></br>
+
+Map 객체의 `get()` 메서드는 해당 key에 대응하는 value를 반환합니다. 만약 해당 key가 존재하지 않는다면 <b>undefined를 반환</b>합니다.
+
+아래는 get() 메서드를 사용한 예시 코드입니다.
+
+```js
+const myMap = new Map();
+
+myMap.set("name", "John");
+myMap.set("age", 30);
+myMap.set("job", "developer");
+
+console.log(myMap.get("name")); // 'John'
+console.log(myMap.get("age")); // 30
+console.log(myMap.get("job")); // 'developer'
+console.log(myMap.get("hobby")); // undefined
+```
+
+get() 메서드를 사용하여 key에 대응하는 value를 가져왔습니다. 마지막으로 존재하지 않는 key를 이용해 get() 메서드를 호출했을 때는 undefined가 반환되었습니다.
+
+Map 객체의 get() 메서드는 데이터를 검색할 때 매우 유용한 메서드입니다. get() 메서드를 이용해 key에 해당하는 value를 쉽게 가져올 수 있기 때문에, Map 객체를 이용해 데이터를 저장하고 관리하는 경우 매우 유용합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>3. has(key)</h3>
+<br></br>
+
+Map 객체의 `has()` 메서드는 주어진 key가 Map 객체 내에 존재하는지 확인합니다. 만약 해당 key가 <b>존재한다면 true</b>를 반환하고, <b>그렇지 않다면 false</b>를 반환합니다.
+
+아래는 has() 메서드를 사용한 예시 코드입니다.
+
+```js
+const myMap = new Map();
+
+myMap.set("name", "John");
+myMap.set("age", 30);
+myMap.set("job", "developer");
+
+console.log(myMap.has("age")); // true
+console.log(myMap.has("hobby")); // false
+```
+
+has() 메서드를 이용해 존재하는 key와 존재하지 않는 key를 각각 확인해보았습니다. has() 메서드를 이용해 key의 존재 여부를 확인하면, Map 객체 내부에서 특정 key가 존재하는지 쉽게 파악할 수 있습니다.
+
+Map 객체의 has() 메서드는 데이터를 검색할 때 매우 유용한 메서드입니다. has() 메서드를 이용해 존재하는 key인지 여부를 확인하면, Map 객체 내부에서 쉽게 데이터를 검색할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>4. delete(key)</h3>
+<br></br>
+
+Map 객체의 `delete()` 메서드는 Map 객체 내에서 key-value 쌍을 삭제합니다. 만약 해당 key가 Map 객체 내에 <b>존재한다면</b> 해당 key-value 쌍이 삭제되고 <b>true를 반환</b>합니다. 만약 해당 key가 <b>존재하지 않는다면, 삭제되지 않고 false를 반환</b>합니다.
+
+아래는 delete() 메서드를 사용한 예시 코드입니다.
+
+```js
+const myMap = new Map();
+
+myMap.set("name", "John");
+myMap.set("age", 30);
+myMap.set("job", "developer");
+
+console.log(myMap.delete("age")); // true
+console.log(myMap.delete("hobby")); // false
+console.log(myMap); // Map(2) { "name" => "John", "job" => "developer" }
+```
+
+delete() 메서드를 이용해 존재하는 key와 존재하지 않는 key를 각각 삭제해보았습니다. delete() 메서드를 이용해 key-value 쌍을 삭제하면, Map 객체 내부에서 특정 데이터를 삭제할 수 있습니다.
+
+Map 객체의 delete() 메서드를 이용하면, Map 객체 내부에서 특정 데이터를 삭제할 수 있습니다. 이를 이용해 필요하지 않은 데이터를 삭제하면, Map 객체의 메모리 사용량을 줄일 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>5. clear()</h3>
+<br></br>
+
+Map 객체의 `clear()` 메서드는 Map 객체 내의 모든 key-value 쌍을 삭제합니다.
+
+아래는 clear() 메서드를 사용한 예시 코드입니다.
+
+```js
+const myMap = new Map();
+
+myMap.set("name", "John");
+myMap.set("age", 30);
+myMap.set("job", "developer");
+
+console.log(myMap); // Map(3) { "name" => "John", "age" => 30, "job" => "developer" }
+
+myMap.clear();
+
+console.log(myMap); // Map(0) {}
+```
+
+clear() 메서드를 이용해 모든 key-value 쌍을 삭제해보았습니다. clear() 메서드를 이용해 Map 객체 내부의 모든 데이터를 삭제할 수 있습니다.
+
+Map 객체의 clear() 메서드를 이용하면, Map 객체 내부의 모든 데이터를 삭제할 수 있습니다. 이를 이용해 필요하지 않은 데이터를 일괄적으로 삭제하면, Map 객체의 <b>메모리 사용량을 효율적으로 관리</b>할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>6. flatMap(callback)</h3>
+<br></br>
+
+Map 객체에는 `flatMap()` 메서드가 존재하지 않습니다. 하지만, Array 객체에 flatMap() 메서드가 존재합니다. <b>Array.prototype.flatMap()</b>은 콜백 함수를 실행한 결과를 배열로 반환하며, 이를 한 번 <b>평탄화(flatten)</b>합니다. `map()`과 `flat()` 메서드의 기능을 합쳐놓은 것입니다. 이 메서드는 다음과 같은 형태로 사용됩니다.
+
+```js
+array.flatMap(callback);
+```
+
+여기서 array는 평탄화할 배열을 가리키는 변수이며, callback은 콜백 함수를 가리키는 변수입니다.
+
+아래는 flatMap() 메서드를 사용한 예시 코드입니다.
+
+```js
+const arr = [1, 2, 3, 4];
+
+const result = arr.flatMap((x) => [x * 2]);
+
+console.log(result); // [2, 4, 6, 8]
+```
+
+위 코드에서는 먼저 배열 arr을 생성하고, flatMap() 메서드를 이용해 배열의 각 요소를 2배한 결과를 새로운 배열로 반환해보았습니다. 즉, 배열 [1, 2, 3, 4]를 [2, 4, 6, 8]로 평탄화한 결과를 반환한 것입니다.
+
+Array.prototype.flatMap() 메서드를 이용하면, 배열의 각 요소를 가공하거나, 필요한 값만 추출하는 등 다양한 작업을 수행할 수 있습니다. 이를 이용해 보다 효율적인 데이터 처리를 할 수 있습니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. Map 객체와 관련된 주의사항</div>
+</h2>
+
+<br></br>
+
+Map 객체는 키-값 쌍으로 이루어진 데이터를 저장하는 자료구조입니다. 이를 사용하면 데이터를 빠르게 검색하거나, 중복되지 않는 고유한 값을 만들 수 있습니다. 그러나 Map 객체를 사용할 때 <b>주의해야 할 몇 가지 사항</b>이 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>1. 키의 중복</h3>
+<br></br>
+
+Map 객체에서는 <b>키가 중복될 수 없습니다.</b> 만약 동일한 키가 사용되면, 마지막에 추가된 값으로 덮어씌워집니다. 이러한 동작은 일반 객체와는 다르게 동작하기 때문에 주의해야 합니다. 일반 객체는 동일한 key를 사용하여 값을 추가하면 덮어씌워지는 대신, <b>두 개의 key를 가지게 됩니다.</b> 따라서 Map 객체를 사용할 때는 중복된 key를 사용하지 않도록 주의해야 합니다.
+
+```js
+const map = new Map();
+
+map.set("foo", 1);
+map.set("foo", 2);
+
+console.log(map.get("foo")); // 2
+```
+
+위 코드에서는 'foo'라는 키가 두 번 사용되었습니다. 따라서 첫 번째 set() 메서드로 저장된 값은 덮어씌워지고, 최종적으로 'foo' 키의 값은 2가 됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2. 객체 키의 주의사항</h3>
+<br></br>
+
+Map 객체의 키를 객체로 사용할 경우 <b>예상치 못한 결과가 발생할 수 있습니다.</b>
+
+```js
+const map = new Map();
+
+const obj1 = { name: "John" };
+const obj2 = { name: "John" };
+
+map.set(obj1, 1);
+map.set(obj2, 2);
+
+console.log(map.get(obj1)); // 1
+console.log(map.get(obj2)); // 2
+console.log(map.get({ name: "John" })); // undefined
+```
+
+위 코드에서는 map 객체에 obj1과 obj2를 각각의 키로 사용하여 값을 저장합니다. 그리고 map.get() 메서드를 사용하여 name: 'John' 객체를 키로 사용하여 값을 조회합니다. 이때, name: 'John' 객체는 obj1과 obj2와 내부 값이 같지만, 서로 다른 객체로 생성되어 있습니다. 따라서 name: 'John' 객체는 map 객체에서 찾을 수 없으므로 undefined가 출력됩니다
+
+<br></br>
+<h3 className={`dark:text-white`}>3. 메모리 누수</h3>
+<br></br>
+
+Map 객체는 키와 값이 모두 객체로 이루어져 있기 때문에, <b>메모리 누수</b>가 발생할 수 있습니다. 예를 들어, Map 객체에서 사용한 객체를 참조하는 변수가 삭제되지 않은 경우, Map 객체는 해당 객체를 계속 참조하게 되어 메모리 누수가 발생할 수 있습니다.
+
+```js
+const map = new Map();
+
+const obj = { name: "John" };
+
+map.set(obj, 1);
+
+obj = null; // obj 변수 참조 해제
+
+console.log(map.get(obj)); // undefined
+```
+
+위 코드에서는 obj라는 객체를 생성하고, Map 객체의 키로 사용한 후, obj 변수 참조를 해제합니다. 그러나 Map 객체는 여전히 obj를 참조하고 있기 때문에, 메모리 누수가 발생할 수 있습니다. 따라서 Map 객체에서 사용한 객체는 필요 없어지면 참조를 해제해주어야 합니다.
+
+Map 객체를 사용할 때 이러한 주의사항을 염두에 두고 사용하면, 더욱 안전하고 효과적인 코드를 작성할 수 있습니다.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map"
+>
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+</a>
