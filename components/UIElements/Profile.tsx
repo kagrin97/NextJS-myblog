@@ -17,15 +17,15 @@ const ProfilePicture = () => {
 const Name = () => {
   return (
     <h2 className="text-lg font-bold text-gray-800 dark:text-emerald-500">
-      Developer 강민규
+      주인장 강민규
     </h2>
   );
 };
 
 const Description = () => {
   return (
-    <p className="text-md text-gray-600 dark:text-emerald-200">
-      매일 최선을 다하는 삶
+    <p className="text-sm text-gray-600 dark:text-emerald-200">
+      BDD(blogging driven development)를 지향합니다...
     </p>
   );
 };
