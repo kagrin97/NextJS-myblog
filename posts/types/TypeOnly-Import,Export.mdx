@@ -1,0 +1,155 @@
+---
+title: TypeScript에서 Type-only import/export 사용하기
+date: 2023-03-15
+description: TypeScript에서 Type-only import/export를 사용하는 방법과 이를 사용함으로써 얻을 수 있는 장점, 주의사항을 다루는 글입니다.
+category: type
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. Type-only import/export가 무엇인지 이해하기
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. Type-only import/export의 사용 방법
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. Type-only import/export의 장점
+    </a>
+    <a href="#4" className="mokcha-container__list">
+      4. Type-only import/export의 주의사항
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. Type-only import/export가 무엇인지 이해하기</div>
+</h2>
+
+<br></br>
+
+<b>Type-only import/export는 TypeScript 3.8</b>에 새로 추가된 기술입니다.
+
+몇 달 전에 한번 import type 부분을 알게 된 적이 있는데 까먹고 몇 달 만에 기억이 나서 글을 작성합니다.
+
+이 문법을 사용해서 import/export를 하게 되면은 런타임 과정에서 js에서는 type을 사용할 필요가 없기 때문에 컴파일 결과에서 제외됩니다. 따라서 번들링 과정에서 코드 길이가 더 짧아져서 번들 사이즈가 줄어든다는 점이 있습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. Type-only import/export의 사용 방법</div>
+</h2>
+
+<br></br>
+
+Type-only `import`를 사용하는 방법은 다음과 같습니다.
+
+```js
+import type { MyType } from "./types";
+```
+
+Type-only `export`를 사용하는 방법은 다음과 같습니다.
+
+```js
+type MyType = {
+  name: string,
+  age: number,
+};
+
+export type { MyType };
+```
+
+여기서 중요한 점이 `interface`는 Type-only export를 사용할 수가 없다는 점입니다. 오직 type alias를 사용했을 때만 Type-only export를 사용할 수가 있습니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. Type-only import/export의 장점</div>
+</h2>
+
+<br></br>
+
+위에서도 조금씩 기술했지만 Type-only의 <b>장점</b>에 대해서 더 자세히 알아보겠습니다.
+
+1. <b>코드 가독성 향상</b> : TypeScript에서는 일반적으로 코드를 작성할 때 모듈에서
+   사용되는 모든 타입을 불러오기 위해 import 구문을 사용합니다. 그러나 이러한 방식은
+   코드가 길어지고 가독성이 떨어질 수 있습니다. 타입만을 import하는 경우, 코드의
+   가독성이 향상되고 코드량이 줄어들어 유지보수가 용이해집니다.
+
+2. <b>불필요한 모듈 로딩 방지</b> : 전체 모듈을 import하는 경우, 애플리케이션이 로드될
+   때 불필요한 모듈도 함께 로딩되어 성능 저하를 초래할 수 있습니다. 반면, 타입만을
+   import하는 경우, 필요한 타입만을 로드하여 성능 개선에 도움을 줄 수 있습니다.
+
+3. <b>컴파일 속도 향상</b> : 타입만을 import하는 경우, 컴파일러가 불필요한 코드를
+   처리하지 않아 컴파일 속도가 빨라집니다.
+
+4. <b>타입 안정성 </b> : 타입만을 import하는 경우, 타입 호환성 검사를 보다 엄격하게
+   수행할 수 있어 타입 안정성을 보장할 수 있습니다.
+
+> Type-only import/export는 코드의 가독성, 유지보수성, 성능, 타입 안정성 측면에서 매우 유용한 기능입니다. 이를 적극적으로 활용하여 TypeScript 프로젝트를 보다 효과적으로 개발할 수 있습니다.
+
+<h2 id="4"></h2>
+
+<br></br>
+
+<h2 id="4" className={`dark:text-white text-center`}>
+  <div>4. Type-only import/export의 주의사항</div>
+</h2>
+
+<br></br>
+
+Type-only import/export는 코드의 가독성과 유지보수성, 성능, 타입 안정성에 매우 유용한 기능입니다. 그러나 주의해야 할 사항도 있습니다. 다음은 Type-only import/export의 주의사항입니다.
+
+1. <b>타입만을 import/export할 때의 문제점</b> : Type-only import/export를 사용하면,
+   해당 모듈에서 사용하는 모든 타입만을 import/export하게 됩니다. 이는 모듈에서 사용되는
+   함수, 클래스 등의 구현체를 import/export하지 않기 때문에 문제가 발생할 수 있습니다.
+   예를 들어, 타입만을 import/export하면 해당 모듈에서 사용하는 함수나 클래스를 사용할
+   때, 해당 구현체가 어디서 import/export되는지 명확하지 않아 의도치 않은 오류가
+   발생할 수 있습니다.
+
+2. <b>타입의 충돌 문제</b> : Type-only import/export를 사용할 때, 같은 타입 이름을
+   가진 다른 모듈에서 import/export 할 경우, 타입 충돌이 발생할 수 있습니다. 이는
+   타입의 이름 충돌 때문에 발생하는 문제인데, 이러한 경우에는 타입의 이름을 바꾸거나,
+   타입을 다른 이름으로 명시적으로 정의하는 등의 방법으로 문제를 해결할 수 있습니다.
+
+3. <b>외부 모듈에서의 사용</b> : Type-only import/export는 외부 모듈에서는 사용할
+   수 없습니다. 이는 타입 정보만을 export하기 때문에, 구현체 정보는 export되지 않기
+   때문입니다. 따라서, 외부 모듈에서는 일반적인 import/export 구문을 사용해야 합니다.
+
+> Type-only import/export는 코드의 가독성과 유지보수성, 성능, 타입 안정성에 매우 유용한 기능입니다. 그러나 이를 사용할 때 주의해야 할 점이 있으며, 이를 고려하여 적절히 활용해야 합니다.
+
+앞으로 개인프로젝트를 하거나 협업을 할 때는 Type-only import/export를 사용하는 편이 좋을 것 같습니다. 단점보다 장점이 더 큰 좋은 기능인 것 같습니다.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.typescriptlang.org/ko/docs/handbook/release-notes/typescript-3-8.html#%ED%83%80%EC%9E%85-%EC%A0%84%EC%9A%A9-imports-%EC%99%80-exports-type-only-imports-and-exports"
+>
+  https://www.typescriptlang.org/ko/docs/handbook/release-notes/typescript-3-8.html#%ED%83%80%EC%9E%85-%EC%A0%84%EC%9A%A9-imports-%EC%99%80-exports-type-only-imports-and-exports
+</a>
