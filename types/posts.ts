@@ -4,6 +4,7 @@ export interface Post {
   description: string;
   _raw: {
     flattenedPath: string;
+    sourceFileDir: string;
   };
   _id: string;
   slug: string;

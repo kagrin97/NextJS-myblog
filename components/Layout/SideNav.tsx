@@ -7,7 +7,7 @@ import navlinks, { Navlinks } from "data/navlinks";
 import Profile from "components/UIElements/Profile";
 
 const SideNav = () => {
-  const path = "/" + useRouter().pathname.split("/")[1];
+  const path = "/" + useRouter().asPath.split("/")[1];
 
   return (
     <nav className="flex items-start justify-between flex-wrap mr-2 sticky top-20 dark:bg-neutral-800 ">

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
@@ -11,11 +11,7 @@ import useResizeWidth from "hooks/useResizeWidth";
 import { RiMenu3Line } from "react-icons/ri";
 import { AiOutlineHome } from "react-icons/ai";
 
-import navlinks, { Navlinks } from "data/navlinks";
-
 export default function HeaderNav() {
-  const router = useRouter();
-  const path = `/${router.pathname.split("/")[1]}`;
   const { theme, setTheme } = useTheme();
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const widthSize = useResizeWidth();
@@ -82,24 +78,7 @@ export default function HeaderNav() {
       )}
 
       {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
-      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
-        <div className="m-auto">
-          {navlinks.map((nav: Navlinks) => (
-            <Link href={nav.link} key={nav.title}>
-              <div className="hover:cursor-pointer hover:text-green-400 mb-5 text-3xl">
-                <a
-                  href={nav.link}
-                  className={`flex justify-center ${
-                    nav.link === path ? "text-green-400" : ""
-                  }`}
-                >
-                  <span className="mr-4">{nav.title}</span>
-                </a>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </SideDrawer>
+      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler} />
     </nav>
   );
 }
