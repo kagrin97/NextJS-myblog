@@ -6,7 +6,7 @@ interface Props {
   title: string;
   des: string;
   slug: string;
-  children?: any;
+  type: string;
 }
 
 export default function BlogPost(props: Props) {
@@ -16,7 +16,7 @@ export default function BlogPost(props: Props) {
         <a>
           <div className="font-medium text-xs text-gray-400">
             <span className="mr-2 font-bold text-xs text-green-500">
-              {props.children}
+              {props.type}
             </span>
             {props.date}
           </div>

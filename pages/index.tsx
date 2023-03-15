@@ -40,9 +40,8 @@ export default function Home(
                   title={post.title}
                   des={post.description}
                   slug={`${post.type.toLowerCase()}/${post.slug}`}
-                >
-                  {post.type}
-                </BlogPost>
+                  type={post.type}
+                />
               </React.Fragment>
             ))}
           </div>

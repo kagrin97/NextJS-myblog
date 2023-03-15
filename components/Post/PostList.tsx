@@ -20,6 +20,7 @@ export default function PostList({ searchPosts, posts }: Props) {
           des={post.description}
           slug={post._raw.flattenedPath}
           key={post._id}
+          type={post.type}
         />
       ))}
     </article>
