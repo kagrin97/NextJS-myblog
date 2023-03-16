@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 
 export default function Comments() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
 
   const makeComments = () => {
@@ -18,11 +18,17 @@ export default function Comments() {
       script.setAttribute("theme", "github-light");
     }
     script.setAttribute("label", "blog-comment");
-    ref.current.appendChild(script);
+
+    if (ref.current) {
+      ref.current.appendChild(script);
+    }
   };
 
   const removeExistedComments = () => {
-    const existingScript = ref.current.querySelector(".utterances");
+    let existingScript;
+    if (ref.current) {
+      existingScript = ref.current.querySelector(".utterances");
+    }
     if (existingScript) {
       existingScript.remove();
     }

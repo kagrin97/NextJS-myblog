@@ -10,7 +10,6 @@ import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
 
 import { StructuredDataType } from "data/metadata";
-import axios from "axios";
 interface ContainerProps {
   structuredData?: StructuredDataType;
   children?: React.ReactNode;
@@ -27,25 +26,37 @@ export default function Container({
   return (
     <main className={`w-full flex flex-col items-center p-3 relative`}>
       <Head>
-        <title>{structuredData.headline}</title>
+        {structuredData && (
+          <React.Fragment>
+            <title>{structuredData.headline}</title>
 
-        <meta name="description" content={structuredData.description} />
-        <meta property="og:title" content={structuredData.headline} />
-        <meta property="og:description" content={structuredData.description} />
-        <meta property="og:url" content={structuredData.url} />
-        <meta property="og:image" content={structuredData.image} />
+            <meta name="description" content={structuredData.description} />
+            <meta property="og:title" content={structuredData.headline} />
+            <meta
+              property="og:description"
+              content={structuredData.description}
+            />
+            <meta property="og:url" content={structuredData.url} />
+            <meta property="og:image" content={structuredData.image} />
 
-        <meta name="twitter:title" content={structuredData.headline} />
-        <meta name="twitter:description" content={structuredData.description} />
+            <meta name="twitter:title" content={structuredData.headline} />
+            <meta
+              name="twitter:description"
+              content={structuredData.description}
+            />
 
-        <meta
-          property="article:published_time"
-          content={structuredData.datePublished}
-        ></meta>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+            <meta
+              property="article:published_time"
+              content={structuredData.datePublished}
+            ></meta>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(structuredData),
+              }}
+            />
+          </React.Fragment>
+        )}
       </Head>
       <NextProgress
         color="#22c55e"

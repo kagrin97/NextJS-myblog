@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function useResizeWidth() {
   const [widthSize, setWidthSize] = useState(window.innerWidth);
-  let resizeTimer;
+  let resizeTimer: ReturnType<typeof setTimeout>;
 
   const handleResizeWidth = () => {
     clearTimeout(resizeTimer);

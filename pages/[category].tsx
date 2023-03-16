@@ -5,7 +5,11 @@ import handleStructuredData from "data/metadata";
 import navlinks, { Navlinks } from "data/navlinks";
 import { checkCategory } from "utils/checkCategory";
 
-import type { InferGetStaticPropsType } from "next";
+import type {
+  InferGetStaticPropsType,
+  GetStaticProps,
+  GetStaticPropsContext,
+} from "next";
 import type { Post } from "types/posts";
 import type { DocumentTypes } from ".contentlayer/generated/types";
 
@@ -34,11 +38,20 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = async ({ params }) => {
-  const { category } = params;
+type PageParams = {
+  category: string;
+};
 
-  let posts: Post[];
-  let curDocs: DocumentTypes[];
+export const getStaticProps = async (
+  context: GetStaticPropsContext<PageParams>
+) => {
+  if (!context.params) {
+    return;
+  }
+  const { category } = context.params;
+
+  let posts: Post[] | undefined;
+  let curDocs: DocumentTypes[] | undefined;
 
   const handelSortDocs = (curDos: DocumentTypes[]) => {
     curDocs = curDos;
@@ -52,9 +65,9 @@ export const getStaticProps = async ({ params }) => {
   const structuredData = handleStructuredData();
   return {
     props: {
-      posts,
+      posts: posts ? posts : null,
       structuredData,
-      curDocs,
+      curDocs: curDocs ? curDocs : null,
     },
   };
 };

@@ -46,7 +46,7 @@ export interface StructuredDataType {
   twitterImage: string;
 }
 
-const handleStructuredData = (customMeta?) => {
+const handleStructuredData = (customMeta?: MetadataType) => {
   const structuredData: StructuredDataType = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",

@@ -6,6 +6,9 @@ export interface Post {
     flattenedPath: string;
     sourceFileDir: string;
   };
+  body: {
+    code: string;
+  };
   _id: string;
   slug: string;
   type: string;

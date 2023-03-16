@@ -9,7 +9,17 @@ import Pagnation from "components/UIElements/Pagnation";
 import usePagnationPosts from "hooks/usePagnationPosts";
 import useSearchPosts from "hooks/useSearchPosts";
 
-const PostCategoryMain = ({ allDoc, posts, structuredData }) => {
+import type { StructuredDataType } from "data/metadata";
+import type { Post } from "types/posts";
+import type { DocumentTypes } from ".contentlayer/generated/types";
+
+interface Props {
+  allDoc: DocumentTypes[];
+  posts: Post[];
+  structuredData: StructuredDataType;
+}
+
+const PostCategoryMain = ({ allDoc, posts, structuredData }: Props) => {
   const { searchTitle, searchPosts, onChangeSearchTitle, getSearchPosts } =
     useSearchPosts(allDoc);
 

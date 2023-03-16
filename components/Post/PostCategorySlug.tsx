@@ -6,8 +6,17 @@ import BlogContents from "components/Post/BlogContents";
 
 import { useMDXComponent } from "next-contentlayer/hooks";
 
-const PostCategorySlug = ({ post, structuredData }) => {
+import type { StructuredDataType } from "data/metadata";
+import type { Post } from "types/posts";
+
+interface Props {
+  post: Post;
+  structuredData: StructuredDataType;
+}
+
+const PostCategorySlug = ({ post, structuredData }: Props) => {
   const MDXComponent = useMDXComponent(post.body.code);
+
   return (
     <Container structuredData={structuredData} className="relative">
       <BlogContents post={post} MDXComponent={MDXComponent} />

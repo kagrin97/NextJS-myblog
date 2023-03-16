@@ -4,7 +4,14 @@ import axios from "axios";
 import cheerio from "cheerio";
 import OpenGraphPreview from "../UIElements/OpenGraphPreview";
 
-export default function BlogContents({ post, MDXComponent }) {
+import type { Post } from "types/posts";
+
+interface Props {
+  post: Post;
+  MDXComponent: Function;
+}
+
+export default function BlogContents({ post, MDXComponent }: Props) {
   const handleLinkPreview = async (el: HTMLAnchorElement) => {
     try {
       const urlPath = el.href;

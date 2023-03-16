@@ -1,6 +1,7 @@
 import { metadata } from "data/metadata";
+import type { Post } from "types/posts";
 
-export const makeMeta = (post) => {
+export const makeMeta = (post: Post) => {
   return {
     ...metadata,
     title: post.title,
