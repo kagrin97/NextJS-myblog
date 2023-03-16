@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function BlogContents({ post, MDXComponent }: Props) {
-  const handleLinkPreview = async (el: HTMLAnchorElement) => {
+  const makeURLPreview = async (el: HTMLAnchorElement) => {
     try {
       const urlPath = el.href;
       const response = await axios.get(
@@ -50,7 +50,10 @@ export default function BlogContents({ post, MDXComponent }: Props) {
     }
   };
 
-  const handleLinkClick = (event: MouseEvent, link: HTMLAnchorElement) => {
+  const makeChapterLinkAction = (
+    event: MouseEvent,
+    link: HTMLAnchorElement
+  ) => {
     event.preventDefault();
     const linkId = link.getAttribute("href")?.slice(1);
     if (linkId) {
@@ -66,14 +69,14 @@ export default function BlogContents({ post, MDXComponent }: Props) {
       const linkList = document.querySelectorAll("#link");
       linkList.forEach((el: Element) => {
         if (el instanceof HTMLAnchorElement) {
-          handleLinkPreview(el);
+          makeURLPreview(el);
         }
       });
       const links = document.querySelectorAll('a[href^="#"]');
       links.forEach((link) => {
         if (link instanceof HTMLAnchorElement) {
           link.addEventListener("click", (event: MouseEvent) =>
-            handleLinkClick(event, link)
+            makeChapterLinkAction(event, link)
           );
         }
       });

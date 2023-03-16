@@ -13,6 +13,10 @@ b {
   @apply dark:text-emerald-400;
 }
 
+.ml-div {
+  margin-left: 1rem;
+}
+
 .step-by-step {
   border-radius: 50px;
   border-width: 2px;

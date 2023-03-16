@@ -1,0 +1,327 @@
+---
+title: TypeScript의 tsconfig.json 파일 살펴보기
+date: 2023-03-16
+description: .ts 파일들을 .js 파일로 변환할 때 세부설정을 정할수있는 tsconfig.json 파일 살펴보겠습니다.
+category: type
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. tsconfig.json는 무엇인가
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. tsconfig.json의 옵션에 대해서 알아보자
+      <p>2-1. files</p>
+      <p>2-2. include</p>
+      <p>2-3. exclude</p>
+      <p>2-4. compilerOptions</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. tsconfig.json는 무엇인가</div>
+</h2>
+
+<br></br>
+
+TypeScript에서는 `tsconfig.json` 파일을 사용하여 컴파일러에게 프로젝트의 컴파일 설정을 지정할 수 있습니다. 이 파일은 프로젝트 루트 디렉토리에 위치하며, tsc 명령어를 사용하여 TypeScript 코드를 컴파일할 때 이 파일의 설정이 적용됩니다.
+
+```json:tsconfig.json showLineNumbers
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs"
+  },
+}
+
+```
+
+대략 루트 디렉토리의 최상위에 존재하며 이름은 tsconfig.json으로 설정해야합니다.
+
+옵션에는 크게 <b>compilerOptions, files, include, exclude</b>이 존재합니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. tsconfig.json의 옵션에 대해서 알아보자</div>
+</h2>
+
+<br></br>
+
+<h3 className={`dark:text-white`}>2-1. files</h3>
+<br></br>
+
+타입스크립트의 `tsconfig.json` 파일의 `files` 옵션은 프로젝트에서 컴파일할 파일 목록을 설정하는 옵션입니다.
+
+이 옵션을 사용하여 특정 파일을 컴파일하도록 명시적으로 지정할 수 있습니다. 만약 `files` 옵션을 지정하지 않으면, 컴파일러는 `include` 옵션에 지정된 디렉토리 하위의 모든 파일을 컴파일합니다.
+
+`files` 옵션을 사용하면, 프로젝트에서 컴파일할 파일 목록을 명시적으로 지정할 수 있습니다. 이는 컴파일 시간을 단축시킬 수 있으며, 불필요한 파일을 제외하여 컴파일 오류를 줄일 수 있습니다.
+
+예를 들어, 아래와 같이 `tsconfig.json` 파일에 `files` 옵션을 지정할 수 있습니다.
+
+```json
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs"
+  },
+  "files": ["src/main.ts", "src/utils.ts"]
+}
+```
+
+위의 예시에서는 `src` 디렉토리 내의 `main.ts`와 `utils.ts` 파일만 컴파일 대상으로 지정되며, <b>다른 파일은 컴파일 대상에서 제외됩니다.</b>
+
+<br></br>
+<h3 className={`dark:text-white`}>2-2. include</h3>
+<br></br>
+
+타입스크립트의 `tsconfig.json` 파일의 `include` 옵션은 컴파일러가 컴파일할 TypeScript 소스 코드 파일의 <b>디렉토리와 파일 패턴</b>을 지정하는 옵션입니다.
+
+이 옵션을 사용하여 컴파일러에게 컴파일할 파일의 위치를 알려주고, 해당 위치에서 파일 패턴을 사용하여 컴파일할 파일을 선택할 수 있습니다.
+
+`include` 옵션은 배열로 구성되며, 각 요소는 디렉토리 경로 또는 파일 패턴을 지정합니다. 디렉토리 경로를 지정하는 경우 해당 디렉토리와 그 하위 디렉토리의 모든 TypeScript 파일이 컴파일됩니다. 파일 패턴을 지정하는 경우 해당 패턴과 일치하는 TypeScript 파일만 컴파일됩니다.
+
+예를 들어, 다음과 같이 `tsconfig.json` 파일에 `include` 옵션을 지정할 수 있습니다.
+
+```json
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs"
+  },
+  "include": [
+    "src/**/*.ts"
+    "src/**/*.tsx"
+  ]
+}
+```
+
+위의 예시에서는 `src` 디렉토리 및 그 하위 디렉토리의 모든 TypeScript 파일이 컴파일 대상으로 지정됩니다. 패턴 `\*\*`는 모든 하위 디렉토리를 의미합니다.
+
+`include` 옵션은 `exclude` 옵션과 함께 사용할 수 있습니다. `exclude` 옵션은 컴파일 대상에서 제외할 파일이나 디렉토리를 지정합니다. `include` 옵션으로 지정된 파일 중 `exclude` 옵션으로 지정된 파일이 제외됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-3. exclude</h3>
+<br></br>
+
+`exclude` 옵션은 TypeScript 컴파일러가 <b>컴파일하지 않아도 되는 파일을 지정하는 옵션</b>입니다. 보통 `exclude` 옵션을 사용하여 컴파일할 필요가 없는 파일을 제외하고, 컴파일 속도를 높이는 데 사용합니다.
+
+`exclude` 옵션은 다음과 같은 패턴으로 파일을 지정할 수 있습니다.
+
+- 파일 확장자: `*.js`, `*.css`, `*.json` 등
+- 디렉터리 이름: `test/`, `src/**/test/` 등
+- 반드시 제외해야 하는 파일: `node_modules/`
+
+예를 들어, 다음과 같이 `tsconfig.json` 파일에 `exclude` 옵션을 설정하면, TypeScript 컴파일러는 `.js`, `.css`, `.json` 파일과 `node_modules` 디렉터리를 컴파일하지 않습니다.
+
+```json
+{
+  "exclude": ["node_modules", "**/*.js", "**/*.css", "**/*.json"]
+}
+```
+
+`exclude` 옵션은 `include` 옵션과 함께 사용될 때, `include` 옵션으로 지정한 파일만 컴파일하도록 설정할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-4. compilerOptions</h3>
+<br></br>
+
+타입스크립트의 `tsconfig.json` 파일의 `compilerOptions` 옵션은 컴파일러의 동작을 제어하는 옵션입니다. 이 옵션을 사용하여 <b>컴파일러의 출력 형식, 빌드 시 경고 및 오류 처리 방식, 코드 생성 옵션 등을 설정</b>할 수 있습니다.
+
+compilerOptions에는 정말 많은 세부 옵션이 존재합니다. 그중에서 몇 가지만 가져왔습니다.
+
+<br></br>
+
+<b>2-4-1. target</b>
+
+<div className="ml-div">
+  컴파일된 자바스크립트 코드 ECMAScript 버전을 설정합니다. 예를 들어, `es5`,
+  `es6`, `es2015`, `esnext` 등의 값을 지정할 수 있습니다. 최신문법을 작성해도
+  es5로 컴파일한다면 예전 문법으로 변경됩니다.
+</div>
+
+<b>2-4-2. module</b>
+<div className="ml-div">
+  무슨 import 문법 쓸건지 설정합니다. `commonjs`, `amd`, `es2015`, `esnext`등이
+  있습니다.
+
+    ```js // commonjs const abc = require("./abc");
+
+    // esnext
+    import abc from "./abc";
+
+    ```
+
+</div>
+<br></br>
+<b>2-4-3. allowJs</b>
+<div className="ml-div">
+true일 경우 js 파일들을 ts 파일에서 import해서 쓸 수 있습니다.
+</div>
+<b>2-4-4. checkJs</b>
+<div className="ml-div">
+자바스크립트 파일을 타입 검사합니다.
+</div>
+<b>2-4-5. jsx</b>
+<div className="ml-div">
+tsx 파일을 jsx로 어떻게 컴파일할 것인지 설정합니다. 5가지의 옵션이 존재합니다. 보통 preserve를 사용합니다.
+
+- <b>react</b> : .js 파일로 컴파일 (JSX 코드는 React.createElement() 함수의 호출로
+  변환된다)
+
+- <b>react-jsx</b> : .js 파일로 컴파일 (JSX 코드는 \_jsx() 함수의 호출로 변환된다)
+
+- <b>react-jsxdev</b> : .js 파일로 컴파일 (JSX 코드는 \_jsx() 함수의 호출로 변환된다)
+
+- <b>preserve</b> : .jsx 파일로 컴파일 (JSX 코드가 그대로 유지된다)
+
+- <b>react-native</b> : .js 파일로 컴파일 (JSX 코드가 그대로 유지된다)
+
+```js
+// Original TypeScript Sample Code
+export const helloWorld = () => <h1>Hello world</h1>;
+
+// Default: "react"
+export const helloWorld = () => React.createElement("h1", null, "Hello world");
+
+// React 17 transform: "react-jsx"
+import { jsx as _jsx } from "react/jsx-runtime";
+export const helloWorld = () => _jsx("h1", { children: "Hello world" }, void 0);
+
+// React 17 dev transform: "react-jsxdev"
+import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+const _jsxFileName =
+  "/home/runner/work/TypeScript-Website/TypeScript-Website/packages/typescriptlang-org/index.tsx";
+export const helloWorld = () =>
+  _jsxDEV(
+    "h1",
+    { children: "Hello world" },
+    void 0,
+    false,
+    { fileName: _jsxFileName, lineNumber: 7, columnNumber: 32 },
+    this
+  );
+
+// Preserve: "preserve"
+export const helloWorld = () => <h1>Hello world</h1>;
+
+// React Native: "react-native"
+export const helloWorld = () => <h1>Hello world</h1>;
+```
+
+</div>
+<br></br>
+<b>2-4-6. declaration</b>
+<div className="ml-div">
+컴파일시 .d.ts 파일도 자동으로 함께생성됩니다. .d.ts 파일이란
+
+> `.d.ts`는 TypeScript Definition 파일의 확장자입니다. TypeScript는 JavaScript의 상위 집합 언어로 정적 타입 검사, 클래스, 인터페이스 등의 기능을 제공합니다. 하지만 TypeScript로 작성된 코드를 JavaScript로 컴파일하면 타입 정보가 사라지기 때문에 다른 개발자들이 TypeScript 코드를 사용하기 어렵습니다. 이때, `.d.ts` 파일을 사용하면 TypeScript 코드에서 선언한 타입 정보를 코드 외부에 따로 저장하여 다른 개발자들이 TypeScript 코드를 사용할 때 유용하게 사용할 수 있도록 합니다. 이 파일은 주로 외부 라이브러리에서 제공되며, TypeScript에서 해당 라이브러리를 사용할 때 필요합니다.
+
+</div>
+<b>2-4-7. removeComments</b>
+<div className="ml-div">
+컴파일시 주석을 제거해줍니다.
+</div>
+<b>2-4-8. outDir</b>
+<div className="ml-div">
+컴파일된 자바스크립트 파일의 출력 디렉토리를 설정합니다.
+</div>
+<b>2-4-9. noEmit</b>
+<div className="ml-div">
+컴파일된 자바스크립트 파일을 생성하지 않습니다.
+</div>
+<b>2-4-10. baseUrl</b>
+<div className="ml-div">
+TypeScript 프로젝트에서 모듈을 로드할 때 모듈 이름을 해석하는 기준 경로를 지정하는 옵션입니다. `baseUrl`을 설정하면 상대 경로로 모듈을 로드하는 대신, 절대 경로로 모듈을 로드할 수 있습니다.
+
+```js
+// tsconfig.json
+"baseUrl": "./src",
+
+
+// abc/foo.js
+import zxc from '../src/zxc' // 이 방식 대신
+import zxc from 'zxc' // 절대경로 사용가능
+```
+
+</div>
+<br></br>
+<b>2-4-11. strict</b>
+<div className="ml-div">
+`strict` 옵션은 TypeScript에서 제공하는 <b>여러 개의 타입 체크 옵션을 모두 활성화</b>하는 옵션입니다. `strict` 옵션을 `true`로 설정하면 다음과 같은 타입 체크 옵션이 활성화됩니다.
+
+- <b>noImplicitAny</b>: 암묵적 any를 사용할 수 없게 됩니다.
+
+- <b>strictNullChecks</b>: null 또는 undefined이 될 수 있는 값에 대해 엄격하게
+  체크합니다.
+
+- <b>strictFunctionTypes</b>: 함수 타입의 매개변수와 반환 값에 대해 엄격하게
+  체크합니다.
+
+- <b>strictPropertyInitialization</b>: 클래스의 프로퍼티가 초기화되지 않았다면
+  오류를 발생시킵니다.
+
+- <b>noImplicitThis</b>: this 키워드의 타입이 암묵적 any로 처리되는 것을
+  막습니다.
+
+`strict` 모드를 사용하면 코드의 안정성을 높일 수 있으며, 타입 오류를 미리 방지할 수 있습니다. 하지만 코드 작성 시 더 많은 주의가 필요하며, 타입 오류를 조금 더 자세하게 해결해야 할 수도 있습니다. 따라서 프로젝트의 규모와 성격에 따라 `strict` 모드를 사용할 지 결정해야 합니다.
+
+</div>
+
+<b>2-4-12. skipLibCheck</b>
+<div className="ml-div">
+`skipLibCheck` 옵션은 TypeScript 컴파일러가 `.d.ts` 파일을 타입 체크하지 않도록 설정하는 옵션입니다. `.d.ts` 파일은 보통 외부 라이브러리나 프레임워크에서 제공하는 타입 선언 파일입니다.
+
+일반적으로 `.d.ts` 파일은 이미 타입 체크가 이루어져 있으므로, TypeScript 컴파일러가 다시 타입 체크를 하지 않도록 `skipLibCheck` 옵션을 사용합니다. 이 옵션을 사용하면 컴파일 시간이 줄어들어 빌드 속도를 높일 수 있습니다.
+
+하지만 외부 라이브러리나 프레임워크에서 제공하는 `.d.ts` 파일이 잘못된 타입을 선언하거나 누락된 타입이 있을 수 있으므로, `skipLibCheck` 옵션을 사용하기 전에 신중하게 검토해야 합니다.
+
+</div>
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.typescriptlang.org/ko/docs/handbook/tsconfig-json.html"
+>
+  https://www.typescriptlang.org/ko/docs/handbook/tsconfig-json.html
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://it-eldorado.tistory.com/128"
+>
+  https://it-eldorado.tistory.com/128
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://codingapple.com/unit/typescript-tsconfig-json/"
+>
+  https://codingapple.com/unit/typescript-tsconfig-json/
+</a>
