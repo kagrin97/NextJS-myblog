@@ -1,0 +1,118 @@
+---
+title: Next.js에서는 type-checking을 지원하지 않는다?!?
+date: 2023-03-16
+description: Next.js의 개발자모드에서 type-checking을 지원하지 않는 이유와 type-checking하는 방법을 소개합니다.
+category: type
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. Next.js에서는 type-checking을 지원하지 않는 이유
+      <p>1-1. fast refresh</p>
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. type-checking을 수동으로 실행하자
+      <p>2-1. Script에 type-checking 명령어를 추가하자</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. Next.js에서는 type-checking을 지원하지 않는 이유</div>
+</h2>
+
+<br></br>
+
+사실 next는 type-checking을 지원하지 않는다는 말은 <b>반은 맞고 반은 틀립니다.</b> 이게무슨 말이냐구요?
+
+저는 여느때처럼 next를 사용해서 만든 블로그 코드들을 리팩토링하고 있었습니다. 하지만 예전부터 <b>의문이였던 점</b>이 있었습니다. 그점은 바로 <b>개발자 모드(next dev)</b>에서는 잘 작동하던 코드가 <b>build만 하면 에러</b>를 마구 뿜어내는 것이였죠. 그래서 이리저리 알아본결과 개발자 모드에서는 9.4버전부터 `fast refresh`가 적용되면서 type-checking을 빼버렸다는 점입니다. 그렇다면 fast refresh는 무엇일까요?
+
+<br></br>
+<h3 className={`dark:text-white`}>1-1. fast refresh</h3>
+<br></br>
+
+Next.js의 fast refresh는 코드 변경 시 브라우저에서 새로고침 없이 빠르게 변경 사항을 반영할 수 있는 기능입니다. 이 기능은 개발자가 코드를 변경할 때마다 브라우저에서 전체 페이지를 다시 로드하지 않고 변경된 부분만을 업데이트하여 빠른 개발환경을 제공합니다.
+
+이전에는 `React Hot Loader`나 `React Fast Refresh`와 같은 도구를 사용하여 React 애플리케이션을 빠르게 새로고침할 수 있었습니다. 하지만 Next.js 9.4 버전부터는 이러한 기능을 내장하고 있어, 별도의 설정 없이 사용할 수 있습니다.
+
+Fast refresh는 개발자가 코드를 변경하면, 변경된 부분만을 즉시 반영하여 브라우저에서는 페이지 전체를 다시 로드하지 않습니다. 이를 통해 개발자는 빠른 피드백을 받고, 애플리케이션의 개발 속도를 향상시킬 수 있습니다. 또한, Fast refresh는 React Hooks나 함수 컴포넌트를 사용할 때도 잘 작동합니다.
+
+결국 next는 <b>DX</b>를 위해서 타입 체킹을 빼버렸던거지요.(오히려 DX가 더 나빠진 느낌...)
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. type-checking을 수동으로 실행하자</div>
+</h2>
+
+<br></br>
+
+next.config.js에 type-checking을 fast refresh시 수행하는 옵션이 있다면 좋겠지만 아쉽게도 존재하지 않습니다.(제가 모르는 type-checking 옵션이 있다면 댓글로 알려주세요!)
+
+그래서 저는 type-checking을 수동으로 실행하는 <b>가장 간단한 방법을 소개</b>하겠습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  2-1. Script에 type-checking 명령어를 추가하자
+</h3>
+<br></br>
+
+`tsc --noEmit --incremental --watch` 명령어를 사용하면 실시간으로 ts 파일들이 수정될 때마다 해당 파일 타입체킹을 수행합니다!
+
+```json:package.json
+  "scripts": {
+    "dev": "next dev",
+    "ts": "tsc --noEmit --incremental --watch",
+    ...
+  }
+```
+
+저는 script에 ts명령어로 설정했습니다.
+
+그렇다면 tsc, --noEmit, --incremental, --watch 이 명령어들은 무엇일까요?
+
+- <b>tsc</b> : TypeScript 컴파일러를 실행하는 명령어입니다. 이 명령어에는 여러 옵션을
+  지정할 수 있습니다
+
+- <b>--noEmit</b> : JavaScript 소스 코드, 소스 맵 또는 선언과 같은 컴파일러 출력
+  파일을 생성하지 않습니다.
+
+- <b>--incremental</b> : 이 모드는 이전 컴파일의 정보를 기반으로 변경된 파일만 다시
+  컴파일하여 컴파일 시간을 단축합니다. tsconfig.tsbuildinfo라는 파일이 생성되어 이전
+  컴파일의 정보를 저장합니다
+
+- <b>--watch</b> : 입력 파일이나 프로젝트의 변경 사항을 감지하여 자동으로 다시 컴파일합니다.
+  이 옵션은 개발 중에 편리하게 사용할 수 있습니다.
+
+즉 ts파일을 빠르게 type-checking 해준다는 뜻이죠
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.inflearn.com/blogs/2893"
+>
+  https://www.inflearn.com/blogs/2893
+</a>

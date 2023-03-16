@@ -92,6 +92,7 @@ b {
 
 .prose :where(code):not(:where([class~="not-prose"] *)) {
   color: rgb(235, 87, 87);
+  @apply dark:text-pink-400;
   padding: 0.2em 0.4em;
   font-size: 85%;
   background-color: rgba(175, 184, 193, 0.2);
