@@ -19,6 +19,7 @@ export interface Navlinks {
 }
 
 const navlinks: Navlinks[] = [
+  { title: "포트폴리오 🧑🏻‍💻", link: "https://portfolio-kagrin97.vercel.app/" },
   { title: "JavaScript", link: "/js", length: allJs.length },
   { title: "TypeScript", link: "/types", length: allTypes.length },
   { title: "NextJS", link: "/next", length: allNexts.length },

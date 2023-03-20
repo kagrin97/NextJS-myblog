@@ -29,7 +29,7 @@ const SideDrawer = (props: Props) => {
         <div className="m-auto">
           {navlinks.map((nav: Navlinks) => (
             <Link href={nav.link} key={nav.title}>
-              <div className="hover:cursor-pointer hover:text-green-400 mb-5 text-3xl">
+              <div className="hover:cursor-pointer hover:text-green-400 mb-5 text-2xl">
                 <a
                   href={nav.link}
                   className={`flex justify-center ${
