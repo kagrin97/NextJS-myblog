@@ -36,5 +36,8 @@ export const checkCategory = (
     case "git":
       sortDocsOrgetArticle(Articles.allGits);
       break;
+    case "article":
+      sortDocsOrgetArticle(Articles.allArticles);
+      break;
   }
 };

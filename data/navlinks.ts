@@ -9,6 +9,7 @@ import {
   allDataBases,
   allBackEnds,
   allServers,
+  allArticles,
 } from "contentlayer/generated";
 
 export interface Navlinks {
@@ -28,6 +29,7 @@ const navlinks: Navlinks[] = [
   { title: "BackEnd", link: "/backend", length: allBackEnds.length },
   { title: "DataBase", link: "/db", length: allDataBases.length },
   { title: "Server", link: "/server", length: allServers.length },
+  { title: "Article", link: "/article", length: allArticles.length },
 ];
 
 export default navlinks;
