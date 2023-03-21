@@ -1,0 +1,389 @@
+---
+title: 웹접근성(Web Accessibility)을 고려한 프론트엔드 개발의 중요성 및 구현
+date: 2023-03-21
+description: 웹접근성이 필요한 이유와 높이기 위해서 할수있는 방법, 그리고 검사 tool을 알아봅니다.
+category: other
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. 웹접근성이란?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 프론트엔드에서 웹접근성을 높이는 방법
+      <p>img태그에 alt를 넣기</p>
+      <p>role속성을 부여하기</p>
+      <p>적절한 링크 텍스트 제공하기</p>
+      <p>시각적으로 숨겨진 콘텐츠에 대한 대체 텍스트 제공하기</p>
+      <p>텍스트 크기 조절 가능하게 하기</p>
+      <p>비디오 태그에 자막 삽입하기</p>
+      <p>적절한 색상 대비 사용하기</p>
+      <p>키보드로 모든 기능 사용 가능하게 하기</p>
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. 웹접근성을 검사해주는 tool
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. 웹접근성이란?</div>
+</h2>
+
+<br></br>
+
+웹 접근성이란 무엇이며 접근성이 좋아지면 어떠한 점이 좋을까요? <b>간단한 예시를 살펴보겠습니다.</b>
+
+당신은 나이가 50인 축구광입니다. 며칠 전에 축구를 하던 중 손을 다쳐서 오른손을 사용하지 못합니다. 잠깐 밖에 일이 있어서 나왔는데 어제 있었던 축구 경기의 결과가 궁금해져서 휴대폰을 열었습니다. 하지만 네이버 기사 글씨가 너무 작아서 네이버에서 제공하는 글씨 크기를 마음대로 조정할 수가 있는 기능을 사용해 글씨 크기를 늘렸습니다. 그리고 기사에 첨부된 동영상을 시청하려고 했는데 아뿔싸 이어폰을 안 챙겨왔습니다. 하지만 동영상에서 자막을 제공해줘서 영상 시청이 가능했습니다. 그리고 며칠 뒤 당신은 집에서 컴퓨터로 은행 업무를 보려고 했습니다. 오른손을 다쳐서 왼쪽 손을 키보드만 사용해서 은행 업무를 수행할 수가 있었습니다.
+
+이와 같은 에피소드를 보았을 때 웹 접근성이 좋아진다면 몸이 불편하신 분들도 편하게 웹에서 일을 볼 수가 있습니다.
+
+그렇다면 어떠한 기능이 추가되어야 웹 접근성이 좋다고 할 수가 있는 것일까요? 제가 생각하기로는 웹 접근성은 a라는 기능을 수행할 때 <b>여러 가지의 방법으로 a라는 기능을 수행할 수 있을 때</b> 웹 접근성이 좋아진다고 생각합니다. 예를 들어서 어떤 파일을 복사할 때 여러 가지 방법이 존재합니다.
+
+1. 컨트롤 + c
+
+2. 드래그 + 오른쪽 클릭 + 복사
+
+3. 파일 자체를 드래그해서 옮길 폴더로 옮긴다.
+
+등등 여러 가지 방법이 존재할 수가 있습니다. 사람마다 편리하다고 생각하는 방법이 존재하지만 중요한 점은 다양한 환경에서도 수행이 가능하도록 <b>사용자를 배려</b>하고 있다는 점입니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 프론트엔드에서 웹접근성을 높이는 방법</div>
+</h2>
+
+그렇다면 프론트엔드에서 웹 접근성을 높이는 어떤 방법들이 존재할까요? 이제부터 하나씩 알아보겠습니다.
+
+<br></br>
+
+<h3 className={`dark:text-white`}>
+  <b>img태그에 alt를 넣기</b>
+</h3>
+<br></br>
+
+img 태그에 alt라는 속성은 이미지가 로딩중일때 대체텍스트를 사용해 사용자한테 어떤 이미지인지를 알려줍니다.
+
+```html
+<img alt="하늘 사진" src="불라불라" />
+```
+
+alt속성에 하늘 사진이라는 텍스트를 넣음으로써 사용자는 해당 이미지가 불러오기도 전에 어떤 이미지인지를 알수가 있습니다. 또한 alt속성은 <b>SEO</b>에도 도움이됩니다!!
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <b>role속성을 부여하기</b>
+</h3>
+<br></br>
+
+또한 속성에는 role 속성이라는 것이 존재합니다. role은 말 그대로 해당 태그가 어떤 <b>역할</b>을 수행하는지 알려주는 속성입니다. 그렇다면 이런 속성이 왜 존재할까요?
+
+그 이유는 시각장애인들은 웹을 사용할 때 글씨를 읽을 수가 없기 때문에 <b>스크린리더기</b>를 통해서 웹을 사용하기 때문입니다. 스크린 리더기는 무엇일까요?
+
+스크린 리더는 컴퓨터 화면을 읽어주는 소프트웨어입니다. 스크린 리더는 화면에 출력된 텍스트, 이미지, 버튼 등을 음성으로 변환하여 사용자에게 전달합니다. 이를 위해 스크린 리더는 화면의 내용을 읽어주는 TTS(Text-To-Speech) 엔진과 사용자의 입력을 인식하는 인터페이스를 가지고 있습니다.
+
+스크린 리더는 사용자가 컴퓨터를 조작할 수 있도록 도와주는 보조 기술 중 하나입니다. 스크린 리더는 시각 장애인을 위한 기술이지만, 다른 이유로 인해 화면을 볼 수 없는 사용자에게도 도움이 됩니다.
+
+만약 `role="button"` 이라면 스크린 리더기는 해당 요소가 버튼이라는 점을 사용하자한테 알려줍니다. 또한 위에 있는 atl속성을 스크린 리더기가 읽어줍니다!!
+
+```html
+<div class="snackbar" role="alert">
+  <img src="apple.jpg" alt="사과 이미지" />
+</div>
+```
+
+div 태그의 역할을 alert이며 안에 있는 이미지는 사과 이미지라는 것을 시각 장애인도 인지할수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <b>적절한 링크 텍스트 제공하기</b>
+</h3>
+<br></br>
+
+웹 접근성을 높이기 위해서는 링크 텍스트를 적절하게 제공해야 합니다. 링크 텍스트는 링크를 클릭했을 때 이동하는 <b>페이지의 내용을 요약</b>하고 있어야 합니다. 링크 텍스트를 적절하게 제공하면 시각 장애인이나 저시력자 등이 스크린 리더를 통해 링크를 인식할 때 더욱 쉽게 이해할 수 있습니다.
+
+링크 텍스트를 적절하게 제공하기 위해서는 다음과 같은 사항을 고려해야 합니다.
+
+- 링크 텍스트가 링크를 클릭했을 때 이동하는 페이지의 내용을 요약하고 있어야 합니다.
+- 링크 텍스트가 명확하고 간결해야 합니다.
+- 링크 텍스트가 중복되지 않도록 해야 합니다.
+
+```html
+<a href="youtube.co.kr">유튜브 링크</a>
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <b>시각적으로 숨겨진 콘텐츠에 대한 대체 텍스트 제공하기</b>
+</h3>
+<br></br>
+
+시각적으로 숨겨진 콘텐츠에 대한 대체 텍스트를 제공하기 위해서는 다음과 같은 방법을 사용할 수 있습니다.
+
+<br></br>
+1. <b>CSS를 사용하여 숨김 처리된 콘텐츠에 대한 대체 텍스트를 제공하는 방법</b>
+
+```css
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+```
+
+위와 같은 CSS 코드를 작성하면, `.sr-only` 클래스를 가진 요소는 시각적으로는 보이지 않지만 스크린 리더를 사용하는 사용자는 해당 요소의 대체 텍스트를 읽을 수 있습니다.
+
+<br></br>
+2. <b>HTML의 aria-label 속성을 사용하여 대체 텍스트를 제공하는 방법</b>
+
+```js
+<button aria-label="검색">검색</button>
+```
+
+위와 같은 HTML 코드를 작성하면, aria-label 속성에 지정된 대체 텍스트가 스크린 리더를 사용하는 사용자에게 읽힙니다.
+
+여기서 <b>의문점</b>이 있습니다. role 속성과 aria-label 속성은 결국 같은 역할을 하는 것이 아닌가요? <b>결론은 그렇지 않습니다.</b>
+
+aria-label과 role 속성은 비슷한 역할을 수행하지만, 사용하는 방법이 다릅니다. role 속성은 요소의 역할을 정의하는 데 사용되며, 미리 정의된 값만 사용할 수 있습니다. 예를 들어, role="button"은 버튼 역할을 정의합니다. 반면 aria-label 속성은 요소의 이름을 정의하는 데 사용됩니다. aria-label 속성은 요소의 역할과는 무관하게 사용할 수 있습니다. 예를 들어, `검색`은 버튼 역할을 하면서도 "검색"이라는 이름을 가지게 됩니다
+
+위 코드에서 aria-label 속성은 버튼의 이름을 "검색"으로 정의하고 있습니다. 이렇게 하면 스크린 리더를 사용하는 사용자가 버튼의 이름을 읽을 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <b>텍스트 크기 조절 가능하게 하기</b>
+</h3>
+<br></br>
+
+웹 접근성을 높이기 위해서는 텍스트 크기를 조절할 수 있도록 해야 합니다. 이를 위해서는 다음과 같은 방법을 사용할 수 있습니다.
+
+<br></br>
+1. <b>em 단위를 사용하여 폰트 크기를 지정하는 방법</b>
+
+```css
+body {
+  font-size: 16px;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+p {
+  font-size: 1em;
+}
+```
+
+위와 같은 CSS 코드를 작성하면, body 요소의 폰트 크기를 16px로 지정하고, h1 요소의 폰트 크기를 2em으로 지정하면 h1 요소의 폰트 크기는 32px이 됩니다.
+
+p 요소의 폰트 크기는 1em으로 지정하면 16px이 됩니다. 이렇게 하면 사용자가 브라우저의 확대/축소 기능을 사용하여 폰트 크기를 조절할 때, 모든 요소의 폰트 크기가 함께 조절됩니다.
+
+<br></br>
+2. <b>rem 단위를 사용하여 폰트 크기를 지정하는 방법</b>
+
+```css
+html {
+  font-size: 16px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+p {
+  font-size: 1rem;
+}
+```
+
+위와 같은 CSS 코드를 작성하면, html 요소의 폰트 크기를 16px로 지정하고, h1 요소의 폰트 크기를 2rem으로 지정하면 h1 요소의 폰트 크기는 32px이 됩니다. p 요소의 폰트 크기는 1rem으로 지정하면 16px이 됩니다.
+
+rem 단위는 root em을 의미하며, html 요소의 폰트 크기를 기준으로 계산됩니다. 이렇게 하면 사용자가 브라우저의 확대/축소 기능을 사용하여 폰트 크기를 조절할 때, html 요소의 폰트 크기만 조절되고, 다른 요소의 폰트 크기는 그대로 유지됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <b>비디오 태그에 자막 삽입하기</b>
+</h3>
+<br></br>
+
+HTML5에서는 track 요소를 사용하여 비디오에 자막을 추가할 수 있습니다. track 요소는 video 요소 내부에 위치하며, kind, src, srclang, label 등의 속성을 사용하여 자막 파일을 지정합니다. 예를 들어, 다음과 같은 코드를 사용하여 자막 파일을 추가할 수 있습니다.
+
+```html
+<video controls>
+  <source src="movie.mp4" type="video/mp4" />
+  <track src="subtitles.vtt" kind="subtitles" srclang="en" label="English" />
+</video>
+```
+
+위 코드에서 src 속성은 자막 파일의 경로를 지정하며, kind 속성은 자막의 종류를 지정합니다. srclang 속성은 자막 파일의 언어를 지정하며, label 속성은 자막의 레이블을 지정합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <b>적절한 색상 대비 사용하기</b>
+</h3>
+<br></br>
+
+웹접근성을 위해서는 적절한 색상 대비를 사용해야 합니다. 대부분의 경우, 텍스트와 배경 사이의 대비가 4.5:1 이상이어야 합니다. 이를 위해서는 색상 대비 검사 도구를 사용하여 색상 대비를 확인할 수 있습니다. 대표적인 색상 대비 검사 도구로는 `Contrast-Finder`가 있습니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://app.contrast-finder.org/result.html?foreground=rgb%2870%2C136%2C71%29&background=%23DFF0D8&ratio=4.5&isBackgroundTested=false&algo=Rgb&lang=ko"
+>
+  Contrast Finder
+</a>
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <b>키보드로 모든 기능 사용 가능하게 하기</b>
+</h3>
+<br></br>
+
+키보드로 모든 기능을 수행하고 싶다면 tabindex라는 속성에 대해서 알아야 합니다. tabindex는 무엇일까요?
+
+tabindex는 HTML 엘리먼트가 포커스를 받을 수 있도록 하는 글로벌 특성입니다. tabindex의 값에 따라 해당 엘리먼트가 포커스를 받을 수 있는 순서가 결정됩니다. tabindex의 값이 0이면, 해당 엘리먼트는 tab 키를 이용해 탐색이 가능해집니다. 보통 브라우저에서 tab을 클릭하게 되면 input, form, a 같은 관련 요소(element)와 같은 요소들이 차례대로 포커스가 됩니다. 그렇다면 포커스를 받지 않게 하거나 받게 하거나 포커스 순서를 정하고 싶다면 tabindex값을 특정 값으로 설정하면 됩니다.
+
+tabindex는 0, -1, 양수 크게 3가지를 값으로 설정할 수 있는데 각각 알아봅시다.
+
+<br></br>
+1. <b>tabindex=“0”</b>
+
+상호작용하지 않는 `<div>`, `<span>` 태그와 같은 요소들도 키보드 포커스가 잡히게 하고 싶으면 해당 요소의 tabindex의 값을 0으로 설정해주면 tab을 클릭했을때 포커스가 가능해집니다.
+
+```html
+<h2 tabindex="0">나를 포커스 해줘!!</h2>
+```
+
+<br></br>
+2. <b>tabindex=“-1”</b>
+
+default tabindex값이 0인 요소들(form,a..)을 키보드 포커스가 잡히지 않게 하려면 해당 요소의 tabindex값을 -1로 설정하게 된다면 어떠한 요소라도 해당 요소로 포커스가 잡히지 않게 됩니다.
+
+```html
+<a tabindex="-1">나를 내버려 둬!</a>
+```
+
+<br></br>
+3. <b>tabindex=“양수”</b>
+
+이제 마지막입니다. tabindex의 포커스 순서를 마음대로 조절하고 싶은데 어떻게 하면 좋을까요?? tabindex에 1 이상의 양수를 집어넣는 방법이 존재합니다. 예를 들어서 tabindex값이 각각 1,2,3,4 인 요소들이 존재한다고 가정했을 때 1 -> 2 -> 3 -> 4 순서대로 포커스가 됩니다.
+
+```html
+<span tabindex="4">4 번째</span>
+<span tabindex="3">3 번째</span>
+<span tabindex="2">2 번째</span>
+<span tabindex="1">1 번째</span>
+```
+
+위 요소들을 tab한다면 맨 밑의 요소부터 맨 위의 요소까지의 순서대로 포커스가 됩니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. 웹접근성을 검사해주는 tool</div>
+</h2>
+
+웹접근성이 좋은지 안 좋은지 페이지만 봐서는 알수가 없습니다. 그래서 <b>웹접근성을 검사해주는 tool</b>에 대해서 알아보겠습니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://wave.webaim.org/"
+>
+  WAVE 웹 접근성 평가 도구
+</a>
+
+위 링크에 접속하게 되면 <b>Web page address</b>라고 웹페이지 url을 입력하는 input창이 존재합니다. 해당 url을 검사해서 개선해야할점을 알려줍니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/226517652-3c1d84d5-c458-4018-9a00-2cd6277d0f03.png"
+    width="60%"
+    alt="WAVE 웹 접근성 평가 도구 이미지"
+  />
+</div>
+
+저는 제 블로그를 검사해보겠습니다. 보니까 Error가 1개, Alerts가 3개가 존재하네요?? 디테일 탭으로 이동해서 더 자세한 이야기를 들어보겠습니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/226522508-199c2074-1a36-4880-bd2b-5c3dc6eedd8b.png"
+    width="60%"
+    alt="WAVE 웹 접근성 평가 도구 디테일"
+  />
+</div>
+
+디테일 탭으로 옮기면 이렇게 문제인점을 알려줍니다. 더 자세한 내용을 알고 싶다면 i 아이콘을 클릭하시면 해당 정보를 더 자세히 알려줍니다. 저는 error 사항을 더 자세히 보겠습니다.
+
+<div className={`flex justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/226522862-b5f8ca84-1ebb-4522-8506-82342ff42795.png
+"
+    width="60%"
+    alt="WAVE 웹 접근성 평가 도구 에러 디테일"
+  />
+</div>
+
+헉! 블로그 home 페이지에 title이 없다는 에러가 나타났습니다. 저는 블로그 title 태그를 동적으로 생성 후 넣어주고 있기 때문에 발생하는 문제인 것 같습니다. next.js server 단계에서 동적으로 생성 후 유저한테 서빙해주고 있는데 알 수 없는 이유로 초기 html에 동적으로 생성된 태그가 존재하지 않습니다. (잘 아시는 분은 댓글 남겨주세요!)
+
+또한 Contrast 항목에서는 텍스트와 배경의 명암 대비를 측정해주는 기능도 제공해주고 있습니다. 이렇게 웹 접근성에 대해서 알아봤습니다. 기존에 알고 있던 내용도 있지만 글을 작성하면서 새로 알게 된 점도 있네요.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://seulbinim.github.io/WSA/accessibility.html"
+>
+  웹접근성(Web Accessibility) | 웹접근성과 웹표준
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.daleseo.com/html-tabindex/"
+>
+  [HTML] tabindex 속성과 키보드 포커스
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.youtube.com/watch?v=yLZZi5E7NTU&t=331s"
+>
+  [10분 테코톡] 블링의 웹 접근성
+</a>
