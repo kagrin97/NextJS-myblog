@@ -1,0 +1,448 @@
+---
+title: webpack에서 꼭 필요한 5가지의 플러그인!
+date: 2023-03-23
+description: 꼭 필요한 플러그인 3개와 사용하면 좋은 플러그인2개를 설명 및 사용
+category: other
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. webpack에서 플러그인은 무엇을 하나요?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 무조건 사용해야하는 플러그인 3종
+      <p>2.1 html-webpack-plugin</p>
+      <p>2.2 clean-webpack-plugin</p>
+      <p>2.3 copy-webpack-plugin</p>
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. 사용하면 좋은 플러그인 2종
+      <p>3.1 terser-webpack-plugin</p>
+      <p>3.2 mini-css-extract-plugin</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. webpack에서 플러그인은 무엇을 하나요?</div>
+</h2>
+
+<br></br>
+
+webpack은 개발자의 관점에서 보고 읽기 쉬운 코드를 압축시켜서 짧은 하나의 js파일로 변환합니다.
+
+그렇다면 플러그인은 무엇일까요?
+
+Webpack의 플러그인은 빌드 과정 중에 추가적인 작업을 수행하거나, 빌드 결과물을 조작하는 등의 역할을 합니다.
+
+무슨 말인지 모르시겠다구요? 그래도 일단 따라오세요. 이제부터 제가 꼭 필요한 플러그인 3가지와 사용하면 좋은 플러그인 2가지에 대해서 설명해드리겠습니다. 레쯔고
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 무조건 사용해야하는 플러그인 3종</div>
+</h2>
+<br></br>
+
+지금부터 무조건 사용해야 개발자로써 매우 편해지는 플러그인 3가지를 설명해드리겠습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2.1 html-webpack-plugin</h3>
+<br></br>
+
+`html-webpack-plugin`은 HTML 파일을 자동으로 생성해주는 Webpack 플러그인입니다. 이 플러그인은 웹팩 빌드 시점에서 HTML 파일을 생성하며, 생성된 HTML 파일에 번들링된 자바스크립트와 CSS 파일을 자동으로 추가합니다.
+
+이 플러그인을 사용하면 HTML 파일에서 번들링된 자바스크립트와 CSS 파일을 수동으로 추가하는 작업을 줄일 수 있습니다. 또한, 다양한 템플릿 엔진을 지원하므로, 프로젝트에 맞게 원하는 템플릿 엔진을 선택하여 사용할 수 있습니다.
+
+html-webpack-plugin을 사용하려면, `webpack.config.js` 파일에서 다음과 같이 설정해야 합니다.
+
+```js showLineNumbers
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "index.html",
+    }),
+  ],
+};
+```
+
+위의 예시 코드에서 <b>template</b> 옵션은 웹팩이 사용할 HTML 템플릿 파일의 경로를 설정하고, <b>filename</b> 옵션은 생성될 HTML 파일의 이름을 설정합니다. 이렇게 설정하면 웹팩 빌드 시점에서 <b>template</b>으로 지정한 HTML 파일을 기반으로 <b>filename</b>으로 지정한 이름의 HTML 파일을 생성하며, 해당 HTML 파일에 웹팩으로 번들링된 자바스크립트와 CSS 파일을 자동으로 추가합니다.
+
+<br></br>
+
+<div className={`flex flex-col justify-center`}>
+  <small>빌드폴더에 생겨난 index.html 파일 👇</small>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/227182111-0891858e-5467-448f-bfaf-f2f657ca6c7a.png"
+    width="70%"
+  />
+</div>
+
+<br></br>
+
+또한 다양한 옵션이 존재합니다.
+
+- <b>inject</b>: 자동으로 생성된 script 태그를 HTML 파일에 삽입할 방법을
+  설정합니다. 설정값으로 <b>true</b>를 사용하면 <b>body</b> 요소의 마지막에 삽입하고, <b>
+    head
+  </b> 요소에 삽입하려면 <b>head</b>를 설정합니다. <b>false</b>를 설정하면 자동 삽입을
+  비활성화할 수 있습니다. 기본값은 <b>true</b>입니다.
+
+- <b>minify</b>: 생성된 HTML 파일을 최소화할지 여부를 설정합니다. 기본값은 <b>
+    false
+  </b>입니다.
+
+- <b>hash</b>: 자동으로 생성된 script 파일명에 해시값을 추가할지 여부를
+  설정합니다. 캐시 갱신을 위해 사용됩니다. 기본값은 <b>false</b>입니다.
+
+  <br></br>
+
+예를 들어, <b>template</b> 옵션을 사용하여 사용자 지정 HTML 템플릿 파일을 사용하고 싶은 경우, 다음과 같이 설정할 수 있습니다.
+
+```js showLineNumbers
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/custom-template.html",
+    }),
+  ],
+};
+```
+
+이렇게 설정하면, `./src/custom-template.html` 파일을 사용하여 HTML 파일을 생성합니다.
+
+또한, `minify` 옵션을 사용하여 생성된 HTML 파일을 최소화할 수 있습니다.
+
+```javascript
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  plugins: [
+    new HtmlWebpackPlugin({
+      minify: true,
+    }),
+  ],
+};
+```
+
+이렇게 설정하면, 생성된 HTML 파일이 최소화됩니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://webpack.kr/plugins/html-webpack-plugin/"
+>
+  html-webpack-plugin 문서
+</a>
+
+<br></br>
+<h3 className={`dark:text-white`}>2.2 clean-webpack-plugin</h3>
+<br></br>
+
+`CleanWebpackPlugin`은 웹팩 빌드 시점에서 이전 빌드 결과물을 자동으로 삭제하는 플러그인입니다. 이전 빌드 결과물이 삭제되지 않으면, 새로운 빌드 결과물이 이전 빌드 결과물과 섞이거나 충돌할 수 있습니다. 이러한 문제를 방지하기 위해 CleanWebpackPlugin을 사용합니다.
+
+CleanWebpackPlugin을 사용하려면, `webpack.config.js` 파일에서 다음과 같이 설정해야 합니다.
+
+```js showLineNumbers
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  plugins: [new CleanWebpackPlugin()],
+};
+```
+
+<br></br>
+
+위의 예시 코드에서 CleanWebpackPlugin을 생성한 후, <b>plugins</b> 배열에 추가합니다. 이렇게 설정하면 웹팩 빌드 시점에서 이전 빌드 결과물이 자동으로 삭제됩니다.
+
+CleanWebpackPlugin은 다양한 옵션을 제공하므로, 프로젝트에 맞게 설정할 수 있습니다. 일부 주요 옵션은 다음과 같습니다.
+
+- <b>cleanOnceBeforeBuildPatterns</b>: 빌드 이전에 삭제할 파일 경로를
+  설정합니다. 기본값은 <b>['**/*']</b>으로, 모든 파일을 삭제합니다.
+
+- <b>cleanAfterEveryBuildPatterns</b>: 빌드 이후에 삭제할 파일 경로를
+  설정합니다.
+
+- <b>verbose</b>: 삭제되는 파일의 상세 정보를 출력합니다. 기본값은 <b>false</b>입니다.
+
+<br></br>
+
+예를 들어, <b>cleanOnceBeforeBuildPatterns</b> 옵션을 사용하여 <b>build</b> 폴더 내의 파일만 삭제하고 싶은 경우, 다음과 같이 설정할 수 있습니다.
+
+```js showLineNumbers
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ["build/*"],
+    }),
+  ],
+};
+```
+
+이렇게 설정하면, 웹팩 빌드 시점에서 build 폴더 내의 파일만 자동으로 삭제됩니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.npmjs.com/package/clean-webpack-plugin"
+>
+  clean-webpack-plugin 문서
+</a>
+
+<br></br>
+<h3 className={`dark:text-white`}>2.3 copy-webpack-plugin</h3>
+<br></br>
+
+`copy-webpack-plugin`은 웹팩 빌드 시점에서 파일을 복사하는 플러그인입니다. 웹팩으로 빌드한 결과물 외에, 원하는 파일들을 추가로 복사할 수 있습니다. 저는 리액트의 public 아래에 존재하는 이미지, 문서 등등을 빌드후에도 사용하기 위해서 copy-webpack-plugin을 사용합니다.
+
+copy-webpack-plugin을 사용하려면, `webpack.config.js` 파일에서 다음과 같이 설정해야 합니다.
+
+```js showLineNumbers
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        // 복사할 파일 경로와 대상 경로를 설정합니다.
+        { from: "source", to: "dest" },
+        { from: "public/imgs", to: "imgs" },
+        ,
+      ],
+    }),
+  ],
+};
+```
+
+위의 예시 코드에서 <b>CopyWebpackPlugin</b>을 생성한 후, <b>plugins</b> 배열에 추가합니다. <b>patterns</b> 옵션을 사용하여 복사할 파일 경로와 대상 경로를 설정합니다. <b>from</b> 속성은 복사할 파일 경로를, <b>to</b> 속성은 대상 경로를 설정합니다. <b>from</b>과 <b>to</b>는 모두 상대 경로이며, 기본적으로 웹팩 빌드 결과물 경로를 기준으로 합니다.
+
+즉 두번째 패턴을 보시면 public/imgs의 폴더안에 존재하는 모든 파일들을 빌드후 build/imgs로 복사한다는 의미입니다.
+
+<br></br>
+
+<div className={`flex flex-col justify-center`}>
+  <small>빌드폴더에 복사된 파일 👇</small>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/227182106-bcf61207-6236-4a99-8607-fa54a2633fad.png"
+    width="70%"
+  />
+</div>
+
+또한, CopyWebpackPlugin은 다양한 옵션을 제공합니다. 일부 주요 옵션은 다음과 같습니다.
+
+- <b>force</b>: 이미 존재하는 파일을 덮어쓸지 여부를 설정합니다. 기본값은 <b>
+    false
+  </b>입니다.
+
+- <b>cleanStaleWebpackAssets</b>: 이전 빌드 결과물 중 더 이상 사용되지 않는
+  파일을 삭제할지 여부를 설정합니다. 기본값은 <b>true</b>입니다.
+
+- <b>flatten</b>: 복사 대상 경로에 상위 경로를 포함시키지 않고, 파일명만
+  복사할지 여부를 설정합니다. 기본값은 <b>false</b>입니다.
+
+  <br></br>
+
+예를 들어, <b>force</b> 옵션을 사용하여 이미 존재하는 파일을 덮어쓰도록 설정하고 싶은 경우, 다음과 같이 설정할 수 있습니다.
+
+```js showLineNumbers
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [{ from: "source", to: "dest" }],
+      options: {
+        force: true,
+      },
+    }),
+  ],
+};
+```
+
+이렇게 설정하면, 이미 존재하는 파일을 덮어쓰도록 설정됩니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://webpack.js.org/plugins/copy-webpack-plugin/"
+>
+  copy-webpack-plugin 문서
+</a>
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. 사용하면 좋은 플러그인 2종</div>
+</h2>
+<br></br>
+
+사용하지 않으면 큰일이 나지 않지만 사용하면 좋은 최적화 플러그인 2개를 소개합니다!
+
+기본적으로 최적화 플러그인이기 떄문에 개발모드에서는 사용하지 않으며 배포모드에서 사용합니다. 저는 개발모드와 배포모드를 구별하기 위해서 webpack-merge를 사용해서 분리했습니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://kagrin97-blog.vercel.app/other/webpack-merge"
+>
+  webpack-merge 웹팩 설정 파일을 개발, 배포 따로 설정해보자
+</a>
+
+<br></br>
+<h3 className={`dark:text-white`}>3.1 terser-webpack-plugin</h3>
+<br></br>
+
+`terser-webpack-plugin`은 Webpack에서 JavaScript 코드를 압축하는 데 사용되는 플러그인입니다. `uglifyjs-webpack-plugin`와 비슷한 기능을 하지만, uglifyjs-webpack-plugin보다 더 나은 결과물을 생성하며, 속도도 더 빠릅니다.
+
+또한 uglifyjs-webpack-plugin은 webpack 5에서 지원이 되지 않습니다.
+
+Webpack 설정 파일에서 terser-webpack-plugin을 import하고, <b>optimization</b> 속성 안에서 사용할 수 있습니다. 아래는 terser-webpack-plugin의 간단한 예시입니다.
+
+```js showLineNumbers
+const TerserPlugin = require("terser-webpack-plugin");
+
+module.exports = {
+  // ...기타 설정
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true, // 콘솔 로그 제거
+          },
+          format: {
+            comments: false, // 주석 제거
+          },
+        },
+      }),
+    ],
+  },
+};
+```
+
+위 예시에서 <b>minimize</b> 속성은 Webpack이 번들링된 JavaScript 코드를 압축할지 여부를 설정합니다. <b>minimizer</b> 속성에는 Webpack이 사용할 압축 플러그인의 리스트를 설정합니다.
+
+여기에서는 terser-webpack-plugin을 사용하고 있습니다. <b>terserOptions</b> 속성은 terser-webpack-plugin이 사용할 Terser 옵션을 설정합니다.
+
+위 예시에서는 <b>compress</b> 옵션으로 콘솔 로그를 제거하도록 설정했습니다. 또한 <b>format</b> 옵션으로 주석을 제거하도록 설정했습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>3.2 mini-css-extract-plugin</h3>
+<br></br>
+
+`mini-css-extract-plugin`은 웹팩 빌드 시점에서 CSS 파일을 분리하여 추출하는 플러그인입니다. CSS 파일을 별도로 추출하면, 브라우저에서 CSS 파일을 캐시할 수 있어 초기 로딩 속도를 높일 수 있습니다.
+
+mini-css-extract-plugin을 사용하려면, `webpack.config.js` 파일에서 다음과 같이 설정해야 합니다.
+
+```js showLineNumbers
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+    ],
+  },
+  plugins: [new MiniCssExtractPlugin()],
+};
+```
+
+위의 예시 코드에서 MiniCssExtractPlugin을 생성한 후, `plugins` 배열에 추가합니다.
+
+이후, CSS 파일을 처리하는 <b>module.rules</b> 설정에서 <b>MiniCssExtractPlugin.loader</b>를 사용하여 CSS 파일을 분리합니다.
+
+MiniCssExtractPlugin은 다양한 옵션을 제공합니다. 일부 주요 옵션은 다음과 같습니다.
+
+- <b>filename</b>: 추출된 CSS 파일명을 설정합니다. 기본값은 <b>main.css</b>입니다.
+- <b>chunkFilename</b>: 추출된 CSS 파일의 청크(chunk) 파일명을 설정합니다.
+  기본값은 <b>[id].css</b>입니다.
+- <b>ignoreOrder</b>: CSS 파일 추출 순서에 대한 경고를 출력하지 않도록
+  설정합니다. 기본값은 <b>false</b>입니다.
+
+  <br></br>
+
+예를 들어, <b>filename</b> 옵션을 사용하여 추출된 CSS 파일명을 <b>styles.css</b>로 설정하고 싶은 경우, 다음과 같이 설정할 수 있습니다.
+
+```js showLineNumbers
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+module.exports = {
+  // ... 다른 설정
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "styles.css",
+    }),
+  ],
+};
+```
+
+이렇게 설정하면, 추출된 CSS 파일명이 `styles.css`로 설정됩니다.
+
+<br></br>
+
+<div className={`flex flex-col justify-center`}>
+  <small>빌드폴더에 생겨난 css파일 👇</small>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/227182099-9a549662-1229-441e-b0ab-24ada7cc56a6.png"
+    width="50%"
+  />
+</div>
+
+이렇게 알아봤는데 이것만 알아도 웹팩을 시작하는데 문제가 없을것같습니다. ^^
