@@ -1,6 +1,7 @@
 # 👀 블로그 프로젝트 목차
 
 > 개발 블로그를 직접 만들고 싶어서 시작한 프로젝트입니다.
+<br>
 
 - [1. 구현된 기능](#1-구현된-기능)
   - 1-1. 블로그 기능
@@ -54,30 +55,39 @@
 
 ## 2. 사용한 프레임워크및 라이브러리
 
-- ### **Next.JS**
+<details>
+<summary> 읽고 싶으면 펴기 / 닫고 싶으면 접기 </summary>
+<div markdown="1">
+
+- **Next.JS**
 
   react에서 SSR방식을 사용해 성능을 향상시키고 SEO를 유리하게 하기 위해서 사용했습니다.
 
-- ### **contentlayer**
+- **contentlayer**
 
   Next.JS와 호환이 되면서 블로그 기능을 구현할 수 있는 SDK로 Next.js 단독 또는 Gatsby와 같은 다른 프레임워크보다 빌드 시간이 빠릅니다.
 
-- ### **tailwind**
+- **tailwind**
 
   기존 css보다 사용하기 편리하고 컴포넌트에서 스타일 유추가 쉽기 때문에 사용했습니다.
 
-- ### **rehype-prism-plus**
+- **rehype-prism-plus**
 
   코드 블록을 사용할 때 tailwind를 사용하면 스타일 적용이 안 되기 때문에 코드 블록에 클래스를 추가 하기 위해 사용했습니다.
 
-- ### **next-themes**
+- **next-themes**
 
   라이트모드와 다크모드를 구현하기 위해 현재 테마 정보를 가져오기위해 사용했습니다.
 
-- ### **cheerio**
+- **cheerio**
 
   OpenGraphPreview를 생성할떄 필요한 og정보를 html에서 더 쉽게 추출하기 위해서 사용했습니다.
 <br>
+
+</div>
+</details>
+
+
 
 ## 3. 핵심 기능
 
