@@ -1,0 +1,412 @@
+---
+title: "[FP/JS] 함수형 프로그래밍에서의 curry, go, pipe"
+date: 2023-03-28
+description: 함수형 프로그래밍에서 코드를 값으로 사용하는 방법 3가지에 대해서 알아봅니다.
+category: js
+---
+
+---
+
+지금부터 작성할 내용은 함수형 프로그래밍의 map, filter, reduce가 필요하기 떄문에 밑의 글을 먼저 읽어보시길 바랍니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://kagrin97-blog.vercel.app/js/FP-iterable_(map,filter,reduce)"
+>
+  FP/JS prototype이 Arrary가 아닌 iterable 객체 map, filter, reduce 구현하기
+</a>
+<br></br>
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. curry, go, pipe를 사용하는 이유
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. curry 사용법
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. go 사용법
+    </a>
+    <a href="#4" className="mokcha-container__list">
+      4. pipe 사용법
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. curry, go, pipe를 사용하는 이유</div>
+</h2>
+
+<br></br>
+
+자바스크립트에서 함수가 중첩이 되어있는 경우에는 가독성이 좋지않습니다.
+
+```js showLineNumbers
+// go, pipe, curry 적용 전
+console.log(
+  reduce(
+    add,
+    map(
+      (p) => p.price,
+      filter((p) => p.price < 20000, products)
+    )
+  )
+);
+
+// go, pipe, curry 적용 후
+go(
+  products,
+  filter((p) => p.price < 20000),
+  getTotalPrice,
+  console.log
+);
+```
+
+go, pipe, curry는 함수형 프로그래밍에서 <b>함수 조합을 쉽게 하기 위한 도구들</b>입니다.
+
+go와 pipe는 함수를 <b>연속해서 실행하는 함수 조합</b>을 쉽게 만들어 줍니다. 함수를 연속해서 실행하면서 중간 결과를 처리할 필요 없이, 마지막 함수의 결과만 반환하면 되기 때문에 코드가 간결해지고 가독성이 좋아집니다.
+
+curry는 인자를 분리해서 받는 함수를 <b>인자를 하나씩 받는 함수들의 연속</b>으로 바꿔줍니다. 이렇게 하면 함수 조합이 더욱 쉬워지며, 재사용성도 높아집니다.
+
+이러한 도구들을 사용하면 코드의 가독성과 유지보수성이 높아지며, 함수형 프로그래밍의 장점인 모듈화, 추상화, 재사용성 등을 쉽게 구현할 수 있습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. curry 사용법</div>
+</h2>
+
+<br></br>
+
+curry는 기존의 하나씩 인자를 받던 방식에서 하나의 인자를 받고 그 인자의 속성을 띄는 함수를 반환해서 <b>재사용성을 높이는 함수 클로저(?)</b>라고 볼 수가 있습니다.
+
+```js
+const curry =
+  (f) =>
+  (a, ..._) =>
+    _.length ? f(a, ..._) : (..._) => f(a, ..._);
+```
+
+위 코드는 curry 함수의 형태입니다. 처음 보자마자 머리가 띵합니다. 함수형 프로그래밍을 잘하시는 분들은 정말 대단하신 것 같습니다.
+
+간단하게 설명하자면 curry는 초기에 하나의 인자(함수)를 받아서 해당 함수가 적용된 함수를 반환합니다. 반환된 함수는 여러 가지의 인자를 받을 수가 있는데 하나의 인자를 받는다면 나머지 함수들을 받을 수 있게 함수를 다시 반환합니다. 만약에 여러 가지 인자를 받는다면 해당 함수를 즉시 실행합니다.
+
+```js
+const multi = curry((a, b) => a * b);
+
+// 여러가지 인자를 받아서 즉시 실행
+console.log(multi(3)(2)); // 6
+
+// 한 가지 인자를 받아서 함수를 반환
+const multi3 = multi(3);
+console.log(multi3(2)); // 6
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>적용코드, 적용하지않은 코드 비교</h3>
+<br></br>
+
+```js showLineNumbers
+const map2 = curry((f, iter) => {
+  let res = [];
+  for (const a of iter) {
+    res.push(f(a));
+  }
+  return res;
+});
+
+const map1 = (f, iter) => {
+  let res = [];
+  for (const a of iter) {
+    res.push(f(a));
+  }
+  return res;
+};
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>동작 순서</h3>
+<br></br>
+
+map2 함수는 커링을 적용하여 구현한 것이고, map1 함수는 커링을 적용하지 않은 것입니다. 두 함수는 f 함수와 iter 이터러블 객체를 받아서 f 함수를 이용해 iter 객체의 각 요소에 적용한 결과를 배열로 반환합니다.
+
+커링을 적용한 map2 함수를 사용하면, 다음과 같이 인자를 하나씩 부분적으로 적용해서 새로운 함수를 만들 수 있습니다.
+
+<br></br>
+
+```js
+const arr = [1, 2, 3];
+const addOne = map2((x) => x + 1);
+const result = addOne(arr); // [2, 3, 4]
+```
+
+<br></br>
+
+map2 함수는 첫 번째 인자로 함수 f를 받아서, 그 함수와 함께 부분적으로 적용된 함수를 반환합니다. 반환된 함수는 인자로 iter 객체를 받아서, f 함수를 이용해 iter 객체의 각 요소에 적용한 결과를 배열로 반환합니다.
+
+<br></br>
+
+```js
+const arr = [1, 2, 3];
+const addOne = (x) => x + 1;
+const result = map1(addOne, arr); // [2, 3, 4]
+```
+
+<br></br>
+
+반면에, 커링을 적용하지 않은 map1 함수를 사용하면, 다음과 같이 두 개의 인자를 함께 전달해야 합니다.
+
+map1 함수는 두 개의 인자 f와 iter를 함께 받습니다. f 함수를 이용해 iter 객체의 각 요소에 적용한 결과를 배열로 반환합니다. 이 때, addOne 함수를 먼저 정의하고 그 함수를 map1 함수의 첫 번째 인자로 전달해야 합니다.
+
+즉, 커링을 적용한 함수 map2는 인자를 하나씩 부분적으로 적용할 수 있어서 <b>코드의 재사용성</b>이 높아지고, 사용성이 좋아집니다. 하지만 커링을 적용하지 않은 함수 map1은 <b>인자를 함께 전달</b>해야 하므로 사용성이 좀 떨어집니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. go 사용법</div>
+</h2>
+
+<br></br>
+
+go 함수는 인자를 하나씩 받아서 <b>순차적으로 즉시 실행</b>되게 도와주고 가독성이 좋아지게 해줍니다.
+
+go 함수는 순차적으로 실행하고 누적하기 위해서 `reduce`를 사용합니다. reduce를 사용할 때 기존의 Array 객체의 reduce를 사용해서도 구현할 수가 있습니다.
+
+<br></br>
+
+```js
+// Array 객체의 reduce를 사용해 구현
+const go = (...args) => args.reduce((acc, f) => f(acc), args.shift());
+```
+
+<br></br>
+
+하지만 여기서는 저희가 직접 만든 reduce 함수를 이용해서 구현하겠습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>go 코드</h3>
+<br></br>
+
+```js showLineNumbers
+const reduce = (f, acc, iter) => {
+  if (!iter) {
+    iter = acc[Symbol.iterator]();
+    acc = iter.next().value;
+  }
+  for (const a of iter) {
+    acc = f(acc, a);
+  }
+  return acc;
+};
+
+const go = (...args) => reduce((a, f) => f(a), args);
+
+go(
+  1,
+  (a) => a + 10,
+  (a) => a + 100
+);
+// 111
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>동작 순서</h3>
+<br></br>
+
+go를 사용해서 args를 모두 받는데 args는 인자 배열입니다. reduce에 (a, f) => f(a) 함수를 첫 번째 인자로 넘겨준 후 함수 덩어리들을 두번쨰 인자인 acc 배열로 넘겨줍니다.
+
+그 후 iter이 존재하지 않기 때문에 iter을 생성하는데 함수들을 순회할 수 있게 만들어준 후 acc 값은 iter.next().value를 사용했기 때문에 첫 번쨰 값이 들어갑니다.
+
+그 후 iter을 순회하는데 go의 두번쨰 인자부터 마지막 인자(함수)까지 실행합니다. acc 값은 초기 1을 가지고 실행 후 해당 값을 가지고 나머지 함수들의 인자로 넘겨서 동작합니다.
+
+초기의 acc 배열은 <b>[1, ƒ, ƒ]</b> 이런식으로 첫 번째는 값 나머지는 함수로 이루어져 있습니다.
+
+그 후에 하나씩 f, a, acc를 찍어보면 이렇게 되어있습니다.
+
+```js
+for (const a of iter) {
+console.log("f", f); // f : (a, f) => f(a)
+console.log("a", a); // a : a => a + 10
+console.log("acc", acc); // acc : 1
+acc = f(acc, a);
+..
+.
+console.log("f", f); // f : (a, f) => f(a)
+console.log("a", a); // a : a => a + 100
+console.log("acc", acc); // acc : 11
+acc = f(acc, a);
+...
+..
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>go를 이용해 기존의 코드를 개선</h3>
+<br></br>
+
+```js showLineNumbers
+console.log(
+  reduce(
+    add,
+    map(
+      (p) => p.price,
+      filter((p) => p.price < 20000, products)
+    )
+  )
+);
+
+// go함수를 사용해 가독성이 좋아짐
+go(
+  products,
+  (products) => filter((p) => p.price < 20000, products),
+  (products) => map((p) => p.price, products),
+  (prices) => reduce(add, prices),
+  console.log
+);
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  go + curry를 이용해 기존의 코드를 더욱 개선
+</h3>
+<br></br>
+
+```js showLineNumbers
+const filter = curry((f, iter) => {
+  let res = [];
+  for (const a of iter) {
+    if (f(a)) res.push(a);
+  }
+  return res;
+});
+
+// 개선된 코드
+go(
+  products,
+  filter((p) => p.price < 20000),
+  console.log
+);
+```
+
+curry 함수가 인자를 하나씩 받는 함수들의 연속으로 바꿔주기 때문에, filter 함수도 인자를 하나씩 받는 함수들의 연속으로 바뀌게 됩니다.
+
+따라서 filter 함수에 첫 번째 인자인 f만 넘겨주게 되면, 이는 curry 함수가 반환한 새로운 함수가 됩니다. 이 새로운 함수는 products를 인자로 받는 함수가 되며, products를 인자로 받아서 f 함수를 이용하여 필터링된 결과를 반환합니다.
+
+그리고 go 함수는 이렇게 필터링된 결과를 다음 함수로 전달하게 됩니다. 따라서 filter 함수는 인자를 하나만 받아도 잘 작동하게 됩니다.
+
+---
+
+<h2 id="4"></h2>
+
+<br></br>
+
+<h2 id="4" className={`dark:text-white text-center`}>
+  <div>4. pipe 사용법</div>
+</h2>
+
+<br></br>
+
+파이프는 여러 함수를 차례대로 합쳐서 하나의 함수를 반환합니다. 간단하게 <b>함수 모음집</b>을 변수로 사용한다고 보시면 될 것 같습니다.
+
+<br></br>
+
+```js
+const pipe =
+  (f, ...fs) =>
+  (...as) =>
+    go(f(...as), ...fs);
+```
+
+<br></br>
+
+차례대로 받은 함수들을 실행하고 리턴값을 다음 함수의 인자로 넘겨줘야하기 떄문에 내부적으로 go를 사용합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>pipe와 go를 사용해서 가독성을 더욱 높이기</h3>
+<br></br>
+
+```js
+go(
+  products,
+  filter((p) => p.price < 20000),
+  map((p) => p.price),
+  reduce(add),
+  console.log
+);
+
+go(
+  products,
+  filter((p) => p.price >= 20000),
+  map((p) => p.price),
+  reduce(add),
+  console.log
+);
+```
+
+<br></br>
+
+이 두가지의 함수의 중복되는 부분을 pipe로 만들어줍니다.
+
+<br></br>
+
+```js
+// 중복
+map((p) => p.price), reduce(add), console.log;
+
+// 중복을 pipe로
+const getTotalPrice = pipe(
+  map((p) => p.price),
+  reduce(add),
+  console.log
+);
+
+// pipe 적용
+go(
+  products,
+  filter((p) => p.price < 20000),
+  getTotalPrice,
+  console.log
+);
+```
+
+<br></br>
+
+이렇게 함수형 프로그래밍에서 코드의 가독성을 높여주는 go, pipe, curry를 알아봤는데 이해한 다음에 다시 보면 이해가 안 되고 이해된 줄 알았는데 다시 까먹고 진짜 어려운 것 같습니다. 눈이 핑핑 돌아요 하지만 함수형 프로그래밍의 간결함은 정말 대단한 것 같습니다. 마스터할 수 있을까...?
+
+<br></br>
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.inflearn.com/course/functional-es6"
+>
+  인프런 강의 : 함수형 프로그래밍과 JavaScript ES6+
+</a>
