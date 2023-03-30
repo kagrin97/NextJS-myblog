@@ -1,0 +1,337 @@
+---
+title: "[FP/JS] 지연 평가(Lazy Evaluation) 구현하기"
+date: 2023-03-29
+description: 느긋한 계산법 즉 지연 평가를 통해서 계산의 결과 값이 필요할 떄까지 계산을 늦추는 방법을 알아봅시다.
+category: js
+---
+
+---
+
+<br></br>이 글을 제대로 이해하기 위해서는 필자가 전에 작성한 함수형 프로그래밍(FP)
+글을 먼저 읽으시길 바랍니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://kagrin97-blog.vercel.app/js/FP-iterable_(map,filter,reduce)"
+>
+  FP/JS prototype이 Arrary가 아닌 iterable 객체 map, filter, reduce 구현하기
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://kagrin97-blog.vercel.app/js/FP-(curry,go,pipe)"
+>
+  FP/JS 함수형 프로그래밍에서의 curry, go, pipe
+</a>
+
+<br></br>
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. 지연 평가는 무엇인가
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. map, filter 지연 평가로 동작하는 방법
+      <p>2-1. 느긋한 map</p>
+      <p>2-2. 느긋한 filter</p>
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. 엄격한 평가와 지연 평가의 동작 순서 차이
+      <p>3-1. 엄격한 평가 동작 순서</p>
+      <p>3-2. 지연 평가 동작 순서</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. 지연 평가는 무엇인가</div>
+</h2>
+
+<br></br>
+
+JavaScript의 함수형 프로그래밍에서 <b>지연평가(Lazy Evaluation)</b>는 계산이 필요한 시점까지 연산을 늦추는 방식으로 동작합니다. 이를 통해 필요하지 않은 계산을 줄이고, 메모리와 CPU 자원을 효율적으로 사용할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>엄격한 평가와 지연 평가</h3>
+<br></br>
+
+<b>엄격한 평가(strict evaluation)</b>의 동작 방식과 비교를 통해 지연 평가의 동작
+방식을 알아봅시다. 엄격한 평가는 지연 평가의 반대말로, 수행되는 즉시 계산의
+결과를 도출하는 동작 방식을 뜻합니다.
+
+예를 들어서 range라는 함수가 있습니다. 인자로 limit 값을 받아서 0~limit 까지 숫자가 들어있는 배열을 반환합니다. 엄격한 함수는 어떻게 동작할까요?
+
+<br></br>
+
+```js showLineNumbers
+### 엄격한 함수
+
+const range = (l) => {
+  let i = -1;
+  let res = [];
+  while (++i < l) {
+    res.push(i);
+  }
+  return res;
+};
+
+var list = range(4); // [0, 1, 2, 3]
+```
+
+<br></br>
+
+위 코드는 range 함수가 실행되자마자 range의 로직들이 실행되면서 배열을 반환해 list 변수에 값이 담기게 됩니다. 이렇게 <b>즉시 계산</b>이 되는 것을 엄격한 평가라고 하죠. 그렇다면 지연 평가 코드는 어떻게 생겼을까요?
+
+<br></br>
+
+```js showLineNumbers
+### 느긋한 함수
+
+const L = {};
+L.range = function* (l) {
+  let i = -1;
+  while (++i < l) {
+    yield i;
+  }
+};
+
+var list = L.range(4);
+```
+
+<br></br>
+
+L은 객체입니다. 지연평가의 Lazy 앞 글자를 따서 만들어진 지연 평가로 동작하는 메소드들을 담고 있는 객체라고 생각하시면 됩니다.
+
+L.range는 <b>제너레이터(generator)</b> 함수입니다. 제너레이터 함수는 <b>이터레이터(iterator)</b>를 생성하는 함수로, 동작을 제어할 수 있는 제어 흐름(control flow)을 제공합니다. 이터레이터는 next() 메소드를 사용해서 값을 하나씩 <b>평가(evaluate)</b>하는데, 이때 비로소 제너레이터 함수 내부가 실행됩니다.
+
+제너레이터 함수를 호출하면, 이터레이터(iterator)를 반환하는데, 이터레이터를 평가하기 전까지는 제너레이터 함수 내부가 실행되지 않습니다. 따라서 L.range(4)를 호출하면, L.range 제너레이터 함수가 실행되지 않고, `{suspended}` 상태인 제너레이터(generator) 객체가 생성됩니다.
+
+이 상태에서, 이터레이터 객체의 next() 메소드를 호출하면, 제너레이터 함수가 실행되고, 이터레이터 객체는 `{ value, done }` 형태의 객체를 반환합니다. 이후부터는 이터레이터 객체를 사용해서 제너레이터 함수 내부의 값들을 평가할 수 있습니다.
+
+즉 기존의 엄격한 평가 코드와는 다르게 list라는 변수에 평가가 완료된 배열이 존재하는 것이 아닌 <b>평가되지 않은 제너레이터 객체</b>가 list에 저장이 됩니다.
+
+<div className={`flex flex-col justify-center`}>
+  <small>list를 콘솔에 찍어보면 나온다 👇</small>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/228724383-9e5dcfbd-ee1e-4205-991d-a1f0385ebe37.png"
+    width="70%"
+  />
+</div>
+
+따라서 next 메소드를 실행하기 전까지 평가하지 않기 때문에 쓸데없이 동작하지 않아 효율이 높습니다.
+
+지연 평가 함수를 구현하고 싶다면 제너레이터가 구현되어 있어야 합니다. 이런 방식으로 저희가 기존에 만든 map, filter 같은 함수들 내부를 제너레이터로 바꾸어주면 지연평가가 됩니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. map, filter 지연 평가로 동작하는 방법</div>
+</h2>
+
+<br></br>
+
+앞서 말했듯이 지연 평가는 제너레이터로 동작하기 때문에 함수를 제너레이터로 바꿔주면 지연평가 기능이 구현됩니다. `yield`를 만나기 전까지 평가를 미루기 때문이죠.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-1. 느긋한 map</h3>
+<br></br>
+
+```js showLineNumbers
+### L.map
+
+L.map = function *(f, iter) {
+     for (const a of iter) yield f(a);
+   };
+   var it = L.map(a => a + 10, [1, 2, 3]);
+
+   log(it.next()); // {value: 11, done: false}
+   log(it.next()); // {value: 12, done: false}
+   log(it.next()); // {value: 13, done: false}
+```
+
+<br></br>
+
+map 함수를 제너레이터로 동작하도록 변경했습니다. next()가 실행될 때 받은 함수를 실행하고 반환합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-2. 느긋한 filter</h3>
+<br></br>
+
+```js showLineNumbers
+### L.filter
+
+L.filter = function *(f, iter) {
+	for (const a of iter) if (f(a)) yield a;
+};
+var it = L.filter(a => a % 2, [1, 2, 3, 4]);
+
+log(it.next());  // {value: 1, done: true}
+log(it.next());  // {value: 3, done: true}
+log(it.next()); // {value: undefined, done: true}
+```
+
+<br></br>
+
+map과 마찬가지로 제너레이터를 사용함으로써 지연 평가가 됩니다. 받은 함수의 결과가 true일 때만 반환하기 때문에 filter 역할을 수행합니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. 엄격한 평가와 지연 평가의 동작 순서 차이</div>
+</h2>
+
+<br></br>
+
+엄격한 평가와 지연 평가는 동작 순서에 차이가 있습니다. 엄격한 평가는 <b>위에서 아래로</b> 하나씩 로직이 동작하면서 맨 아래에 도착했을 때 모든 로직이 끝납니다.
+
+하지만 지연 평가는 동작 순서가 완전히 반대입니다. <b>맨 아래에서 맨 위로 다시 아래로 오르락내리락 </b>동작합니다.
+
+예를 들어서 go 함수로 순차적으로 동작하는 엄격한 함수들은 이렇게 생겼습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>3-1. 엄격한 평가 동작 순서</h3>
+<br></br>
+
+```js showLineNumbers
+### 순차적으로 실행될 엄격한 함수
+
+go(
+  range(1000),
+  map((n) => n + 10),
+  filter((n) => n % 2),
+  take(2),
+  log
+);
+```
+
+<br></br>
+
+참고로 `take` 함수는 배열의 첫 번째와 두 번째 값을 가져오는 함수입니다.
+
+엄격한 함수를 순차적으로 실행하면 첫째로 range 함수에서 0~999 까지의 값들이 들어있는 배열을 map에 넘겨줍니다. map은 모든 값을 10씩 더해줍니다. 또한 filter로 홀수만 가져온 후 첫 번째 값과 두 번째 값을 가져와 log를 찍어줍니다.
+
+동작순서 :
+
+1. range 실행 / [0, 1, 2, 3, 4, 5, 6, 7, 8...]
+
+2. map 실행 / [10, 11, 12, ...]
+
+3. filter 실행 / [11, 13, 15 ..]
+
+4. take 실행 / [11, 13]
+
+이렇게 수행되는 엄격한 평가는 2개의 값만 가져오면 되는데 엄청난 길이의 배열을 생성하고 모두 더해주고 필터링하게 되기 때문에 시간과 메모리에 엄청난 비효율을 보여줍니다. 그렇다면 지연평가는 머가 다를까요?
+
+<br></br>
+<h3 className={`dark:text-white`}>3-2. 지연 평가 동작 순서</h3>
+<br></br>
+
+```js showLineNumbers
+L.range = function* (l) {
+  let i = -1;
+  while (++i < l) {
+    yield i;
+  }
+};
+
+L.map = curry(function* (f, iter) {
+  iter = iter[Symbol.iterator]();
+  let cur;
+  while (!(cur = iter.next()).done) {
+    const a = cur.value;
+    yield f(a);
+  }
+});
+
+L.filter = curry(function* (f, iter) {
+  iter = iter[Symbol.iterator]();
+  let cur;
+  while (!(cur = iter.next()).done) {
+    const a = cur.value;
+    if (f(a)) {
+      yield a;
+    }
+  }
+});
+
+const take = curry((l, iter) => {
+  let res = [];
+  iter = iter[Symbol.iterator]();
+  let cur;
+  while (!(cur = iter.next()).done) {
+    const a = cur.value;
+    res.push(a);
+    if (res.length == l) return res;
+  }
+  return res;
+});
+
+### 순차적으로 실행될 느긋한 함수
+
+go(
+  L.range(Infinity),
+  L.map((n) => n + 10),
+  L.filter((n) => n % 2),
+  take(10),
+  log
+);
+```
+
+<br></br>
+
+동작 순서
+
+1. range → map → filter → take로 평가를 미룹니다.
+
+2. take의 iter.next()가 실행될 때 미뤄둔 제너레이터를 실행하기 위해 위로 쭉쭉 올라갑니다.
+
+3. 쭉쭉 올라가서 range의 yield i를 만나게 되면 제너레이터가 실행되면서 해당 값을 밑으로 내려줍니다.
+
+4. range → map → filter → take로 해당 i 값이 쭉쭉 내려가면서 filter의 if 문으로 yield가 실행되지 않으면 맨 위의 range의 yield i로 다시 한 번에 올라갑니다. (map을 거치지 않음)
+
+5. 쭉쭉 내려가면서 take까지 평가가 되면 해당 값이 결과에 포함됩니다.
+
+6. take의 10개까지 평가되면 종료됩니다.
+
+어떻게 설명을 열심히 해보았는데 이해가 잘되지 않으신다면 위 코드를 작성한 후 브레이킹 포인트로 하나씩 동작을 보면 이해가 더욱 잘 되실 겁니다. ^-^
+
+이렇게 지연 평가를 하게 되면 쓸데없이 range로 배열을 모두 만든 다음에 넘겨주지 않기 때문에 range 값에 infinity를 넣어도 어차피 만들지 않고 미루기 때문에 무한 실행이 일어나지 않습니다. 스피드 또한 빠르고 메모리적으로도 매우 우수합니다. 원하는 값 하나가 나오기 전까지 다른 값들을 만들거나 필터링하지 않기 때문이죠.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.inflearn.com/course/functional-es6"
+>
+  인프런 강의 : 함수형 프로그래밍과 JavaScript ES6+
+</a>
