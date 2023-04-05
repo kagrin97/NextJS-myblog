@@ -1,0 +1,519 @@
+---
+title: TypeScript의 유틸리티 타입에 대해 알아보자
+date: 2023-04-05
+description: TypeScript에서 제공하는 유틸리티 타입은 기존의 타입을 변환하거나 새로운 타입을 생성하여 타입 선언을 보다 간편하고 유지보수하기 쉽게 만들어 줍니다. 이 글에서는 TypeScript에서 제공하는 유틸리티 타입들과 그 사용 방법을 소개합니다.
+category: type
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. 유틸리티 타입은 무엇일까?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 유틸리티 타입들을 하나씩 알아보자
+      <p>2-1. Partial&lt;T&gt;</p>
+      <p>2-2. Readonly&lt;T&gt;</p>
+      <p>2-3. Record&lt;K,T&gt;</p>
+      <p>2-4. Pick&lt;T,K&gt;</p>
+      <p>2-5. Omit&lt;T,K&gt;</p>
+      <p>2-6. Exclude&lt;T,U&gt;</p>
+      <p>2-7. Extract&lt;T,U&gt;</p>
+      <p>2-8. NonNullable&lt;T&gt;</p>
+      <p>2-9. Parameters&lt;T&gt;</p>
+      <p>2-10. ConstructorParameters&lt;T&gt;</p>
+      <p>2-11. ReturnType&lt;T&gt;</p>
+      <p>2-12. InstanceType&lt;T&gt;</p>
+      <p>2-13. Required&lt;T&gt;</p>
+      <p>2-14. ThisParameterType</p>
+      <p>2-15. OmitThisParameter</p>
+      <p>2-16. ThisType&lt;T&gt;</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. 유틸리티 타입은 무엇일까?</div>
+</h2>
+
+<br></br>
+
+TypeScript에서 유틸리티 타입은 TypeScript에서 제공하는 여러 전역 유틸리티 타입으로, 일반적인 타입 변환을 쉽게 하기 위해 사용할 수 있습니다. 유틸리티 타입은 이미 정의해 놓은 타입을 변환할 때 유용하게 쓰이며, 간결한 문법으로 새로운 타입을 정의할 수 있습니다.
+
+이렇게 들으니까 하나도 모르겠네요. 유틸리티 타입을 하나씩 살펴보면서 유틸리티 타입이 무엇인지 한번 살펴봅시다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 유틸리티 타입들을 하나씩 알아보자</div>
+</h2>
+
+<br></br>
+
+<h3 className={`dark:text-white`}>2-1. Partial&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 모든 속성을 ?(옵셔널)을 적용합니다.</b>
+
+`Partial<T>`는 TypeScript에서 제공하는 유틸리티 타입 중 하나로, 제네릭 타입 T의 모든 속성을 선택적으로 만든 새로운 타입을 생성합니다. 이를 통해 T 타입의 모든 속성을 필수가 아닌 선택적으로 만들 수 있습니다.
+
+예를 들어, User 인터페이스가 다음과 같다고 가정해봅시다.
+
+```typescript showLineNumbers
+interface User {
+  name: string;
+  age: number;
+  email: string;
+}
+```
+
+이제 `Partial<User>`를 사용하여 User 인터페이스를 선택적으로 만들어진 `Partial<User>` 타입으로 변환하였습니다.
+
+```typescript showLineNumbers
+type PartialUser = Partial<User>;
+// PartialUser 타입: { name?: string; age?: number; email?: string; }
+```
+
+위 코드에서 `Partial<User>`를 사용하여 User 인터페이스를 선택적으로 만들어진 `PartialUser` 타입으로 변환하였습니다. 이제 PartialUser 타입으로 선언된 변수는 name, age, email 속성을 선택적으로 가지고 있으므로, 빈 객체로 초기화할 수 있습니다.
+
+```typescript showLineNumbers
+const user: PartialUser = {}; // 모든 속성이 선택적으로 만들어졌습니다.
+```
+
+이처럼 `Partial<T>`를 사용하면, 기존 타입에서 필요한 부분만 선택적으로 사용할 수 있어 유용합니다. 마치 타입에 옵셔널을 모두 적용하는듯한 효과가 나타납니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-2. Readonly&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 모든 속성을 수정할수 없게 합니다.</b>
+
+TypeScript에서는 유틸리티 타입(utility type)을 제공하여 타입 선언을 간편하게 할 수 있습니다. 그리고 그 중 하나가 `Readonly<T>`입니다.
+
+`Readonly<T>`는 제네릭 타입 T의 모든 속성을 읽기 전용으로 만든 새로운 타입을 생성합니다. 즉, T의 속성을 수정할 수 없는 타입으로 만듭니다.
+
+예를 들어, 다음과 같이 Person 인터페이스가 있다고 가정해봅시다.
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+}
+```
+
+이제 `Readonly<Person>`을 사용하여 Person 인터페이스를 수정할 수 없는 타입으로 만들어 봅시다.
+
+```typescript
+type ReadonlyPerson = Readonly<Person>;
+
+const person: ReadonlyPerson = { name: "John", age: 30 };
+person.name = "Jane"; // 에러 발생!
+```
+
+위 코드에서 `Readonly<Person>`을 ReadonlyPerson 타입으로 지정하고, person 변수를 이 타입으로 선언합니다. 그리고 person.name을 "Jane"으로 수정하려고 하면 에러가 발생합니다. 이는 `Readonly<Person>` 타입으로 지정했기 때문에 person 변수의 속성을 수정할 수 없기 때문입니다.
+
+이처럼 `Readonly<T>`를 사용하면 읽기 전용 타입을 생성할수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-3. Record&lt;K,T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 키, 값을 모두 동일 하게 정해줍니다.</b>
+
+TypeScript에서 `Record<K, T>`는 키(key)와 값(value)의 쌍으로 이루어진 객체를 표현하는 제네릭 타입입니다. K는 객체의 키(key) 타입을, T는 값(value)의 타입을 나타냅니다.
+
+예를 들어, 다음과 같이 `Record<K, T>`를 사용하여 Person 인터페이스를 간단하게 표현할 수 있습니다.
+
+```typescript
+type Person = Record<string, any>;
+
+const person: Person = {
+  name: "John",
+  age: 30,
+  gender: "male",
+};
+```
+
+위 코드에서 `Record<string, any>`를 Person 타입으로 지정하고, person 변수를 이 타입으로 선언합니다. 이제 person 변수는 name, age, gender 속성을 가지는 객체가 되며, 속성의 값은 모두 any 타입으로 지정됩니다.
+
+`Record<K, T>`는 객체를 동적으로 생성할 때 유용하게 사용될 수 있습니다. 예를 들어, 다음과 같이 `Record<string, any>`를 사용하여 동적으로 객체를 생성할 수 있습니다.
+
+```typescript
+function createObject(keys: string[], values: any[]): Record<string, any> {
+  const obj: Record<string, any> = {};
+  keys.forEach((key, index) => {
+    obj[key] = values[index];
+  });
+  return obj;
+}
+
+const obj = createObject(["name", "age", "gender"], ["John", 30, "male"]);
+console.log(obj); // { name: 'John', age: 30, gender: 'male' }
+```
+
+위 코드에서 createObject 함수는 keys와 values 배열을 인수로 받아 `Record<string, any>` 타입의 객체를 반환합니다. 함수 내부에서는 keys 배열과 values 배열을 순회하면서 각각의 값을 키와 값으로 가지는 객체를 생성합니다. 이렇게 생성된 객체는 obj 변수에 할당되어 출력됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-4. Pick&lt;T,K&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 특정 속성을 골라 가져옵니다.</b>
+
+TypeScript에서 `Pick<T, K>`는 타입 T에서 특정 속성만 선택하여 타입을 새로 만들어내는 유틸리티 타입입니다. K는 T에서 선택하고자 하는 속성의 이름으로 이루어진 문자열 리터럴 유니온 타입입니다.
+
+예를 들어, 다음과 같이 `Pick<T, K>`를 사용하여 Person 인터페이스에서 name과 age 속성만 선택하여 PersonNameAndAge 타입을 생성할 수 있습니다.
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  gender: string;
+}
+
+type PersonNameAndAge = Pick<Person, "name" | "age">;
+
+const person: PersonNameAndAge = {
+  name: "John",
+  age: 30,
+};
+```
+
+위 코드에서 `Pick<Person, "name" | "age">`는 Person 타입에서 name과 age 속성만 선택하여 새로운 타입 PersonNameAndAge를 만듭니다. 이제 PersonNameAndAge 타입을 이용하여 person 변수를 선언하면 name과 age 속성만을 가지는 객체가 됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-5. Omit&lt;T,K&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 특정 속성을 제거한 타입을 생성합니다..</b>
+
+`Omit`은 TypeScript에서 제공하는 유틸리티 타입 중 하나입니다. 이 타입은 기존 타입에서
+특정 속성을 제거한 새로운 타입을 생성하는 역할을 합니다.
+
+Omit 타입은 다음과 같은 형태로 사용합니다.
+
+```typescript
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+```
+
+- T: 기존 타입
+- K: 제거할 속성 이름
+
+예를 들어, 다음과 같은 Person 인터페이스가 있다고 가정해보겠습니다.
+
+```typescript
+interface Person {
+  name: string;
+  age: number;
+  gender: string;
+}
+```
+
+이제 Person 인터페이스에서 age 속성을 제거하고 싶다면, 다음과 같이 Omit을 사용할 수 있습니다.
+
+```typescript
+type PersonWithoutAge = Omit<Person, "age">;
+```
+
+위의 코드에서 PersonWithoutAge 타입은 다음과 같이 정의됩니다.
+
+```typescript
+type PersonWithoutAge = {
+  name: string;
+  gender: string;
+};
+```
+
+Omit 타입은 기존 타입에서 여러 개의 속성을 제거하거나, 제거할 속성 이름이 타입 안에 없는 경우도 처리할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-6. Exclude&lt;T,U&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 특정 속성을 제외한 타입을 만듭니다.</b>
+
+`Exclude<T, U>`는 타입 T에서 타입 U에 할당 가능한 속성을 제외한 새로운 타입을 생성하는 제네릭 타입입니다.
+
+즉, `Exclude<T, U>`는 T 타입에서 U 타입에 할당 가능한 모든 속성을 제외한 새로운 타입을 반환합니다. 이때 T와 U는 유니온 타입이어야 합니다.
+
+예를 들어, string | number | boolean에서 number와 boolean 타입을 제외한 타입을 생성하고 싶다면, 다음과 같이 Exclude를 사용할 수 있습니다.
+
+```typescript
+type MyType = Exclude<string | number | boolean, number | boolean>;
+```
+
+위 코드에서 MyType은 string 타입만을 포함하는 새로운 타입이 됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-7. Extract&lt;T,U&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 특정 속성만을 포함한 타입을 만듭니다.</b>
+
+`Extract<T, U>`는 타입 T에서 타입 U`에 할당 가능한 속성들만 추출하여 새로운 타입을 생성하는 제네릭 타입입니다.
+
+즉, `Extract<T, U>`는 T 타입에서 U 타입에 할당 가능한 모든 속성을 추출하여 새로운 타입을 반환합니다. 이때 T와 U는 유니온 타입이어야 합니다.
+
+예를 들어, string | number | boolean에서 number 타입만 추출하고 싶다면, 다음과 같이 Extract를 사용할 수 있습니다.
+
+```typescript
+type MyType = Extract<string | number | boolean, number>;
+```
+
+위 코드에서 MyType은 number 타입만을 포함하는 새로운 타입이 됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-8. NonNullable&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 속성에 null과 undefined를 제외한 타입을 생성.</b>
+
+`NonNullable<T>`는 타입 T에서 null과 undefined를 제외한 타입을 생성하는 제네릭 타입입니다.
+
+즉, `NonNullable<T>`는 T 타입에서 null과 undefined를 제외한 모든 속성을 추출하여 새로운 타입을 반환합니다.
+
+예를 들어, string | null | undefined에서 null과 undefined를 제외한 타입을 생성하고 싶다면, 다음과 같이 NonNullable을 사용할 수 있습니다.
+
+```typescript
+type MyType = NonNullable<string | null | undefined>;
+```
+
+위 코드에서 MyType은 string 타입만을 포함하는 새로운 타입이 됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-9. Parameters&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 매개변수 타입을 추출해 배열 타입을 만듭니다.</b>
+
+`Parameters<T>`는 함수 타입 T의 매개변수 타입들을 추출하여 배열 타입으로 만드는 제네릭 타입입니다.
+
+즉, `Parameters<T>`는 함수 타입 T의 매개변수 타입들을 추출하여 Array 타입으로 반환합니다.
+
+예를 들어, (x: string, y: number) => void 타입에서 매개변수 타입들을 추출하여 배열 타입으로 만들고 싶다면, 다음과 같이 Parameters를 사용할 수 있습니다.
+
+```typescript
+type MyType = Parameters<(x: string, y: number) => void>;
+```
+
+위 코드에서 MyType은 [string, number] 타입이 됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-10. ConstructorParameters&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 생성자 함수의 매개변수를 추출해 튜플타입으로 만듭니다.</b>
+
+`ConstructorParameters<T>`는 생성자 함수 타입 T의 매개변수 타입들을 추출하여 튜플 타입으로 만드는 제네릭 타입입니다.
+
+즉, `ConstructorParameters<T>`는 생성자 함수 타입 T의 매개변수 타입들을 추출하여 Tuple 타입으로 반환합니다. 이때, Tuple 타입은 배열과 유사하지만, 각 요소의 타입이 미리 지정되어 있어서 타입 안정성을 보장합니다.
+
+예를 들어, new (x: string, y: number) => void 생성자 함수 타입에서 매개변수 타입들을 추출하여 튜플 타입으로 만들고 싶다면, 다음과 같이 ConstructorParameters를 사용할 수 있습니다.
+
+```typescript
+type MyType = ConstructorParameters<new (x: string, y: number) => void>;
+```
+
+위 코드에서 MyType은 [string, number] 타입이 됩니다.
+
+ConstructorParameters 타입은 TypeScript 2.8 버전에서 추가된 타입 연산자 중 하나입니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-11. ReturnType&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 함수의 반환 값을 추출해 타입을 만듭니다.</b>
+
+`ReturnType<T>`는 함수 타입 T의 반환 타입을 추출하는 제네릭 타입입니다.
+
+즉, `ReturnType<T>`는 함수 타입 T의 반환 타입을 추출하여 반환합니다.
+
+예를 들어, (x: string) => number 타입에서 반환 타입을 추출하고 싶다면, 다음과 같이 ReturnType을 사용할 수 있습니다.
+
+```typescript
+type MyType = ReturnType<(x: string) => number>;
+```
+
+위 코드에서 MyType은 number 타입이 됩니다.
+
+ReturnType 타입은 TypeScript 2.8 버전에서 추가된 타입 연산자 중 하나입니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-12. InstanceType&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 생성자 함수가 생성하는 인스턴스 타입을 추출합니다.</b>
+
+`InstanceType<T>`는 생성자 함수 타입 T가 생성할 수 있는 인스턴스 타입을 추출하는 제네릭 타입입니다.
+
+즉, `InstanceType<T>`는 생성자 함수 타입 T가 생성할 수 있는 인스턴스의 타입을 추출하여 반환합니다.
+
+예를 들어, `class MyClass { x = 0; }`에서 MyClass 생성자 함수가 생성할 수 있는 인스턴스 타입을 추출하고 싶다면, 다음과 같이 InstanceType을 사용할 수 있습니다.
+
+```typescript
+type MyType = InstanceType<typeof MyClass>;
+```
+
+위 코드에서 MyType은 클래스의 인스턴스 타입인 `{ x: number }`가 됩니다.
+
+InstanceType 타입은 TypeScript 2.8 버전에서 추가된 타입 연산자 중 하나입니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-13. Required&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : 타입의 모든 속성을 필수로 만듭니다.</b>
+
+`Required<T>`는 타입 T의 모든 속성이 undefined 또는 null이 아닌 값을 가져야 하는 타입을 생성하는 제네릭 타입입니다.
+
+즉, `Required<T>`는 타입 T의 모든 속성이 필수적으로 존재해야 하는 타입을 반환합니다.
+
+예를 들어, 다음과 같은 인터페이스가 있다고 가정해봅시다.
+
+```typescript
+interface Person {
+  name?: string;
+  age?: number;
+}
+```
+
+위 인터페이스에서 name과 age 속성은 모두 선택적(optional)입니다. 이제 Required 타입을 사용하여 모든 속성이 필수적으로 존재해야 하는 타입을 만들어보겠습니다.
+
+```typescript
+type RequiredPerson = Required<Person>;
+```
+
+위 코드에서 RequiredPerson은 `{ name: string; age: number }` 타입이 됩니다. 즉, Required를 사용하여 Person 인터페이스의 모든 속성이 필수적으로 존재하는 새로운 타입을 만들었습니다.
+
+Required 타입은 타입스크립트 2.8 버전에서 추가된 타입 연산자 중 하나입니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-14. ThisParameterType</h3>
+<br></br>
+
+<b>한줄 요약 : 함수 타입의 this를 추출합니다.</b>
+
+ThisParameterType는 함수 타입 T의 this 매개변수 타입을 추출하는 제네릭 타입입니다.
+
+즉, `ThisParameterType<T>`는 함수 타입 T의 첫 번째 매개변수(일반적으로 this 매개변수)의 타입을 추출하여 반환합니다.
+
+예를 들어, 다음과 같은 함수 타입이 있다고 가정해봅시다.
+
+```typescript
+type MyFuncType = (this: string, x: number, y: number) => number;
+```
+
+위 함수 타입에서 this 매개변수의 타입을 추출하고 싶다면, 다음과 같이 ThisParameterType을 사용할 수 있습니다.
+
+```typescript
+type MyThisType = ThisParameterType<MyFuncType>;
+```
+
+위 코드에서 MyThisType은 string 타입이 됩니다. 즉, ThisParameterType를 사용하여 함수 타입 MyFuncType에서 this 매개변수의 타입을 추출하여 새로운 타입으로 만들었습니다.
+
+ThisParameterType 타입은 타입스크립트 3.1 버전에서 추가된 타입 연산자 중 하나입니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-15. OmitThisParameter</h3>
+<br></br>
+
+<b>한줄 요약 : 매개변수의 this를 제거한 타입을 생성합니다.</b>
+
+`OmitThisParameter<T>`는 함수 타입 T에서 this 매개변수를 제거한 타입을 생성하는 제네릭 타입입니다.
+
+즉, `OmitThisParameter<T>`는 함수 타입 T에서 this 매개변수를 제거한 새로운 함수 타입을 반환합니다.
+
+예를 들어, 다음과 같은 함수 타입이 있다고 가정해봅시다.
+
+```typescript
+type MyFuncType = (this: string, x: number, y: number) => number;
+```
+
+위 함수 타입에서 this 매개변수를 제거하고 싶다면, 다음과 같이 OmitThisParameter을 사용할 수 있습니다.
+
+```typescript
+type MyNewFuncType = OmitThisParameter<MyFuncType>;
+```
+
+위 코드에서 MyNewFuncType은 (x: number, y: number) => number 타입이 됩니다. 즉, OmitThisParameter를 사용하여 함수 타입 MyFuncType에서 this 매개변수를 제거한 새로운 함수 타입을 만들었습니다.
+
+OmitThisParameter 타입은 타입스크립트 3.2 버전에서 추가된 타입 연산자 중 하나입니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-16. ThisType&lt;T&gt;</h3>
+<br></br>
+
+<b>한줄 요약 : this타입을 this로 설정해줍니다.</b>
+
+`ThisType<T>`은 객체 리터럴에서 this가 참조하는 타입을 설정하는 유용한 타입입니다. 객체 리터럴에서 this는 객체 자신을 참조합니다. `ThisType<T>`을 사용하면 this가 참조하는 타입을 지정하여 객체 리터럴의 타입을 더욱 정확하게 지정할 수 있습니다.
+
+예를 들어, 다음과 같은 코드에서 ThisType을 사용하여 this가 참조하는 타입을 MyType으로 지정할 수 있습니다.
+
+```typescript
+type MyType = {
+  prop1: number;
+  prop2: string;
+  myMethod(this: MyType, x: number, y: number): number;
+};
+
+const myObj: MyType = {
+  prop1: 42,
+  prop2: "hello",
+  myMethod(this: MyType, x: number, y: number) {
+    return this.prop1 * x + y;
+  },
+};
+```
+
+위 코드에서 myMethod 메서드의 this 매개변수 타입을 MyType으로 지정했습니다. 이렇게 하면 myMethod에서 this를 사용할 때 MyType의 프로퍼티에 접근할 수 있습니다.
+
+하지만 ThisType을 사용하면 다음과 같이 코드를 더욱 간결하고 명확하게 작성할 수 있습니다.
+
+```typescript
+type MyType = {
+  prop1: number;
+  prop2: string;
+  myMethod(this: this, x: number, y: number): number;
+};
+
+const myObj: MyType = {
+  prop1: 42,
+  prop2: "hello",
+  myMethod(this, x, y) {
+    return this.prop1 * x + y;
+  },
+};
+```
+
+위 코드에서 myMethod 메서드의 this 매개변수 타입을 this로 지정했습니다. 이렇게 하면 ThisType이 MyType으로 자동으로 설정되어, myMethod에서 this를 사용할 때 MyType의 프로퍼티에 접근할 수 있습니다.
+
+ThisType은 타입스크립트 2.0 버전에서 추가된 유용한 타입 중 하나입니다.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.typescriptlang.org/ko/docs/handbook/utility-types.html"
+>
+  TypeScript Docs Utility Types
+</a>
