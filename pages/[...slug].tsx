@@ -3,13 +3,12 @@ import React from "react";
 import PostCategorySlug from "components/Post/PostCategorySlug";
 import { makeMeta } from "utils/makeMeta";
 import handleStructuredData, { StructuredDataType } from "data/metadata";
-import { checkCategory } from "utils/checkCategory";
+import { getCategoryDocs } from "utils/getCategoryDocs";
 
 import * as Articles from "contentlayer/generated";
 
 import type { GetStaticPropsContext } from "next";
 import type { Post } from "types/posts";
-import type { DocumentTypes } from ".contentlayer/generated/types";
 
 interface Props {
   post: Post;
@@ -37,30 +36,25 @@ type PageParams = {
 export const getStaticProps = async (
   context: GetStaticPropsContext<PageParams>
 ) => {
-  if (!context.params) {
+  const { slug } = context.params ?? {};
+  if (!slug) {
     return;
   }
 
-  const { slug } = context.params;
-  const category = slug[0];
-  let post: Post | undefined;
-  let structuredData: StructuredDataType | undefined;
+  const [category, postSlug] = slug;
 
-  const getArticle = (curDos: DocumentTypes[]) => {
-    post = curDos.find((p: Post) => p.slug === slug[1]);
-    if (post) {
-      const customMeta = makeMeta(post);
-      structuredData = handleStructuredData(customMeta);
-      return;
-    }
-  };
+  const curDocs = getCategoryDocs(category) as Post[];
 
-  checkCategory(category, getArticle);
+  const post = curDocs?.find((p: Post) => p.slug === postSlug);
+
+  const structuredData = post
+    ? handleStructuredData(makeMeta(post))
+    : undefined;
 
   return {
     props: {
-      post: post ? post : null,
-      structuredData: structuredData ? structuredData : null,
+      post: post ?? null,
+      structuredData: structuredData ?? null,
     },
   };
 };

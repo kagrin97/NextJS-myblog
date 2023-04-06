@@ -2,16 +2,15 @@ import React from "react";
 
 import PostCategoryMain from "components/Post/PostCategoryMain";
 import handleStructuredData from "data/metadata";
-import navlinks, { Navlinks } from "data/navlinks";
-import { checkCategory } from "utils/checkCategory";
+import navlinks from "data/navlinks";
+import { getCategoryDocs } from "utils/getCategoryDocs";
 
-import type {
-  InferGetStaticPropsType,
-  GetStaticProps,
-  GetStaticPropsContext,
-} from "next";
+import type { InferGetStaticPropsType, GetStaticPropsContext } from "next";
 import type { Post } from "types/posts";
-import type { DocumentTypes } from ".contentlayer/generated/types";
+
+type PageParams = {
+  category: string;
+};
 
 const Category = ({
   posts,
@@ -28,8 +27,7 @@ const Category = ({
 };
 
 export const getStaticPaths = async () => {
-  const links = navlinks.map((navlink: Navlinks) => navlink.link);
-  const paths = links.map((link: string) => ({
+  const paths = navlinks.map(({ link }) => ({
     params: { category: link.slice(1) },
   }));
   return {
@@ -38,36 +36,25 @@ export const getStaticPaths = async () => {
   };
 };
 
-type PageParams = {
-  category: string;
-};
-
 export const getStaticProps = async (
   context: GetStaticPropsContext<PageParams>
 ) => {
-  if (!context.params) {
+  const { category } = context.params ?? {};
+  if (!category) {
     return;
   }
-  const { category } = context.params;
 
-  let posts: Post[] | undefined;
-  let curDocs: DocumentTypes[] | undefined;
-
-  const handelSortDocs = (curDos: DocumentTypes[]) => {
-    curDocs = curDos;
-    posts = curDos.sort(
-      (a: Post, b: Post) => Number(new Date(b.date)) - Number(new Date(a.date))
-    );
-  };
-
-  checkCategory(category, handelSortDocs);
-
+  const curDocs = getCategoryDocs(category);
+  const posts = curDocs?.sort(
+    (a: Post, b: Post) => Number(new Date(b.date)) - Number(new Date(a.date))
+  );
   const structuredData = handleStructuredData();
+
   return {
     props: {
-      posts: posts ? posts : null,
+      posts: posts ?? null,
       structuredData,
-      curDocs: curDocs ? curDocs : null,
+      curDocs: curDocs ?? null,
     },
   };
 };
