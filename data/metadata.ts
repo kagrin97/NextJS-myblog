@@ -1,3 +1,5 @@
+import type { Post } from "types/posts";
+
 export interface MetadataType {
   type: string;
   title: string;
@@ -46,7 +48,22 @@ export interface StructuredDataType {
   twitterImage: string;
 }
 
-const handleStructuredData = (customMeta?: MetadataType) => {
+const createCustomMeta = (post: Post) => {
+  return {
+    ...metadata,
+    title: post.title,
+    description: post.description,
+    date: new Date(post.date).toISOString(),
+    url: post._raw.flattenedPath,
+  };
+};
+
+const createStructuredData = (post?: Post) => {
+  let customMeta;
+  if (post) {
+    customMeta = createCustomMeta(post);
+  }
+
   const structuredData: StructuredDataType = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -90,4 +107,4 @@ const handleStructuredData = (customMeta?: MetadataType) => {
   return structuredData;
 };
 
-export default handleStructuredData;
+export default createStructuredData;

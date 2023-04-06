@@ -1,7 +1,7 @@
 import React from "react";
 
 import PostCategoryMain from "components/Post/PostCategoryMain";
-import handleStructuredData from "data/metadata";
+import createStructuredData from "data/metadata";
 import navlinks from "data/navlinks";
 import { getCategoryDocs } from "utils/getCategoryDocs";
 
@@ -48,7 +48,7 @@ export const getStaticProps = async (
   const posts = curDocs?.sort(
     (a: Post, b: Post) => Number(new Date(b.date)) - Number(new Date(a.date))
   );
-  const structuredData = handleStructuredData();
+  const structuredData = createStructuredData();
 
   return {
     props: {

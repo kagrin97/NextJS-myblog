@@ -1,8 +1,7 @@
 import React from "react";
 
 import PostCategorySlug from "components/Post/PostCategorySlug";
-import { makeMeta } from "utils/makeMeta";
-import handleStructuredData, { StructuredDataType } from "data/metadata";
+import createStructuredData, { StructuredDataType } from "data/metadata";
 import { getCategoryDocs } from "utils/getCategoryDocs";
 
 import * as Articles from "contentlayer/generated";
@@ -47,9 +46,7 @@ export const getStaticProps = async (
 
   const post = curDocs?.find((p: Post) => p.slug === postSlug);
 
-  const structuredData = post
-    ? handleStructuredData(makeMeta(post))
-    : undefined;
+  const structuredData = post ? createStructuredData(post) : undefined;
 
   return {
     props: {
