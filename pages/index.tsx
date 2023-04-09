@@ -32,19 +32,21 @@ export default function Home(
         </h1>
 
         {mostRecentPosts.length > 0 && (
-          <div>
-            {mostRecentPosts.map((post: Post, index: number) => (
-              <React.Fragment key={index}>
-                <BlogPost
-                  date={post.date}
-                  title={post.title}
-                  des={post.description}
-                  slug={`${post.type.toLowerCase()}/${post.slug}`}
-                  type={post.type}
-                />
-              </React.Fragment>
-            ))}
-          </div>
+          <article>
+            <ul>
+              {mostRecentPosts.map((post: Post, index: number) => (
+                <React.Fragment key={index}>
+                  <BlogPost
+                    date={post.date}
+                    title={post.title}
+                    des={post.description}
+                    slug={`${post.type.toLowerCase()}/${post.slug}`}
+                    type={post.type}
+                  />
+                </React.Fragment>
+              ))}
+            </ul>
+          </article>
         )}
       </div>
     </Container>

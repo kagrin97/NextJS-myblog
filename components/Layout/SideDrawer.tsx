@@ -26,10 +26,10 @@ const SideDrawer = (props: Props) => {
         className={`flex fixed left-0 top-0 z-40 h-screen w-4/5 bg-gray-100 dark:bg-neutral-800 shadow-lg shadow-indigo-500/40`}
         onClick={props.onClick}
       >
-        <div className="m-auto">
+        <ul className="m-auto">
           {navlinks.map((nav: Navlinks) => (
             <Link href={nav.link} key={nav.title}>
-              <div className="hover:cursor-pointer hover:text-green-400 mb-5 text-2xl">
+              <li className="hover:cursor-pointer hover:text-green-400 mb-5 text-2xl">
                 <a
                   href={nav.link}
                   className={`flex justify-center ${
@@ -38,10 +38,10 @@ const SideDrawer = (props: Props) => {
                 >
                   <span className="mr-4">{nav.title}</span>
                 </a>
-              </div>
+              </li>
             </Link>
           ))}
-        </div>
+        </ul>
       </aside>
     </CSSTransition>
   );

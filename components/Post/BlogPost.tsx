@@ -11,7 +11,7 @@ interface Props {
 
 export default function BlogPost(props: Props) {
   return (
-    <div className="w-full my-7 transition ease-in-out hover:-translate-x-1.5 hover:text-green-400/80">
+    <li className="w-full my-7 transition ease-in-out hover:-translate-x-1.5 hover:text-green-400/80">
       <Link href={`/${props.slug}`} passHref>
         <a>
           <div className="font-medium text-xs text-gray-400">
@@ -26,6 +26,6 @@ export default function BlogPost(props: Props) {
           </div>
         </a>
       </Link>
-    </div>
+    </li>
   );
 }
