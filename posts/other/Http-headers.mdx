@@ -1,0 +1,396 @@
+---
+title: HTTP 요청/응답 헤더 살펴보기
+date: 2023-04-11
+description: HTTP 프로토콜에서 데이터를 전송할 때 사용되는 메타데이터 요청/응답 헤더에 대해서 알아봅니다.
+category: other
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. HTTP 요청/응답 헤더란?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 요청(Request) 헤더
+      <p>2-1. :authority</p>
+      <p>2-2. :method</p>
+      <p>2-3. :path</p>
+      <p>2-4. :scheme</p>
+      <p>2-5. accept</p>
+      <p>2-6. accept-Encoding</p>
+      <p>2-7. accept-language</p>
+      <p>2-8. authorization</p>
+      <p>2-9. content-length</p>
+      <p>2-10. content-type</p>
+      <p>2-11. cookie</p>
+      <p>2-12. Referer</p>
+      <p>2-13. User-Agent</p>
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. 응답(Response) 헤더
+      <p>3-1. cache-control</p>
+      <p>3-2. content-security-policy</p>
+      <p>3-3. Set-Cookie</p>
+      <p>3-4. Access-Control-Allow-Origin</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. HTTP 요청/응답 헤더란?</div>
+</h2>
+
+<br></br>
+
+브라우저에서 보이는 많은 데이터들은 HTTP 프로토콜에 의해서 서버에서 브라우저로 데이터가 넘어오게 됩니다. 이때 <b>요청(Request)</b>을 보내고 많은 <b>응답(Response)</b>를 받습니다.
+
+HTTP 헤더에는 브라우저, 서버, 요청 데이터의 정보가 함께 들어있고 전달합니다. 이 글에서는 헤더에 어떤 <b>키-값</b>이 있는지 살펴봅니다.
+
+가장 쉽게 HTTP 헤더를 보고싶다면 개발자도구(F12)를 누른다음 네트워크 탭에서 리소스를 클릭하고 헤더 탭을 보시면 됩니다.
+
+<div className={`flex flex-col justify-center`}>
+  <small>리소스 헤더 정보 👇</small>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/231056785-01b2d8cc-52a0-4804-b9d5-c5090bb70b29.png"
+    width="100%"
+  />
+</div>
+
+여기서 보면 응답/요청 크게 2가지의 헤더가 존재합니다.
+
+더 깊게 분류를 하게 된다면 엔티티 헤더라는 것도 명시를 하지만 이 글에서는 응답/요청 크게 2가지 파트로 설명하겠습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 요청(Request) 헤더</div>
+</h2>
+
+<br></br>
+
+요청 헤더는 말그대로 브라우저가 서버한테 요청을 보낼때 설정을 담아서 보내는 장소입니다. 대표적인 키-값만 살펴보겠습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-1. :authority</h3>
+<br></br>
+
+HTTP/2에서는 HTTP/1.1과 달리 `:authority`라는 특수한 헤더 필드가 추가되었습니다. :authority는 요청한 리소스의 <b>권한(authority)</b>을 나타냅니다.
+
+HTTP/2에서는 여러 개의 요청을 하나의 TCP 연결을 통해 동시에 처리하기 때문에, 각 요청이 어떤 호스트에 대한 것인지를 명시하는 것이 중요합니다. 이를 위해 :authority 헤더 필드가 추가되었습니다.
+
+```bash
+:authority: github.com
+```
+
+> <br></br>: 가 앞에 붙는 이유?? <br></br>HTTP/2에서는 `:`로 시작하는 헤더 필드는
+> 모두 예약된 헤더 필드로, 이들은 HTTP/2 프로토콜에서 사용하기 위해 미리 정의된 헤더
+> 필드입니다. 예약된 헤더 필드를 사용함으로써 HTTP/2에서는 클라이언트와 서버 간의
+> 더욱 효율적인 통신이 가능해졌습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-2. :method</h3>
+<br></br>
+
+`:method`는 HTTP 요청 메서드를 나타내는 헤더 필드입니다. HTTP 요청 메서드는 클라이언트가 서버에게 요청하는 작업의 종류를 나타내며, 일반적으로 <b>GET, POST, PUT, DELETE</b> 등이 있습니다.
+
+HTTP/1.1에서는 :method 대신에 실제 HTTP 요청 메서드를 사용하였지만, HTTP/2에서는 :method 헤더 필드가 추가되어 HTTP 요청 메서드를 명시합니다. 이는 HTTP/2에서 다중 요청을 처리할 때 요청의 우선순위를 결정하는 데에 사용됩니다.
+
+```bash
+:method: GET
+```
+
+예를 들어, 클라이언트가 :method: GET 헤더 필드를 포함하는 HTTP/2 요청을 서버에 보낸다면, 해당 요청은 GET 메서드를 사용한 요청임을 나타내며, 서버는 이를 바탕으로 요청을 처리합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-3. :path</h3>
+<br></br>
+
+`:path`는 HTTP 요청 URI를 나타내는 헤더 필드입니다. HTTP 요청 URI는 클라이언트가 요청하는 <b>리소스의 경로</b>를 나타내며, 일반적으로 `/path/to/resource`와 같은 형식을 갖습니다.
+
+HTTP/1.1에서는 요청 라인에 URI가 포함되어 전송되었지만, HTTP/2에서는 요청 라인이 없기 때문에 :path 헤더 필드가 추가되었습니다. :path 헤더 필드를 사용하여 클라이언트는 요청하는 리소스의 경로를 서버에게 전달할 수 있습니다.
+
+```bash
+:path: github/index.html
+```
+
+예를 들어, 클라이언트가 :path: /index.html 헤더 필드를 포함하는 HTTP/2 요청을 서버에 보낸다면, 해당 요청은 /index.html 경로에 있는 리소스를 요청하는 요청임을 나타내며, 서버는 이를 바탕으로 요청을 처리합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-4. :scheme</h3>
+<br></br>
+
+`:scheme`은 HTTP 요청이 사용하는 URI scheme을 나타내는 헤더 필드입니다. URI scheme은 클라이언트가 요청하는 리소스의 위치를 나타내는 URI의 첫 번째 부분으로, 일반적으로 `http`나 `https`와 같은 문자열을 갖습니다.
+
+```bash
+:scheme: https
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>2-5. accept</h3>
+<br></br>
+
+`accept` 헤더는 클라이언트가 서버로부터 받고자 하는 콘텐츠 타입을 나타내는 헤더 필드입니다. 클라이언트는 accept 헤더를 사용하여 서버가 제공할 수 있는 <b>콘텐츠 타입을 나열</b>하고, 서버는 이 중에서 클라이언트가 받고자 하는 <b>콘텐츠 타입을 선택</b>하여 응답합니다.
+
+accept 헤더의 값은 콤마로 구분된 하나 이상의 콘텐츠 타입을 포함합니다. 각 콘텐츠 타입은 MIME 타입으로 지정되며, 일반적으로 `type/subtype` 형식을 갖습니다. 예를 들어, `application/json`은 JSON 데이터를 나타내는 MIME 타입입니다.
+
+```bash
+accept: text/html
+accept: */* => 모든 요쳥 ok
+```
+
+accept 헤더는 HTTP 요청에서 자주 사용되며, RESTful aPI에서는 클라이언트가 서버로부터 받을 수 있는 콘텐츠 타입을 명시하는 데에 사용됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-6. accept-Encoding</h3>
+<br></br>
+
+`accept-Encoding` 헤더는 클라이언트가 서버로부터 받고자 하는 콘텐츠 인코딩을 나타내는 헤더 필드입니다. 콘텐츠 인코딩은 서버가 콘텐츠를 압축하여 전송할 때 사용되며, 클라이언트는 accept-Encoding 헤더를 사용하여 서버가 지원하는 콘텐츠 인코딩을 나열합니다.
+
+accept-Encoding 헤더는 콤마로 구분된 하나 이상의 콘텐츠 인코딩을 포함합니다. 각 콘텐츠 인코딩은 압축 알고리즘으로 지정되며, 일반적으로 <b>gzip, deflate, br</b> 등이 사용됩니다.
+
+```bash
+accept-encoding: gzip, deflate, br
+```
+
+accept-Encoding 헤더는 HTTP 요청에서 자주 사용되며, 웹 브라우저에서는 콘텐츠를 더 빠르게 전송하기 위해 gzip 등의 콘텐츠 인코딩을 사용합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-7. accept-language</h3>
+<br></br>
+
+`accept-Language` 헤더는 클라이언트가 서버로부터 받고자 하는 언어를 나타내는 헤더 필드입니다. 클라이언트는 accept-Language 헤더를 사용하여 서버가 제공할 수 있는 언어를 나열하고, 서버는 이 중에서 클라이언트가 받고자 하는 언어를 선택하여 응답합니다.
+
+accept-Language 헤더는 콤마로 구분된 하나 이상의 언어 태그를 포함합니다. 각 언어 태그는 ISO 639 언어 코드로 지정되며, 일반적으로 <b>en, ko, ja</b> 등이 사용됩니다. 언어 태그 뒤에는 옵션으로 해당 언어의 지역을 나타내는 ISO 3166 국가 코드를 추가할 수 있습니다.
+
+accept-Language 헤더는 HTTP 요청에서 자주 사용되며, 웹 브라우저에서는 사용자가 설정한 언어를 나타내기 위해 사용됩니다. 서버는 accept-Language 헤더를 사용하여 적절한 언어로 응답을 반환하며, 다국어 웹 사이트에서는 accept-Language 헤더를 사용하여 사용자가 원하는 언어로 콘텐츠를 제공합니다.
+
+```bash
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7,ja;q=0.6
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>2-8. authorization</h3>
+<br></br>
+
+`authorization` 헤더는 클라이언트가 서버에게 자신의 인증 정보를 전달하는 헤더 필드입니다. 보안이 필요한 리소스에 접근할 때 사용되며, 일반적으로 사용자 이름과 암호를 전송합니다. `authorization` 헤더는 HTTP 요청에서만 사용됩니다.
+
+authorization 헤더의 값은 일반적으로 Basic Authentication, Digest Authentication, OAuth 등의 인증 체계를 사용하여 생성된 인증 토큰입니다. Basic Authentication의 경우 인증 토큰은 사용자 이름과 암호를 Base64로 인코딩한 문자열입니다.
+
+```bash
+authorization: Bearer eyJhbGciOiJIUz......
+```
+
+`Bearer`는 Authorization 헤더에서 사용되는 인증 체계 중 하나입니다. OAuth 2.0에서 정의되었으며, 토큰을 전달할 때 사용됩니다.
+
+authorization 헤더는 HTTP 요청에서 자주 사용되며, RESTful API에서는 인증된 사용자만이 접근할 수 있는 리소스에 접근하기 위해 사용됩니다. 서버는 authorization 헤더를 사용하여 클라이언트의 인증 정보를 검증하고, 인증이 성공하면 요청된 리소스를 반환합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-9. content-length</h3>
+<br></br>
+
+요청 본문의 길이를 지정합니다.
+
+```bash
+content-length: 29948
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>2-10. content-type</h3>
+<br></br>
+
+`content-type`은 요청 본문의 미디어 타입을 나타냅니다. accept와 비슷한데 content-type 헤더는 현재 전송하는 데이터가 어떤 타입인지에 대한 설명을 하는 개념이고 accept 헤더는 클라이언트가 서버에게 어떤 특정한 데이터 타입을 보낼때 <b>클라이언트가 보낸 특정 데이터 타입으로만 응답</b>을 해야합니다.
+
+또한 content-type은 요청/응답 둘다 사용할수 있습니다.
+
+```bash
+content-type: application/json
+```
+
+<br></br>
+<h3 className={`dark:text-white`}>2-11. cookie</h3>
+<br></br>
+
+`cookie` 헤더는 HTTP 요청에서 사용되는 헤더 필드 중 하나입니다. 이 헤더는 클라이언트가 서버에 전송하는 쿠키를 나타냅니다.
+
+쿠키는 클라이언트 측에서 저장되는 작은 데이터 조각으로, 클라이언트가 서버에 요청을 보낼 때마다, cookie 헤더에 저장된 쿠키를 서버에 전송하여 사용자를 식별하고, 맞춤화된 경험을 제공합니다.
+
+cookie 헤더는 다음과 같은 형식으로 구성됩니다.
+
+```bash
+cookie: name1=value1; name2=value2; name3=value3
+```
+
+여기서, `name1`, `name2`, `name3`은 쿠키의 이름을 나타내고, `value1`, `value2`, `value3`은 쿠키의 값입니다. 쿠키의 이름과 값은 서버에서 지정합니다. 쿠키의 이름과 값은 반드시 URL 인코딩이 필요합니다.
+
+예를 들어, 사용자의 로그인 정보를 저장하는 쿠키는 다음과 같이 cookie 헤더에 포함될 수 있습니다.
+
+```bash
+cookie: username=john; sessionid=1234567890abcdef
+```
+
+이 경우, username은 쿠키의 이름이고, john은 쿠키의 값입니다. 마찬가지로, sessionid는 쿠키의 이름이고, 1234567890abcdef는 쿠키의 값입니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-12. Referer</h3>
+<br></br>
+
+`Referer` 헤더는 HTTP 요청에서 사용되는 헤더 필드 중 하나입니다. 이 헤더는 클라이언트가 현재 요청을 보내기 전에 방문했던 웹페이지의 URL을 나타냅니다.
+
+Referer 헤더는 다음과 같은 형식으로 구성됩니다.
+
+```bash
+Referer: https://www.example.com/page.html
+```
+
+여기서, `https://www.example.com/page.html`은 방문했던 웹페이지의 URL입니다.
+
+Referer 헤더는 일반적으로 웹사이트 분석 및 보안 목적으로 사용됩니다. 예를 들어, 웹사이트에서는 Referer 헤더를 사용하여 사용자가 해당 웹사이트에서 어떤 페이지로 이동했는지 <b>추적</b>할 수 있습니다. 또한, Referer 헤더는 웹사이트가 외부 링크를 통해 유입되는 트래픽을 추적하는 데 사용됩니다.
+
+그러나, Referer 헤더는 사용자의 개인 정보 보호 문제가 있을 수 있으므로, 일부 브라우저에서는 Referer 헤더를 전송하지 않도록 설정할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2-13. User-Agent</h3>
+<br></br>
+
+`User-Agent` 헤더는 HTTP 요청에서 사용되는 헤더 필드 중 하나입니다. 이 헤더는 클라이언트가 사용하는 소프트웨어나 애플리케이션의 정보를 나타냅니다.
+
+User-Agent 헤더는 다음과 같은 형식으로 구성됩니다.
+
+```bash
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36
+```
+
+여기서, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36은 클라이언트가 사용하는 브라우저의 정보입니다.
+
+User-Agent 헤더는 웹사이트가 클라이언트의 운영 체제, 브라우저 종류, 버전 등을 파악하여, 맞춤화된 경험을 제공하는 데 사용됩니다. 예를 들어, 모바일 기기에서 웹사이트를 열었을 때, 웹사이트는 User-Agent 헤더를 사용하여 모바일 버전의 페이지를 제공할 수 있습니다.
+
+그러나, User-Agent 헤더는 사용자의 개인 정보 보호 문제가 있을 수 있으므로, 일부 브라우저에서는 사용자 에이전트 정보를 조작하거나 감추는 기능을 제공합니다.
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. 응답(Response) 헤더</div>
+</h2>
+
+<br></br>
+<h3 className={`dark:text-white`}>3-1. cache-control</h3>
+<br></br>
+
+`cache-control` 헤더는 HTTP 요청 및 응답에서 사용되는 헤더 필드 중 하나입니다. 이 헤더는 캐시 제어 지시자를 정의하여 캐시 동작을 제어합니다.
+
+cache-control 헤더는 다음과 같은 값으로 구성될 수 있습니다.
+
+- <b>no-cache</b> : 캐시된 리소스를 사용하기 전에 해당 리소스를 검증해야 함을 나타냅니다.
+- <b>no-store</b> : 리소스를 캐시하지 않아야 함을 나타냅니다.
+- <b>max-age</b> : 리소스가 캐시될 최대 시간(초)을 지정합니다.
+- <b>public</b> : 모든 사용자가 리소스를 캐시할 수 있도록 허용합니다.
+- <b>private</b> : 리소스를 캐시할 수 있는 사용자를 제한합니다.
+- <b>must-revalidate</b> : 캐시된 리소스를 사용하기 전에 해당 리소스를 검증해야 함을
+  나타내지만, 캐시된 리소스가 만료되었을 때만 검증합니다.
+- <b>proxy-revalidate</b> : 프록시 서버가 캐시된 리소스를 사용하기 전에 해당 리소스를
+  검증해야 함을 나타내지만, 캐시된 리소스가 만료되었을 때만 검증합니다.
+- <b>no-transform</b> : 리소스가 프록시에 의해 수정되어서는 안 된다는 것을 나타냅니다.
+
+cache-control 헤더는 웹 브라우저나 프록시 서버 등이 리소스를 캐시할 때 사용됩니다. 이 헤더는 캐시 동작을 제어하여 웹사이트의 성능을 향상시키는 데 도움을 줍니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>3-2. content-security-policy</h3>
+<br></br>
+
+`Content-Security-Policy` (CSP)는 웹 사이트에서 로드되는 콘텐츠의 출처를 지정하여 XSS(Cross-Site Scripting) 등의 공격을 방지하는 데 사용되는 보안 헤더입니다.
+
+CSP는 다음과 같은 지시자를 사용하여 구성됩니다.
+
+- <b>default-src</b> : 모든 리소스에 대한 기본 출처 지정자를 정의합니다.
+- <b>script-src</b> : 자바스크립트 파일에 대한 출처 지정자를 정의합니다.
+- <b>style-src</b> : CSS 파일에 대한 출처 지정자를 정의합니다.
+- <b>img-src</b> : 이미지 파일에 대한 출처 지정자를 정의합니다.
+- <b>connect-src</b> : XMLHttpRequest, WebSockets 등의 연결 요청에 대한 출처 지정자를
+  정의합니다.
+- <b>font-src</b> : 웹 폰트에 대한 출처 지정자를 정의합니다.
+- <b>object-src</b> : embed, object 등의 요소에 대한 출처 지정자를 정의합니다.
+- <b>media-src</b> : 미디어 파일에 대한 출처 지정자를 정의합니다.
+- <b>frame-src</b> : frame 및 iframe 요소에 대한 출처 지정자를 정의합니다.
+- <b>sandbox</b> : 현재 문서가 실행될 때 적용할 보안 정책을 정의합니다.
+
+CSP를 사용하면, 웹 페이지에 로드되는 리소스의 출처를 명시적으로 지정함으로써 XSS 등의 공격을 예방할 수 있습니다. 웹 개발자는 CSP를 사용하여 웹 사이트의 보안을 강화할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>3-3. Set-Cookie</h3>
+<br></br>
+
+`Set-Cookie` 헤더는 서버에서 웹 브라우저로 쿠키를 생성하거나 수정할 때 사용되는 헤더입니다.
+
+Set-Cookie 헤더는 다음과 같은 값으로 구성될 수 있습니다.
+
+- <b>name=value</b> : 쿠키의 이름과 값입니다.
+- <b>Expires</b> : 쿠키의 만료 일자를 나타냅니다.
+- <b>Max-Age</b> : 쿠키의 유효 기간을 초 단위로 지정합니다.
+- <b>Domain</b> : 쿠키가 전송될 도메인을 지정합니다.
+- <b>Path</b> : 쿠키가 전송될 URL 경로를 지정합니다.
+- <b>Secure</b> : HTTPS 프로토콜을 사용하여 쿠키를 전송합니다.
+- <b>HttpOnly</b> : 자바스크립트에서 쿠키를 접근할 수 없도록 합니다.
+
+Set-Cookie 헤더를 사용하면, 서버에서 웹 브라우저로 쿠키를 생성하거나 수정하여, 서버와 클라이언트 간의 상태 정보를 유지할 수 있습니다. 이를 통해, 로그인 정보, 사용자 환경 설정 등을 클라이언트 측에서 유지할 수 있습니다.
+
+또한 응답 헤더에 set-cookie가 여러개가 존재할수가 있는데 이것은 쿠키를 여러개 생성하기 위함이므로 이상하게 생각안하셔도 됩니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>3-4. Access-Control-Allow-Origin</h3>
+<br></br>
+
+`Access-Control-Allow-Origin`은 웹 브라우저에서 XMLHttpRequest나 fetch API 등을 통해 다른 도메인의 리소스를 요청할 때, 해당 리소스가 CORS(Cross-Origin Resource Sharing) 정책에 따라 접근 가능한 출처인지를 판단하기 위해 사용되는 응답 헤더입니다.
+
+이 헤더는 서버에서 클라이언트(웹 브라우저)로 보내지며, 다음과 같은 값으로 구성될 수 있습니다.
+
+- <b>Access-Control-Allow-Origin: *</b> : 모든 출처에서 접근 가능하도록 허용합니다.
+
+- <b>Access-Control-Allow-Origin: http://example.com</b> : 특정 도메인에서만 접근
+  가능하도록 허용합니다.
+
+이 헤더로 지정된 출처만이 해당 리소스에 접근할 수 있습니다. 이를 통해, 다른 도메인에서의 CSRF(Cross-Site Request Forgery) 공격 등을 방지할 수 있습니다.
+
+또한 CORS 보안정책을 회피할수 있게합니다.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://github.com/WeareSoft/tech-interview/blob/master/contents/network.md#http-%EC%9A%94%EC%B2%AD-%EC%9D%91%EB%8B%B5-%ED%97%A4%EB%8D%94"
+>
+  github tech-interview/contents/network.md
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://webstone.tistory.com/66"
+>
+  Contents-Type Header 와 Accept Header의 차이점
+</a>
