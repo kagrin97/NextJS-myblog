@@ -1,0 +1,284 @@
+---
+title: 피그마 플러그인을 React로 만들어보기
+date: 2023-04-14
+description: React를 사용하여 피그마 플러그인을 개발하는 방법을 설명합니다.
+category: other
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. 피그마 플러그인은 뭘까?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. React로 피그마 플러그인 만들어보기
+      <p>2-1. Config</p>
+      <p>2-2. UI 로직 작성</p>
+      <p>2-3. Sandbox 로직 작성</p>
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. 피그마 플러그인은 뭘까?</div>
+</h2>
+
+<br></br>
+
+피그마 플러그인은 디자인 도구인 <b>피그마(Figma)</b>에서 제공하는 확장 기능입니다.
+
+이 확장 기능을 사용하면, 디자인 작업을 보다 효율적으로 수행할 수 있습니다. 예를 들어, 디자인 작업 중 자주 사용하는 기능을 플러그인으로 만들어 두면, 필요할 때마다 불러와 사용할 수 있습니다. 또한, 피그마 API와 연동하여, 피그마 내에서 디자인을 자동화하거나, 외부 서비스와 연동하여 작업을 수행할 수도 있습니다.
+
+피그마 플러그인은 JavaScript를 사용하여 개발할 수 있으며, React, Vue.js, Angular 등 다양한 프레임워크를 사용하여 개발할 수도 있습니다. 피그마 플러그인 개발을 위한 문서와 도구들이 제공되고 있으며, 개발자는 이를 활용하여 효율적으로 개발할 수 있습니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>피그마 플러그인을 위한 프로젝트 요소</h3>
+<br></br>
+
+피그마 플러그인을 사용할려면 우선 피그마 데스크톱 앱이 필요합니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.figma.com/downloads/"
+>
+  피그마 데스크톱 앱
+</a>
+<br></br>
+
+여기서 본인의 운영체제에 해당하는 앱을 설치하시면 됩니다. 그리고 프로젝트에는 `manifest.json` 파일이 필요합니다. 이 파일은 피그마 플러그인에 대한 정보가 존재합니다.
+
+<br></br>
+
+```json:manifest.json
+{
+  "name": "테스트 플러그인", // 플러그인 이름
+  "id": "00000000",
+  "api": "1.0.0",
+  "main": "dist/plugin.js", // Sandbox에서 실행될 플러그인 코드
+  "editorType": ["figma", "figjam"],
+  "ui": "dist/ui.html" // UI 코드
+}
+```
+
+<br></br>
+
+보시면 <b>Sandbox</b>, <b>UI</b> 코드가 <b>분리</b>가 되어있습니다. 피그마 플러그인은 UI와 로직을 분리해서 개발할 수 있습니다. UI는 HTML과 CSS로 구성되며, iframe 위에서 실행됩니다. 로직은 JS로 구성되며, 별도의 sandbox 내에서 실행됩니다. UI와 로직은 `figma.ui.postMessage`와 `figma.ui.onmessage`를 통해 메시지를 주고받을 수 있습니다.
+
+피그마 플러그인 코드가 sandbox와 ui코드가 분리되어 있는 이유는 시스템의 <b>안전성과 성능을 보장</b>하기 위해서입니다. sandbox는 피그마의 핵심적인 로직과 격리되어 있어서 악의적인 코드가 피그마에 영향을 주지 않도록 합니다. 또한 sandbox는 한 번에 하나의 플러그인만 실행할 수 있도록 제한하여 다른 플러그인과의 충돌을 방지합니다. ui코드는 iframe 위에서 실행되어 웹으로 구축된 피그마와는 분리되어 있습니다. 이렇게 하면 ui코드가 피그마의 DOM에 접근하거나 수정하는 것을 막을 수 있습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. React로 피그마 플러그인 만들어보기</div>
+</h2>
+
+<br></br>
+
+<h3 className={`dark:text-white`}>2-1. Config</h3>
+<br></br>
+
+피그마 플러그인 프로젝트를 설정하기 위해서는 너무나 많은 <b>보일러 플레이트</b>가 존재하는데요. 저는 우아한형제들 직원분이 만드신 보일러플레이 repo를 사용했습니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://github.com/hseoy/figma-plugin-react-boilerplate"
+>
+  https://github.com/hseoy/figma-plugin-react-boilerplate
+</a>
+<br></br>
+
+```bash
+$ npx degit https://github.com/hseoy/figma-plugin-react-boilerplate <project name>
+$ cd <project name>
+$ yarn install
+$ yarn build
+```
+
+보일러 플레이트를 빌드까지 성공했다면 다음은 피그마 데스크톱 앱에서 해당하는 플러그인을 불러오는 과정입니다.
+
+1. 피그마 데스크톱 버전을 열어 주세요.
+
+2. 오른쪽 위의 프로필 아이콘 드롭 다운을 클릭한 후 Plugins 선택합니다.
+
+3. In development 섹션에서 + 버튼을 클릭합니다.
+
+4. Import plugin from manifest...를 선택하신 후 다운로드한 보일러 플레이트 내 manifest.json을 선택합니다.
+
+5. 본인이 편집 가능한 디자인 파일에 들어갑니다.
+
+6. Plugins에서 Development 선택 후 보일러 플레이트 플러그인인 sample plugin을 클릭합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <p>최종 예제 실행 영상</p>
+</h3>
+
+<div className={`flex justify-center`}>
+  <video
+    controls
+    width="40%"
+    src="https://user-images.githubusercontent.com/75124028/231973926-ec986d50-f8eb-4e53-86cf-e6319efed46d.mov"
+  ></video>
+</div>
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <p>2-2. UI 로직 작성</p>
+</h3>
+<br></br>
+
+첫번째로 UI 로직을 작성합니다.
+
+```ts:App.tsx showLineNumbers
+import React from 'react';
+
+function App() {
+  const requestToPlugin = (payload: string) => {
+    parent.postMessage({ pluginMessage: payload }, '*');
+  };
+
+  const 바꿔함수 = () => {
+    requestToPlugin('바꿔');
+  };
+
+  const 바꾸지마함수 = () => {
+    requestToPlugin('바꾸지마');
+  };
+
+  return (
+    <div>
+      <h1>간단한 플러그인</h1>
+      <button type="button" onClick={바꿔함수}>
+        바꿔
+      </button>
+      <button type="button" onClick={바꾸지마함수}>
+        바꾸지마
+      </button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+바꿔함수가 실행될경우 Sandbox에서 실행될 비즈니스 로직인 `figma.ui.onmessage`가 실행되게 됩니다. 즉 `postMessage()`가 실행될경우 src/plugin의 `figma.ui.onmessage` 함수가 실행됩니다.
+
+이렇게 동작을 분리함으로써 비즈니스 로직과 뷰를 분리합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>
+  <p>2-3. Sandbox 로직 작성</p>
+</h3>
+<br></br>
+
+Sandbox로직은 기존의 React코드와는 다르니 하나씩 설명하겠습니다. 피그마 데스크톱앱에서 플러그인을 실행했을때 ifram을 사용해서 창을 띄운다고 했었는데 띄워주기 위해서는
+
+```ts
+figma.showUI(__html__);
+```
+
+<br></br>
+
+이 코드가 필요합니다. `__html__`은 manifest.json에서 명시한 UI HTML 파일의 콘텐츠를 담고 있습니다.
+
+<br></br>
+
+```ts:plugin/index.ts showLineNumbers
+const 바꿔로바꿔 = () => {
+  return '바꿔';
+};
+
+const 바꾸지마로바꿔 = () => {
+  return '바꾸지마';
+};
+
+figma.ui.onmessage = async (payload: string) => {
+
+  if (payload === '바꿔') {
+    const { selection } = figma.currentPage;
+
+    selection.forEach((node) => {
+      if (node.type === 'TEXT') {
+        const translateText = 바꿔로바꿔();
+        node.characters = translateText;
+      }
+    });
+  }
+
+  if (payload === '바꾸지마') {
+    const { selection } = figma.currentPage;
+
+    selection.forEach((node) => {
+      if (node.type === 'TEXT') {
+        const translateText = 바꾸지마로바꿔();
+        node.characters = translateText;
+      }
+    });
+  }
+};
+```
+
+위 코드는 피그마 캔버스에서 모든 텍스트 노드를 가져와서 해당 노드의 text값을 바꿔 or 바꾸지마로 바꾸는 로직입니다.
+
+하지만 이 코드를 실행할 경우 <b>에러</b>가 발생하는데요. 그 이유는 텍스트를 다룰 때는 사용할 폰트를 미리 불러와야 한다는 점입니다. 폰트를 불러오기 위해서는 `loadFontAsync api`를 사용해서 불러올수 있습니다.
+
+<br></br>
+
+```ts
+const fontName = { family: 'Roboto', style: 'Regular' };
+
+figma.ui.onmessage = async (payload: string) => {
+  await figma.loadFontAsync(fontName);
+  ..
+  .
+}
+```
+
+이렇게 코드 작성을 마치게 되면 정말 간단한 플러그인 완성입니다.
+
+아직도 정확히 플러그인의 동작 과정이 이해되지는 않지만 공부해보면서 처음에는 엄두도 나지 않았던 피그마 플러그인도 만들 수 있었습니다. 물론 너무 간단한 기능만을 구현했지만 이렇게 하나씩 구현해보면서 나중에는 정말 좋은 플러그인을 만들 수 있을 것만 같은 기분입니다.
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://techblog.woowahan.com/8339/"
+>
+  https://techblog.woowahan.com/8339/
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://engineering.linecorp.com/ko/blog/create-figma-translation-plugin-with-vuejs?ref=codenary"
+>
+  https://engineering.linecorp.com/ko/blog/create-figma-translation-plugin-with-vuejs?ref=codenary
+</a>
