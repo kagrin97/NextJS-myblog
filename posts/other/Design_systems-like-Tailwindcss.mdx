@@ -1,0 +1,356 @@
+---
+title: TailwindCSS 같은 디자인시스템 구축하기
+date: 2023-04-21
+description: 디자인토큰을 만들고 class기반 디자인시스템을 구축해봅니다.
+category: other
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. 디자인 시스템이란 뭐죠?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 디자인 토큰의 종류
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. TailwindCSS같은 디자인시스템 구축하기
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. 디자인 시스템이란 뭐죠?</div>
+</h2>
+
+<br></br>
+
+디자인 시스템은 간단하게 말해서 `MUI`, `TailwindCSS` 같은 통일된 디자인 색상, 타이포그래피, 여백, 그림자 등을 한곳에서 정리 및 관리를 통해서 디자이너, 개발자 간의 협업할 때 통합, 생산성을 높이기 위해서 사용되는 것이라고 생각하시면 됩니다. 이떄 색상, 타이포그래피... 등등을 정의한 CSS 변수를 <b>디자인 토큰</b>이라고 합니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://www.lightningdesignsystem.com/design-tokens/"
+>
+  lightningdesignsystem design-tokens
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://m3.material.io/styles/color/overview"
+>
+  https://m3.material.io/styles/color/overview
+</a>
+
+<br></br>
+
+위 사이트는 여러 회사에서 정의한 디자인 토큰을 설명하는 페이지입니다. 이렇게 회사마다 회사의 통일된 디자인을 유지보수하기 위해서 디자인 토큰을 정의하고 그것을 바탕으로 완성된 디자인 시스템을 사용합니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 디자인 토큰의 종류</div>
+</h2>
+
+<br></br>
+
+회사마다 디자인 토큰의 정의하는 개념과 기준이 사람마다 다르지만 대체로 디자인 토큰을 3가지로 나누어 집니다.
+
+<h3 className={`dark:text-white`}>1. Global tokens</h3>
+<br></br>
+
+<div className="ml-div">
+
+    `Global tokens`는 가장 작은 단위의 디자인입니다. 예를 들어서 색상, 폰트 크기, 폰트 간격... 등등이 존재합니다. Global tokens를 어떤 곳에서는 `Foundation`이라고도 명칭 하기도 합니다.
+
+    ```css
+    --blue-300: blue // Global tokens;;
+    ```
+
+</div>
+
+<br></br>
+<h3 className={`dark:text-white`}>2. Alias tokens</h3>
+<br></br>
+
+<div className="ml-div">
+
+    `Alias tokens`은 원자 단위의 Global tokens의 별칭을 지어주는 것입니다. 예를들어서
+
+    ```css
+    --blue-300 : blue // Global tokens
+
+    --background-color : var(--blue-300) // Alias tokens
+    ```
+
+    가장 기본이 되는 blue 색상은 Global tokens이 되며 Global tokens을 사용해 --background-color라는 Alias tokens을 생성할 수 있습니다.
+
+</div>
+
+<br></br>
+<h3 className={`dark:text-white`}>3. Components tokens</h3>
+<br></br>
+
+<div className="ml-div">
+
+    `Components tokens`은 좀 더 확장된 개념인데 --background-color라는 Alias token을 사용해 특정 컴포넌트를 명시하는 이름으로 할당합니다.
+
+    ```CSS
+    --background-color : var(--blue-300) // Alias tokens
+
+    --btn-background-color : var(--background-color) // Components tokens
+    ```
+
+    --background-color 토큰을 사용해 btn 컴포넌트에서 쓰이는 Components tokens을 생성합니다.
+
+</div>
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. TailwindCSS같은 디자인시스템 구축하기</div>
+</h2>
+
+<br></br>
+
+간단하게 제가 구축한 디자인 시스템의 <b>순서</b>를 설명해겠습니다.
+
+<br></br>
+
+<div className={`step-by-step`}>
+
+<h3>디자인 시스템 구축 순서</h3>
+
+1. CSS 변수들을 사용해 디자인 토큰을 만듭니다.
+
+2. 완성된 디자인 토큰 변수들을 style 태그 `:root` 안에 한 줄씩 작성해 head 태그 안에 삽입합니다.
+
+3. 해당 디자인 토큰들을 가지고 css class를 생성합니다.
+
+4. 완성된 class를 태그의 class에 삽입해 디자인을 적용합니다.
+
+</div>
+
+<br></br>
+<br></br>
+
+<b>이제는 실제로 구축해 보겠습니다.</b>
+
+<br></br>
+<h3 className={`dark:text-white`}>1. css 변수들을 사용해 디자인 토큰을 생성</h3>
+<br></br>
+
+```ts:cssVariables.ts showLineNumbers
+export const cssVariables: CSSVariables = {
+
+// Global token
+static_colors: {
+    black: "#000000",
+    white: "#ffffff",
+    gray300: "#f6f6f6",
+    blue600: "#0056b3",
+    blue800: "#1f3764",
+},
+scale_font_sizes: {
+        size10: "0.625rem",
+        ...
+    }
+    ..
+    .
+    }
+
+// Alias token & Components token
+cssVariables.semantic_colors = {
+    background: cssVariables.static_colors.gray300,
+    text: cssVariables.static_colors.black,
+    btn_background: cssVariables.static_colors.blue800,
+    btn_background_hover: cssVariables.static_colors.blue600,
+    btn_text: cssVariables.static_colors.white,
+};
+.
+.
+
+```
+
+- cssVariables 객체안에 Global token을 할당합니다.
+
+- Global token을 이용해 Alias token, Components token 들을 생성합니다.
+
+<br></br>
+<h3 className={`dark:text-white`}>2. css 변수를 style태그안 :root 안 삽입</h3>
+<br></br>
+
+```ts:injectCSSVariables.utils.ts showLineNumbers
+function createStyleTag(variables: CSSVariables): HTMLStyleElement {
+  const styleTag = document.createElement("style");
+  let root = ":root {\n";
+
+  for (const category in variables) {
+    for (const variableName in variables[category]) {
+      const replacedCategory = category.replace(/_/g, "-");
+      const replacedVariableName = variableName.replace(/_/g, "-");
+      const cssVariableName = `--${replacedCategory}-${replacedVariableName}`;
+      const cssVariableValue = variables[category][variableName];
+      root += `  ${cssVariableName}: ${cssVariableValue};\n`;
+    }
+  }
+
+  styleTag.textContent = root + "}";
+  return styleTag;
+}
+
+export default function injectCSSVariables(variables: CSSVariables): void {
+  const styleTag = createStyleTag(variables);
+  document.head.appendChild(styleTag);
+}
+
+injectCSSVariables(cssVariables)
+```
+
+- injectCSSVariables 함수에 css 토큰 객체를 매개변수로 실행합니다.
+
+- createStyleTag함수로 style 태그를 생성합니다.
+
+  - cssVariables.ts 에서는 <b>"-"(하이픈)</b>을 사용할수없어서 <b>"\_"(언더바)</b>를 사용했기때문에 css규칙을 지키기 위해 정규표현식으로 하이픈을 언더바로 변환합니다.
+
+  - 최종적으로 `:root { --semantic-colors-background ... }` 형태로 저장됩니다.
+    <br></br>
+
+- styleTag를 <b>document.head</b>에 삽입합니다.
+
+  삽입된 토큰들 👇
+
+  <img
+    width="50%"
+    src="https://user-images.githubusercontent.com/75124028/232970681-7a6b5541-bd23-4349-9256-c043a2e9a146.png"
+  />
+
+<br></br>
+<h3 className={`dark:text-white`}>3. css 클래스 생성</h3>
+<br></br>
+
+```css:typography.css
+.semantic-typography-h1 {
+  font-size: var(--semantic-typography-h1-font-size);
+  font-weight: var(--semantic-typography-h1-font-weight);
+  line-height: var(--semantic-typography-h1-line-height);
+  letter-spacing: var(--semantic-typography-h1-letter-spacing);
+}
+
+.semantic-typography-h2 {
+  font-size: var(--semantic-typography-h2-font-size);
+  font-weight: var(--semantic-typography-h2-font-weight);
+  line-height: var(--semantic-typography-h2-line-height);
+  letter-spacing: var(--semantic-typography-h2-letter-spacing);
+}
+...
+..
+.
+```
+
+- css변수를 사용해 class를 생성합니다
+
+<br></br>
+<h3 className={`dark:text-white`}>4. 실제 사용</h3>
+<br></br>
+
+```ts:components/Layout/Header showLineNumbers
+    export default function Header({ title }: HeaderProps) {
+      return (
+        <Styled.HeaderContainer>
+          <Styled.HeaderTitle className="semantic-typography-title3-regular">
+            {title}
+          </Styled.HeaderTitle>
+        </Styled.HeaderContainer>
+      );
+    }
+```
+
+위 코드는 실제로 제가 기업의 사전과제중 구현해 사용한 실제 코드입니다.
+
+이렇게 디자인 class를 적용했을때 크롬 개발자 도구로 검사하게되면 적용이 된 모습을 볼수 있습니다. 👇
+
+<div className={`flex flex-col justify-center`}>
+  <img
+    src="https://user-images.githubusercontent.com/75124028/232972878-3c9a16b0-260b-47b3-bdf6-40f51f6ed5c5.png"
+    width="100%"
+  />
+  <img
+    src="https://user-images.githubusercontent.com/75124028/232972885-cc696043-a782-49d6-bbf6-06fcb22a9968.png"
+    width="100%"
+  />
+</div>
+
+📌 참고로 `letter-spacing` 같은경우 아직 토큰을 생성 하지 않았습니다.
+
+이렇게 tailwind와 같은 유틸리티 디자인 시스템을 구축 및 사용해보았습니다. 이렇게 사용하게 되면 컴포넌트 페이지에서 해당 엘리먼트가 어떤 식으로 생겼는지 실제 렌더링하지 않고도 이름에 명확히 명시가 되어있기 때문에 가독성이 좋아집니다. 중복된 코드들도 많이 줄어들게 되고요. 하지만 이런 class를 많이 사용하게 될 경우 또한 코드가 길어지기 때문에 좀 더 개선해야 한다고 생각합니다.
+
+<br></br>
+
+참고로 제가 디자인 토큰을 생성할때 사용한 css 변수 값들은 당근마켓 seed-design을 참고했습니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://github.com/daangn/seed-design/blob/main/packages/stylesheet/global.css"
+>
+  https://github.com/daangn/seed-design/blob/main/packages/stylesheet/global.css
+</a>
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://spectrum.adobe.com/page/design-tokens/"
+>
+  https://spectrum.adobe.com/page/design-tokens/
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://gsretail.tistory.com/20"
+>
+  https://gsretail.tistory.com/20
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://yozm.wishket.com/magazine/detail/1619/"
+>
+  https://yozm.wishket.com/magazine/detail/1619/
+</a>
