@@ -28,7 +28,7 @@ const Category = ({
 
 export const getStaticPaths = async () => {
   const paths = navlinks.map(({ link }) => ({
-    params: { category: link.slice(1) },
+    params: { category: link && link.slice(1) },
   }));
   return {
     paths,
@@ -52,9 +52,9 @@ export const getStaticProps = async (
 
   return {
     props: {
-      posts: posts ?? null,
+      posts: posts ?? [],
       structuredData,
-      curDocs: curDocs ?? null,
+      curDocs: curDocs ?? {},
     },
   };
 };
