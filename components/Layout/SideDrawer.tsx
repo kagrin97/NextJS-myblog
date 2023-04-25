@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -6,12 +6,16 @@ import { useRouter } from "next/router";
 import { CSSTransition } from "react-transition-group";
 import navlinks, { Navlinks } from "data/navlinks";
 
+import useIsBrowser from "hooks/useIsBrowser";
+
 type Props = {
   show: boolean;
   onClick: () => void;
 };
 
 const SideDrawer = (props: Props) => {
+  const isBrowser = useIsBrowser();
+
   const path = "/" + useRouter().asPath.split("/")[1];
 
   const content = (
@@ -45,6 +49,10 @@ const SideDrawer = (props: Props) => {
       </aside>
     </CSSTransition>
   );
+
+  if (!isBrowser) {
+    return null;
+  }
 
   return ReactDOM.createPortal(
     content,

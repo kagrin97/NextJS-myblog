@@ -3,7 +3,11 @@ import ReactDOM from "react-dom";
 
 import Image from "next/image";
 
+import useIsBrowser from "hooks/useIsBrowser";
+
 const PWAInstallPrompt = () => {
+  const isBrowser = useIsBrowser();
+
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showSnackbar, setShowSnackbar] = useState(false);
 
@@ -38,6 +42,10 @@ const PWAInstallPrompt = () => {
   const handleDismissClick = () => {
     setShowSnackbar(false);
   };
+
+  if (!isBrowser) {
+    return null;
+  }
 
   return ReactDOM.createPortal(
     <div
