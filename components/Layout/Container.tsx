@@ -79,7 +79,7 @@ export default function Container({
         <HeaderNav />
       </header>
       <div className={`flex w-full max-w-5xl mt-10`}>
-        {widthSize >= 800 && (
+        {widthSize && widthSize >= 800 && (
           <aside className={`w-1/5 min-h-screen`}>
             <SideNav />
           </aside>

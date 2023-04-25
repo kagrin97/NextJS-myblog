@@ -68,7 +68,7 @@ export default function HeaderNav() {
         </Link>
       </div>
 
-      {!Boolean(widthSize >= 800) && (
+      {widthSize && !Boolean(widthSize >= 800) && (
         <button
           className="menu-btn hover:text-green-400"
           onClick={openDrawerHandler}
