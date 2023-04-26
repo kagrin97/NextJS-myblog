@@ -16,7 +16,7 @@ const ProfilePicture = () => {
 
 const Name = () => {
   return (
-    <h2 className="text-lg font-bold text-gray-800 dark:text-emerald-500">
+    <h2 className="text-lg font-extrabold dark:text-green-500">
       주인장 강민규
     </h2>
   );

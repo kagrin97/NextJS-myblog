@@ -33,7 +33,7 @@ class MyDocument extends Document {
         <div id="drawer-hook" />
         <div id="backdrop-hook" />
         <div id="install-pwa-modal" />
-        <body className="bg-gray-100 dark:bg-neutral-800 text-black  dark:text-white">
+        <body className=" dark:bg-neutral-800 dark:text-white">
           <Main />
           <NextScript />
         </body>

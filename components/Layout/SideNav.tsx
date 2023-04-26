@@ -17,7 +17,7 @@ const SideNav = () => {
           {navlinks.map((nav: Navlinks) => (
             <Link href={nav.link} key={nav.title}>
               <li
-                className={`hover:cursor-pointer hover:text-green-400 mt-1.5`}
+                className={`hover:cursor-pointer hover:text-green-600 dark:hover:text-green-400 mt-1.5`}
               >
                 <a
                   href={nav.link}
