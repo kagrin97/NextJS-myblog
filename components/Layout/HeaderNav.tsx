@@ -36,9 +36,9 @@ export default function HeaderNav() {
       <Link href="/" passHref>
         <button className={`flex flex-row items-center ml-2 `}>
           <span
-            className={`mx-3 font-black italic text-lg max800:text-sm point-color`}
+            className={`mx-3 font-black text-lg max800:text-sm point-color`}
           >
-            Kang blog
+            KANG BLOG
           </span>
         </button>
       </Link>

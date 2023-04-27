@@ -25,6 +25,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#24B95E" />
 
           <meta name="description" content={metadata.description} />
+          <meta property="og:site_name" content="카그린의 개발 블로그" />
           <meta property="og:title" content={metadata.title} />
           <meta property="og:description" content={metadata.description} />
           <meta property="og:url" content={metadata.url} />
