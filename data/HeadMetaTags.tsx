@@ -10,40 +10,34 @@ interface MetaTagProps {
 const HeadMetaTags = ({ structuredData }: MetaTagProps) => {
   return (
     <Head>
-      {structuredData && (
-        <React.Fragment>
-          <title>{structuredData.headline}</title>
-          <meta name="description" content={structuredData.description} />
+      <React.Fragment>
+        <title>{structuredData.headline}</title>
+        <meta property="og:site_name" content="카그린의 개발 블로그" />
 
-          <meta property="og:title" content={structuredData.headline} />
-          <meta
-            property="og:description"
-            content={structuredData.description}
-          />
-          <meta property="og:url" content={structuredData.url} />
-          <meta property="og:image" content={structuredData.image} />
+        <meta property="og:title" content={structuredData.headline} />
+        <meta name="twitter:title" content={structuredData.headline} />
 
-          <meta name="twitter:title" content={structuredData.headline} />
-          <meta
-            name="twitter:description"
-            content={structuredData.description}
-          />
-          <meta name="twitter:card" content="summary_large_image" />
+        <meta name="description" content={structuredData.description} />
+        <meta property="og:description" content={structuredData.description} />
+        <meta name="twitter:description" content={structuredData.description} />
 
-          <meta name="twitter:image" content={structuredData.image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="og:image" content={structuredData.image} />
+        <meta name="twitter:image" content={structuredData.image} />
 
-          <meta
-            property="article:published_time"
-            content={structuredData.datePublished}
-          ></meta>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(structuredData),
-            }}
-          />
-        </React.Fragment>
-      )}
+        <meta property="og:url" content={structuredData.url} />
+
+        <meta
+          property="article:published_time"
+          content={structuredData.datePublished}
+        ></meta>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
+      </React.Fragment>
     </Head>
   );
 };

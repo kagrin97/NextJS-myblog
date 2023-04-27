@@ -1,6 +1,4 @@
 import React from "react";
-import Head from "next/head";
-import Link from "next/link";
 
 import HeaderNav from "./HeaderNav";
 import SideNav from "./SideNav";
@@ -9,10 +7,9 @@ import useResizeWidth from "hooks/useResizeWidth";
 import NextProgress from "next-progress";
 import ProgressBar from "react-scroll-progress-bar";
 
-import type { StructuredDataType } from "data/metadata";
+import { StructuredDataType } from "data/metadata";
 
 import HeadMetaTags from "data/HeadMetaTags";
-
 interface ContainerProps {
   structuredData?: StructuredDataType;
   children?: React.ReactNode;

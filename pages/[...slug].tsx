@@ -8,7 +8,6 @@ import * as Articles from "contentlayer/generated";
 
 import type { GetStaticPropsContext } from "next";
 import type { Post } from "types/posts";
-import useIsBrowser from "hooks/useIsBrowser";
 
 interface Props {
   post: Post;
@@ -16,12 +15,6 @@ interface Props {
 }
 
 const Slug = (props: Props) => {
-  const isBrowser = useIsBrowser();
-
-  if (!isBrowser) {
-    return null;
-  }
-
   return <PostCategorySlug {...props} />;
 };
 
