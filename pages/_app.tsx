@@ -9,7 +9,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class">
       <Component {...pageProps} />
-      <PWAInstallPrompt />
+      {/* <PWAInstallPrompt /> */}
     </ThemeProvider>
   );
 }

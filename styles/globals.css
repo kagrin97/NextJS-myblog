@@ -2,15 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 @import url("../public/font/font.css");
+@import url("./colors.css");
 @import url("./transition.css");
 
 body {
   font-family: "Noto Sans KR", sans-serif;
-}
-
-b {
-  @apply text-emerald-800;
-  @apply dark:text-emerald-400;
 }
 
 .ml-div {
@@ -82,6 +78,14 @@ b {
 .mokcha-container__list p {
   font-size: 0.9rem;
   opacity: 0.8;
+}
+
+/* elements */
+
+.prose :where(h1):not(:where([class~="not-prose"] *)),
+.prose :where(p):not(:where([class~="not-prose"] *)) {
+  @apply text-black;
+  @apply dark:text-white;
 }
 
 .prose :where(ol):not(:where([class~="not-prose"] *)) {

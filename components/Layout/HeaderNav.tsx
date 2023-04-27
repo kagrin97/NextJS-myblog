@@ -2,14 +2,15 @@ import React, { useState } from "react";
 
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import Image from "next/image";
 
 import Backdrop from "components/UIElements/Backdrop";
 import SideDrawer from "./SideDrawer";
 import useResizeWidth from "hooks/useResizeWidth";
 
 import { RiMenu3Line } from "react-icons/ri";
-import { AiOutlineHome } from "react-icons/ai";
+import { BsSun } from "react-icons/bs";
+import { FiMoon } from "react-icons/fi";
+import { SiGithub } from "react-icons/si";
 
 export default function HeaderNav() {
   const { theme, setTheme } = useTheme();
@@ -29,56 +30,42 @@ export default function HeaderNav() {
   };
 
   return (
-    <nav className="flex flex-row items-center mr-5">
-      <button
-        type="button"
-        onClick={toggleTheme}
-        className="mr-3 animate-pulse"
-      >
-        <Image
-          src={theme === "light" ? "/imgs/해.png" : "/imgs/달.png"}
-          alt="Toggle light/dark mode"
-          width={50}
-          height={50}
-          className="rounded-3xl hover:cursor-pointer"
-        />
-      </button>
-
-      <Link href="https://github.com/kagrin97">
-        <a target="_blank">
-          <Image
-            src={
-              theme === "light"
-                ? "/imgs/github-green.png"
-                : "/imgs/github-green-dark.png"
-            }
-            alt="Github"
-            width={30}
-            height={30}
-            className="hover:cursor-pointer rounded-full"
-          />
-        </a>
+    <header
+      className={`w-full max-w-5xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10 header-color`}
+    >
+      <Link href="/" passHref>
+        <button className={`flex flex-row items-center ml-2 `}>
+          <span
+            className={`mx-3 font-black italic text-lg max800:text-sm point-color`}
+          >
+            Kang blog
+          </span>
+        </button>
       </Link>
+      <nav className="flex items-center mr-2 ">
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="animate-pulse hover-color"
+        >
+          {theme === "light" ? <BsSun size="30px" /> : <FiMoon size="30px" />}
+        </button>
 
-      <div className="mx-5">
-        <Link href="/" key="Home">
-          <a className="hover:text-green-400">
-            <AiOutlineHome size="25px" />
+        <Link href="https://github.com/kagrin97">
+          <a target="_blank" className="mx-4 hover-color">
+            <SiGithub size="22px" />
           </a>
         </Link>
-      </div>
 
-      {widthSize && !Boolean(widthSize >= 800) && (
-        <button
-          className="menu-btn hover:text-green-400"
-          onClick={openDrawerHandler}
-        >
-          <RiMenu3Line size="22px" />
-        </button>
-      )}
+        {widthSize && !Boolean(widthSize >= 800) && (
+          <button className="menu-btn hover-color" onClick={openDrawerHandler}>
+            <RiMenu3Line size="22px" />
+          </button>
+        )}
 
-      {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
-      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler} />
-    </nav>
+        {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
+        <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler} />
+      </nav>
+    </header>
   );
 }

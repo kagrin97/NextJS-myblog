@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+
+import { TbSquareRoundedArrowUpFilled } from "react-icons/tb";
 
 export default function TopBtn() {
   const [isScroll, setIsScroll] = useState(false);
@@ -30,13 +31,7 @@ export default function TopBtn() {
           className="fixed bottom-5 right-5 z-10 hover:cursor-pointer"
           onClick={scrollToTop}
         >
-          <Image
-            src={`/imgs/top.png`}
-            alt="top버튼"
-            width={40}
-            height={40}
-            objectFit={`cover`}
-          />
+          <TbSquareRoundedArrowUpFilled size="40px" className="hover-color" />
         </a>
       )}
     </React.Fragment>

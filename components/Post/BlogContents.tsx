@@ -85,14 +85,12 @@ export default function BlogContents({ post, MDXComponent }: Props) {
 
   return (
     <article className="mt-10 prose max-w-none px-4 ">
-      <h1 className="text-green-600 dark:text-green-500 text-3xl max800:text-2xl">
-        {post.title}
-      </h1>
-      <p className="text-green-600 dark:text-green-500 font-semibold ">
+      <h1 className="text-white text-3xl max800:text-2xl">{post.title}</h1>
+      <p className="font-semibold opacity-70">
         {post.date.slice(0, 4)}년 {post.date.slice(5, 7)}월&nbsp;
         {post.date.slice(8, 10)}일
       </p>
-      <article className="w-full dark:text-slate-50 text-neutral-900 leading-loose">
+      <article className="w-full leading-loose">
         <MDXComponent />
       </article>
     </article>

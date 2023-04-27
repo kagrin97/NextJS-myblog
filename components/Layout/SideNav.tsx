@@ -16,13 +16,11 @@ const SideNav = () => {
         <ul className="text-sm lg:flex-grow">
           {navlinks.map((nav: Navlinks) => (
             <Link href={nav.link} key={nav.title}>
-              <li
-                className={`hover:cursor-pointer hover:text-green-600 dark:hover:text-green-400 mt-1.5`}
-              >
+              <li className={`hover:cursor-pointer hover-color mt-1.5`}>
                 <a
                   href={nav.link}
                   className={`mr-5 flex justify-between ${
-                    nav.link === path ? "text-green-400" : ""
+                    nav.link === path ? "point-color" : ""
                   }`}
                 >
                   <span className="mr-4 text-base">{nav.title}</span>

@@ -1,0 +1,28 @@
+body {
+  @apply bg-white;
+  @apply text-black;
+  @apply dark:bg-neutral-800;
+  @apply dark:text-white;
+}
+
+b {
+  @apply text-emerald-800;
+  @apply dark:text-emerald-400;
+}
+
+.header-color {
+  @apply bg-white;
+  @apply bg-opacity-80;
+  @apply dark:bg-neutral-800;
+  @apply dark:bg-opacity-80;
+}
+
+.point-color {
+  @apply text-green-600;
+  @apply dark:text-green-400;
+}
+
+.hover-color {
+  @apply hover:text-green-600;
+  @apply hover:dark:text-green-400;
+}

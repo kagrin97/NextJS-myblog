@@ -64,20 +64,9 @@ export default function Container({
         options={{ showSpinner: true }}
       />
       <ProgressBar bgcolor="#22c55e" />
-      <header
-        className={`w-full max-w-5xl flex flex-row justify-between items-center pt-3 fixed top-0 z-10  dark:bg-neutral-800 bg-opacity-80 dark:bg-opacity-80`}
-      >
-        <Link href="/" passHref>
-          <button className={`flex flex-row items-center ml-2 `}>
-            <span
-              className={`mx-3 font-black italic text-lg max800:text-sm text-green-600`}
-            >
-              Kang blog
-            </span>
-          </button>
-        </Link>
-        <HeaderNav />
-      </header>
+
+      <HeaderNav />
+
       <div className={`flex w-full max-w-5xl mt-10`}>
         {widthSize && widthSize >= 800 && (
           <aside className={`w-1/5 min-h-screen`}>
