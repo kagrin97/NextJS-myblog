@@ -1,0 +1,330 @@
+---
+title: Kakao API로 위치 기반 서비스 로직을 만들어볼까?
+date: 2023-06-12
+description: Kakao API로 위치 정보를 가져오는 방법을 설명합니다.
+category: other
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. Kakao api를 사용하는 방법 2가지
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. SDK를 활용한 Kakao API 사용 방법
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. Local API를 활용한 Kakao API 사용 방법
+    </a>
+
+  </div>
+</div>
+
+---
+
+<h2 id="1"></h2>
+
+<br></br>
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. Kakao api를 사용하는 방법 2가지</div>
+</h2>
+
+<br></br>
+
+Kakao API를 사용해서 위치정보를 가져오려면 방법을 2가지를 선택할 수가 있습니다.
+
+`SDK를 활용한 Kakao API` : Kakao에서 제공하는 maps SDK를 script로 웹에서 다운로드 한 다음에 Kakao 객체에 접근해서 데이터를 받아오는 방식
+
+`Local API를 활용한 Kakao API` : Kakao에 RESTful API 호출 방식을 사용해서 fetch or Axios를 사용해서 요청을 보내 데이터를 받아오는 방식
+
+두 가지 방법 모두 장단점이 있는 방식이라고 생각합니다. SDK를 활용하는 방법은 초기에 SDK를 다운로드 받을떄 시간이 오래 걸리지만 후에 다운로드받은 객체를 활용해서 더 좋은 성능을 발휘할 수가 있으며 실제 지도를 보여주는 기능이 구현되어있습니다.
+
+Local API의 경우 지도기능을 사용하지 못하지만 주소, 위치 등등의 정보만을 활용할 때 유용하며 필요할떄만 요청을 보내기 때문에 애플리케이션의 성향에 따라서 유용할 수도 별로일 수도 있습니다.
+
+두 가지 방법 모두 구현해보는 과정을 알아보겠습니다.
+
+---
+
+<h2 id="2"></h2>
+
+<br></br>
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. SDK를 활용한 Kakao API 사용 방법</div>
+</h2>
+
+<br></br>
+<h3 className={`dark:text-white`}>2-1. SDK 다운로드하기</h3>
+<br></br>
+
+<div className="ml-div">
+<b>2-1-1. kakao developers 사이트에서 해줘야할 설정</b>
+
+<div className="ml-div">
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://apis.map.kakao.com/"
+>
+  카카오 맵 api 사이트 url
+</a>
+
+우선 위 URL로 이동 후 SDK 다운로드를 위해 애플리케이션을 등록해야 하는데요 우선 우상단의 <b>APP KEY</b> 발급을 눌러서 로그인을 해줘야 합니다. 회원가입은 건너뛰도록 할게요
+
+그 후 애플리케이션 추가하기 버튼을 누르면
+
+<div className={`flex flex-col justify-center`}>
+  <small>애플리케이션 추가하기 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/ed286e1e-2f64-4a28-b3d7-5ad2385a9d99"
+    width="100%"
+  />
+</div>
+
+이러한 애플리케이션 정보를 입력하라는 모달창이 그려지게 되는데 임의의 이름, 사업자명을 작성해주시면 됩니다.
+
+그렇게 되면 APP이 하나 구현이 되어있는데 해당 APP에 이동하게 되면
+
+<div className={`flex flex-col justify-center`}>
+  <small>애플리케이션 정보 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/dd9a21e9-1849-4a1e-9ca5-2679131e67bd"
+    width="100%"
+  />
+</div>
+
+이렇게 애플리케이션 이름과 ID 정보가 최상단이 표시되어있으며 앱키 정보가 나와 있습니다.
+저희는 <b>JavaScript 키</b>를 활용해야 합니다.
+
+그 후에 최상단 왼쪽에 햄버거 아이콘을 클릭해서 side menu 창을 열어서 <b>플랫폼 탭</b>으로 이동합니다.
+이 페이지에서 맨 아래로 내려가면 Web이라는 파트가 존재하는데 해당 파트에 사이트 도메인을 입력해야 합니다.
+
+보통 개발환경, 배포환경의 URL을 입력하면 되는데요. 입력하지 않을 시에 SDK 다운로드 시 에러가 발생합니다.
+
+저는 개발환경에 사용할 URL만 입력을 해주겠습니다.
+
+<div className={`flex flex-col justify-center`}>
+  <small>입력된 사이트 도메인 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/84eabf7c-d66f-4500-8a14-a17553bc125d"
+    width="100%"
+  />
+</div>
+
+</div>
+</div>
+
+<div className="ml-div">
+<b>2-1-2. index.html에서 SDK script를 추가하기</b>
+
+<div className="ml-div">
+SDK를 다운로드받는 스크립트를 작성해야 하는데요.
+
+```js
+<script
+  type="text/javascript"
+  src="//dapi.kakao.com/v2/maps/sdk.js?appkey=발급받은 APP KEY를 넣으시면 됩니다&autoload=true&libraries=services"
+></script>
+```
+
+이렇게 설정을 해주는데 libraries=services를 추가해서 Kakao 객체에 services 프로퍼티도 추가해줍니다.
+
+</div>
+</div>
+
+<br></br>
+<h3 className={`dark:text-white`}>2-2. 주변 동네정보 가져오기</h3>
+<br></br>
+
+저는 현재 JJAN이라는 동네 술친구 프로젝트에 참여 중입니다.
+
+그 프로젝트에서 사용자한테 위도, 경도를 받은 다음에 사용자의 위도, 경도를 바탕으로 사용자의 현재동, 주변동을 가져오는 로직을 작성 중에 있습니다.
+
+위도, 경도를 받아오는 로직은 건너뛰겠습니다. (navigator.geolocation 사용하면 됨)
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://apis.map.kakao.com/web/documentation/"
+>
+  kakao map api documents
+</a>
+
+위 URL로 접속을 하시면 kakao map api를 사용하는 방법에 대해 자세히 설명이 되어있습니다.
+
+저는 여기서 `Library/services.Places` 부분을 사용할 예정입니다. (side bar에서 찾아보세요)
+
+아까 스크립트에 libraries=services를 추가한 이유가 여기서 드러납니다...
+
+Library/services.Places 아래에 보시면 <b>keywordSearch</b>라는 메서드가 존재하는데 해당 메서드는 입력받은 키워드로 주소 정보를 가져옵니다.
+
+간단하게 키워드, 옵션을 매개변수로 전달해주면 <b>callback</b> 함수를 실행해주는데 해당 callback 함수의 첫 번째 매개변수가 키워드의 주소정보를 객체로 저희한테 제공합니다.
+
+키워드를 동사무소로 전달하게 되면 모든 동사무소 주소를 알 수가 있는 겁니다!!
+
+여기서 옵션을 설정해야 하는데 저는 3개 정도의 옵션을 전달할 예정입니다.
+
+<div className="ml-div">
+`x` : <b>Number</b> : longitude(경도)
+
+`y` : <b>Number</b> : latitude(위도)
+
+`radius` : <b>Number</b> : 중심 좌표로부터의 거리(반경) 필터링 값. location / x , y / useMapCenter 중 하나와 같이 써야 의미가 있음. 미터(m) 단위. 기본값은 5000, 0~20000까지 가능
+
+</div>
+
+```js showLineNumbers
+const SEARCH_KEYWORD = "동사무소";
+
+const options = {
+  x: longitude,
+  y: latitude,
+  radius: 4000, // 반경 4km
+};
+```
+
+이제 Places를 사용해 인스턴스를 만들어줍니다.
+
+```js showLineNumbers
+const places = new window.kakao.maps.services.Places();
+```
+
+typescript를 사용할 경우 window의 Kakao 객체 type을 먼저 설정해주셔야 합니다.
+
+그 후에 keywordSearch메서드를 실행하면 됩니다.
+
+```js showLineNumbers
+const SEARCH_KEYWORD = "동사무소";
+
+const options = {
+  x: longitude,
+  y: latitude,
+  radius: 4000, // 반경 4km
+};
+
+var callback = function (result, status) {
+  if (status === kakao.maps.services.Status.OK) {
+    console.log(result);
+  }
+};
+
+places.keywordSearch(SEARCH_KEYWORD, callback, options);
+```
+
+result에는 해당 위도, 경도의 반경 4km 주위에 동사무소 주소가 존재하게됩니다.
+
+이로써 저는 현재동, 주변동 정보를 모두 가져올 수 있게 되는 것이죠!
+
+---
+
+<h2 id="3"></h2>
+
+<br></br>
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. Local API를 활용한 Kakao API 사용 방법</div>
+</h2>
+
+`Local API`를 활용한 Kakao API 사용을 하게 되면 script를 사용해 SDK를 다운로드할 필요가 없이 그냥 RESTful API 요청만 보내면 됩니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://developers.kakao.com/docs/latest/ko/local/dev-guide"
+>
+  카카오 로컬 API 구현 방법을 소개
+</a>
+
+위 URL에는 Local API 요청을 보내는 방법이 상세하게 나와 있습니다. 저는 여기서 <b>키워드로 장소 검색하기</b> 탭으로 이동하겠습니다.
+
+<div className={`flex flex-col justify-center`}>
+  <small>키워드로 장소 검색하기 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/64ecf426-c6b0-4a8f-bb16-87de8b09d0c2"
+    width="100%"
+  />
+</div>
+
+이런 식으로 해당 요청의 정보들을 알려주는데 여기서 밑의 요청 탭으로 이동하시면 요청할떄 꼭 필요한 데이터가 존재합니다.
+
+<b>Authorization, query</b> 이렇게 2개는 꼭 필요한 데이터입니다.
+
+또한 SDK와 똑같은 옵션을 보낼 수가 있습니다. <b>x, y, radius, size, sort</b> 등등...
+
+이외에도 다양한 옵션을 설정할 수가 있으니 둘러보시는 것을 추천합니다.
+
+```js showLineNumbers
+const x = 127.123456; // 중심 좌표의 경도
+const y = 37.123456; // 중심 좌표의 위도
+const size = 10; // 한 페이지에 출력할 결과 수 (1 ~ 15)
+const radius = 4000; // 검색 반경 (단위: 미터)
+const query = "동사무소";
+
+const apiUrl = `https://dapi.kakao.com/v2/local/search/keyword.json?x=${x}&y=${y}&size=${size}&radius=${radius}&=${query}`;
+
+const options = {
+  headers: {
+    Authorization: "KakaoAK {APP KEY}", // 발급받은 API 키로 대체해야 합니다.
+  },
+  method: "GET",
+  mode: "cors",
+  cache: "no-cache",
+};
+
+fetch(apiUrl, options)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+옵션을 쿼리 파라미터로 전달하고 헤더의 <b>Authorization에 APP KEY를 삽입</b> 후 요청을 보내는 거죠
+search/keyword.json 라고 설정하면 <b>JSON</b> 형식의 파일을 받아오게 됩니다.
+search/keyword.XML 라고 설정하면 <b>XML</b> 파일을 받아오게 됩니다.
+
+이렇게 SDK, Local API 2가지 방식을 살펴보았습니다. 감사합니다 ^.^
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://apis.map.kakao.com/"
+>
+  kakao map api 사이트 url
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://apis.map.kakao.com/web/documentation/"
+>
+  kakao map api documents
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://developers.kakao.com/docs/latest/ko/local/dev-guide"
+>
+  kakao local api guide
+</a>
