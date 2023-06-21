@@ -35,7 +35,6 @@ export default function BlogContents({ post, MDXComponent }: Props) {
         structuredData?.ogDescription || meta("og:description");
       const ogImage = structuredData?.ogImage || meta("og:image");
 
-      console.log(meta("og:title"), meta("og:description"));
       const aHtml = ReactDOMServer.renderToString(
         <OpenGraphPreview
           urlPath={urlPath}

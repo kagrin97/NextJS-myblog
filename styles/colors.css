@@ -6,12 +6,17 @@ body {
 }
 
 b {
-  @apply text-emerald-800;
+  @apply text-emerald-700;
   @apply dark:text-emerald-400;
 }
 
 small {
   @apply text-blue-800;
+  @apply dark:text-white;
+}
+
+summary {
+  @apply text-black;
   @apply dark:text-white;
 }
 

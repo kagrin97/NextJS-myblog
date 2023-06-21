@@ -1,0 +1,513 @@
+---
+title: Kakao Map API를 이용한 지역(동) 별 폴리곤 생성하기
+date: 2023-06-21
+description: Kakao Map API를 활용하여 특정 지역(동)의 경계를 따라 폴리곤을 생성하는 방법에 대해 자세히 알아보겠습니다.
+category: other
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. 특정지역(동)의 경계를 따라 폴리곤을 생성하는게 뭐죠?
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 위도, 경도를 받아서 카카오 맵을 생성하기
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. 위도, 경도로 특정 지역(동)을 받아오기
+    </a>
+    <a href="#4" className="mokcha-container__list">
+      4. 해당 지역(동)에 해당하는 좌표를 받아오기
+    </a>
+    <a href="#5" className="mokcha-container__list">
+      5. 해당 구역을 폴리곤으로 그려주기
+    </a>
+
+  </div>
+</div>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. 특정지역(동)의 경계를 따라 폴리곤을 생성하는게 뭐죠?</div>
+</h2>
+
+<br></br>
+
+여러분들은 지도 앱을 사용하시다가 보면 특정 지역의 경계를 따라서 선이 굵게 그려져 있고 내부가 특정 색깔로 칠해져 있는 모습을 볼 수가 있으실 겁니다. 이 포스트에서는 동을 기준으로 경계를 따라서 `폴리곤(다각형)`을 그리는 방법을 기술하고자 합니다. 참고로 React, Vite, TypeScript를 사용한 코드입니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>서울시 중랑구 신내동 폴리곤 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/fb76f836-14eb-430c-b5e0-002907ee9498"
+    width="70%"
+  />
+</div>
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 위도, 경도를 받아서 카카오 맵을 생성하기</div>
+</h2>
+
+<br></br>
+
+우선은 첫 번째 단계로 현재 자신의 <b>위도, 경도를 받는 기능을 구현</b>하겠습니다. 참고로 Kakao map API의 초기 설정은 제가 전에 작성한 포스팅에 존재하니 먼저 읽고 오시는 것을 <b>추천</b>해 드립니다.
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://kagrin97-blog.vercel.app/other/Kakao%20Local%20Api"
+>
+  Kakao API로 위치 기반 서비스 로직을 만들어볼까?
+</a>
+
+<br></br>
+
+```ts showLineNumbers
+const [latitude, setLatitude] = useState<number | null>(null);
+const [longitude, setLongitude] = useState<number | null>(null);
+
+useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLatitude(position.coords.latitude);
+      setLongitude(position.coords.longitude);
+    });
+  }
+}, []);
+```
+
+위 코드를 살펴보시면 `geolocation`라는 브라우저에 기본으로 내장된 API를 사용해서 위도, 경도를 받아올 수가 있습니다. `getCurrentPosition` 메소드를 실행하면 콜백 함수를 받는데 첫 번째 매개변수에 좌표 정보를 담고 있는 객체를 내려줍니다. 그곳에서 latitude, longitude를 뽑아올 수가 있는데 저희는 React를 사용하고 있기 때문에 useState로 값을 관리하겠습니다.
+
+그리고서 카카오 맵을 생성해야 합니다. 사실 위도, 경도를 받아온 이유가 맵을 사용자한테 보여줄 때 해당 구역을 보여줘야 하기 때문에 받아온 것이죠.
+
+<br></br>
+
+```ts showLineNumbers
+const [map, setMap] = useState<any>(null);
+
+useEffect(() => {
+  if (!latitude || !longitude) return;
+
+  const container: any = document.getElementById("myMap");
+  const mapOptions = {
+    center: new window.kakao.maps.LatLng(latitude, longitude),
+    level: 7,
+  };
+
+  const createdMap = new window.kakao.maps.Map(container, mapOptions);
+  setMap(createdMap);
+}, [latitude, longitude]);
+
+return <div id="myMap" style={{ width: "400px", height: "300px" }} />;
+```
+
+위도, 경도가 존재할때 그리고 변경될때 실행될 useEffect 함수를 만들어줍니다. myMap이라는 id 값을 가진 태그를 참조하며 `center` 옵션에 <b>new window.kakao.maps.LatLng(latitude, longitude)</b>를 사용해서 LatLng 객체를 생성해 넣어줍니다.
+
+<b>level</b>은 해당 지도의 초기 줌 레벨입니다.
+
+다른 스코프에서도 접근할 수 있게 map 객체를 useState로 값을 관리하겠습니다.
+
+<br></br>
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>서울시 중랑구 신내동 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/8664a7d0-15b4-4765-9f2c-f513e9ae80a6"
+    width="70%"
+  />
+</div>
+
+참고로 신내동을 제가 사는 지역입니다. ^-^
+
+---
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. 위도, 경도로 특정 지역(동)을 받아오기</div>
+</h2>
+
+<br></br>
+
+위도, 경도를 받아왔으니 어떤 지역(동)인지를 알아야겠죠? 저희는 Kakao map API의 `services` 라이브러리를 사용해서 동 정보를 가져오겠습니다. 참고로 services 라이브러리는 Kakao 객체를 받아올 때 옵셔널하게 받아오기 때문에 script src에 따로 표시를 해줘야 합니다.
+
+```html
+<script
+  type="text/javascript"
+  src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=%VITE_KAKAO_API_KEY%&autoload=true&libraries=services"
+></script>
+```
+
+<br></br>
+
+```ts showLineNumbers
+useEffect(() => {
+  const findNeighborhood = () => {
+    return new Promise<string>((resolve, reject) => {
+      const geocoder = new window.kakao.maps.services.Geocoder();
+
+      const callback = (result: any, status: any) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          resolve(result[0].region_3depth_name);
+        } else {
+          reject(status);
+        }
+      };
+
+      geocoder.coord2RegionCode(longitude, latitude, callback);
+    });
+  };
+
+  const addNeighborhoodPolygon = async () => {
+    const neighborhoodName = await findNeighborhood();
+  };
+
+  if (map) {
+    addNeighborhoodPolygon();
+  }
+}, [latitude, longitude, map]);
+```
+
+우선 map 객체가 존재할 때 지역(동)을 그려주는 <b>addNeighborhoodPolygon함수</b>를 실행합니다.
+
+첫 번째로 위도, 경도를 받아서 지역(동)의 이름을 가져오는 함수인 <b>findNeighborhood함수</b>를 구현합니다.
+
+해당함수는 시간이 조금 걸리는 함수이기 때문에 Promise와 async, await를 사용해서 동기적으로 가져올 수 있게끔 처리합니다. `geocoder.coord2RegionCode` 메소드에 3가지의 매개변수를 넣어줘야 하는데 경도, 위도, 콜백함수 순서이며 callback에도 매개변수가 두 가지 존재하는데 result는 해당 좌표의 정보가 담긴 객체이며 status는 상태코드를 담고 있으며 제대로 받아왔을 경우 <b>OK</b>라는 문자열로 존재합니다. result 배열은 여러 개의 값을 담고 있는데 예를 들어서 신내동, 신내1동 이런 순서로 받아오기 때문에 0번쨰 인덱스의 <b>region_3depth_name</b> 값이 지역(동) 문자열을 가지고 있습니다. (1depth는 시, 2depth는 구 정보를 가지고 있습니다.)
+
+제대로 받아왔으면 neighborhoodName 변수에 지역(동) 문자열이 저장됩니다.
+
+---
+
+<h2 id="4" className={`dark:text-white text-center`}>
+  <div>4. 해당 지역(동)에 해당하는 좌표를 받아오기 </div>
+</h2>
+
+<br></br>
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>폴리곤의 꼭짓점 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/a6a7932c-7853-4aa5-9603-0b41f985b207"
+    width="70%"
+  />
+</div>
+
+위의 사진을 보시면 8개의 `꼭짓점`이 표시되어있는데 해당 꼭짓점의 좌표가 존재해야 폴리곤(다각형)을 그릴 수가 있습니다. 그렇다면 해당 좌표를 어떻게 구할 수가 있을까요? 이제부터 조금 복잡해질 수가 있지만 정신을 꼭 차리시길 바랍니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="http://www.gisdeveloper.co.kr/?p=2332"
+>
+  대한민국 최신 행정구역(SHP) 다운로드
+</a>
+
+`첫 번쨰로` 위 URL로 이동하시면 <b>시도, 시군구, 읍면동, 리</b> 이렇게 4가지의 타입의 좌표 SHP파일을 다운로드 받을 수가 있는데 저희는 읍면동의 가장 최신 파일을 다운로드 받으시면 됩니다. (압축 풀지 마세요!)
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://mapshaper.org/"
+>
+  mapshaper
+</a>
+
+`두 번쨰로` 위 URL로 이동 후 select를 눌러서 방금 받은 zip 파일을 선택합니다. 그리고 옵션에서 <b>snap vertices</b>를 체크하고 3번에서 커맨드 라인 옵션에 <b>encoding=euc-kr</b>를 넣고 Import를 누릅니다. (인코딩 깨짐을 방지) 그 후에 우측 상단의 <b>Simplify</b>를 누르고 나오는 창에서 옵션은 그대로 두고 <b>Apply</b>를 누릅니다.
+
+상단에 나오는 스크롤바를 이용해 단순화 시킬 수가 있는데 단순화할수록 데이터의 양이 작아지며 정확도가 떨어집니다. 하지만 최대로 정확하게 사용하게 될 경우 100메가가 넘는 엄청난 파일을 받기 때문에 어느 정도 단순화하시길 바랍니다. 우측 상단의 <b>Export</b>를 누르고 옵션은 그대로 둔 뒤 Export를 눌러 zip 파일을 받습니다.
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="http://gipong.github.io/shp2geojson.js/"
+>
+  shp2geojson.js
+</a>
+
+`세 번쨰로` 위 URL로 이동 후 <b>Upload zip file</b>을 클릭 후 Encoding란에 <b>euc-kr</b>를 적고 zip 파일을 넣습니다. Preview를 눌러서 상단의 다운로드 버튼을 누르면 <b>geojson</b>파일을 받게 됩니다. (저는 혹시 몰라서 JSON 형식으로 확장자를 변경했습니다.)
+
+<br></br>
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>지역(동)좌표 json 파일 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/4f531718-478d-43fc-9703-1ca312cbde1a"
+    width="100%"
+  />
+</div>
+
+이제 JSON 파일을 순회하면서 현재 지역(동)에 맞는 동의 좌표값을 가져오는 코드를 작성하겠습니다.
+
+```ts showLineNumbers
+..
+..
+    const findNeighborhoodCoordinates = async (neighborhoodName: string) => {
+        const response = await fetch("../2302_행정구역[동].json");
+        const data = await response.json();
+
+        for (const feature of data.features) {
+            if (neighborhoodName === feature.properties.EMD_KOR_NM) {
+            return feature.geometry.coordinates;
+            }
+        }
+        return false;
+        };
+
+    const addNeighborhoodPolygon = async () => {
+        const neighborhoodName = await findNeighborhood();
+        const coordinates = await findNeighborhoodCoordinates(neighborhoodName);
+        console.log(coordinates);
+    };
+..
+..
+```
+
+2302\_행정구역[동].json 파일을 받아서 data라는 변수에 할당합니다. (이름은 마음대로 변경하세요.)
+
+그후 <b>feature</b>를 순회하면서 현재 지역(동)에 맞는지 확인해서 맞는다면 값을 리턴해 받아옵니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>받아온 꼭짓점 좌표 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/10d23871-d22b-470b-b7b2-8b10e1cc59c7"
+    width="70%"
+  />
+</div>
+
+위 사진을 보면 꼭짓점 좌표(coordinates) 정보가 들어있는 것을 확인할 수가 있습니다. 하지만 뭔가 이상하지 않나요?? 값이 터무니없이 큽니다. 그 이유는 해당 좌표는 `UTM-K` 좌표계로 한국의 표준 지리 좌표계입니다. 하지만 카카오는 `WGS84`라는 좌표 체계를 사용하기 때문에 해당 좌표값을 그대로 사용할 수가 없습니다. 변환해야겠죠.
+
+좌표계를 변환해서 새로운 JSON 파일을 생성하는 방법이 존재하지만 저는 `proj4`라는 패키지를 사용해 그때그때 변환하는 방법을 사용해 보겠습니다. (그 이유는 어차피 꼭짓점은 몇 개 안 되요)
+
+```bash
+npm i proj4
+npm i -D @types/proj4
+```
+
+proj4와 @types/proj4를 설치합니다.
+
+<br></br>
+
+```ts showLineNumbers
+import proj4 from "proj4";
+..
+..
+    const addNeighborhoodPolygon = async () => {
+    const neighborhoodName = await findNeighborhood();
+    const coordinates = await findNeighborhoodCoordinates(neighborhoodName);
+
+    const polygonPath: any = [];
+    const utmk =
+        "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
+    const wgs84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+    const transformer = proj4(utmk, wgs84);
+
+    coordinates.forEach((coordinateArray: any[]) => {
+        coordinateArray.forEach((coordinate) => {
+        const [longi, lati] = transformer.forward(coordinate);
+        polygonPath.push(new window.kakao.maps.LatLng(lati, longi));
+        });
+    });
+
+    };
+..
+..
+```
+
+proj4 메서드의 매개변수에 변환 전, 변환 후 좌표 형식을 넣은 값을 <b>transformer</b>라는 변수에 할당합니다. 그리고 <b>forward</b> 메서드를 사용해서 UTM-K를 WGS84 좌표체계로 변환한 후 polygonPath 배열에 카카오 좌표 객체인 LatLng 객체를 생성해 배열에 삽입합니다. 이렇게 되면 좌표가 변환이 완료됩니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>변환된 좌표 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/aa74facb-ed49-4d19-8e05-5c9c49380504"
+    width="70%"
+  />
+</div>
+
+---
+
+<h2 id="5" className={`dark:text-white text-center`}>
+  <div>5. 해당 구역을 폴리곤으로 그려주기</div>
+</h2>
+
+<br></br>
+
+이제 마지막입니다. 받아온 꼭짓점 좌표들을 사용해서 폴리곤을 그려주기만 하면 됩니다.
+
+```ts showLineNumbers
+..
+..
+    const polygon = new window.kakao.maps.Polygon({
+        path: polygonPath,
+        strokeColor: "#925CE9",
+        fillColor: "#925CE9",
+        fillOpacity: 0.7,
+      });
+
+      polygon.setMap(map);
+..
+..
+```
+
+아까 저희가 변환한 좌표 객체가 존재하는 polygonPath라는 배열을 path라는 매개변수에 넣고 스타일 옵션을 작성해준 후 생성된 인스턴스의 setMap 메소드에 map을 넣어주면 폴리곤이 그려집니다!!
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>서울시 중랑구 신내동 폴리곤 👇</small>
+  <img
+    src="https://github.com/kagrin97/NextJS-myblog/assets/75124028/fb76f836-14eb-430c-b5e0-002907ee9498"
+    width="70%"
+  />
+</div>
+
+한 가지 의문점은 제가 받아온 꼭짓점 좌표는 총 9개인데 실제로 그려진 신내동은 꼭짓점이 8개라서 뭔가 겹치는 미세한 꼭짓점이 있는 게 아닐까 추측해봅니다;;
+
+<details>
+<summary>전체 코드 🙋</summary>
+<div markdown="1">
+
+    ```ts showLineNumbers
+    import React, { useEffect, useState } from "react";
+    import proj4 from "proj4";
+
+    declare global {
+    interface Window {
+        kakao: any;
+    }
+    }
+
+    const MapWithPolygon = () => {
+    const [map, setMap] = useState<any>(null);
+
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+        });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!latitude || !longitude) return;
+
+        const container: any = document.getElementById("myMap");
+        const mapOptions = {
+        center: new window.kakao.maps.LatLng(latitude, longitude),
+        level: 7,
+        };
+
+        const createdMap = new window.kakao.maps.Map(container, mapOptions);
+        setMap(createdMap);
+    }, [latitude, longitude]);
+
+    useEffect(() => {
+        const findNeighborhood = () => {
+        return new Promise<string>((resolve, reject) => {
+            const geocoder = new window.kakao.maps.services.Geocoder();
+
+            const callback = (result: any, status: any) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+                resolve(result[0].region_3depth_name);
+            } else {
+                reject(status);
+            }
+            };
+
+            geocoder.coord2RegionCode(longitude, latitude, callback);
+        });
+        };
+
+        const findNeighborhoodCoordinates = async (neighborhoodName: string) => {
+        const response = await fetch("../2302_행정구역[동].json");
+        const data = await response.json();
+
+        for (const feature of data.features) {
+            if (neighborhoodName === feature.properties.EMD_KOR_NM) {
+            return feature.geometry.coordinates;
+            }
+        }
+        return false;
+        };
+
+        const addNeighborhoodPolygon = async () => {
+        const neighborhoodName = await findNeighborhood();
+        const coordinates = await findNeighborhoodCoordinates(neighborhoodName);
+
+        const polygonPath: any = [];
+        const utmk =
+            "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
+        const wgs84 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+        const transformer = proj4(utmk, wgs84);
+
+        coordinates.forEach((coordinateArray: any[]) => {
+            coordinateArray.forEach((coordinate) => {
+            const [longi, lati] = transformer.forward(coordinate);
+            polygonPath.push(new window.kakao.maps.LatLng(lati, longi));
+            });
+        });
+        console.log(polygonPath);
+
+        const polygon = new window.kakao.maps.Polygon({
+            path: polygonPath,
+            strokeColor: "#925CE9",
+            fillColor: "#925CE9",
+            fillOpacity: 0.7,
+        });
+
+        polygon.setMap(map);
+        };
+
+        if (map) {
+        addNeighborhoodPolygon();
+        }
+    }, [latitude, longitude, map]);
+
+    return <div id="myMap" style={{ width: "400px", height: "300px" }} />;
+    };
+
+    export default MapWithPolygon;
+    ```
+
+</div>
+</details>
+
+---
+
+<br></br>
+
+<b>참고 문서</b>
+
+<br></br>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://neurowhai.tistory.com/350#"
+>
+  https://neurowhai.tistory.com/350#
+</a>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://apis.map.kakao.com/web/sample/"
+>
+  https://apis.map.kakao.com/web/sample/
+</a>

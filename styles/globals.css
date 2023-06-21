@@ -1,12 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("../public/font/font.css");
+@import url("../public/font/NanumSquareRound-master/nanumsquareround.css");
 @import url("./colors.css");
 @import url("./transition.css");
 
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "NanumSquareRound", sans-serif;
+}
+
+b {
+  font-weight: 700 !important;
+}
+
+summary:hover {
+  cursor: pointer;
 }
 
 .ml-div {
@@ -243,9 +251,8 @@ pre[class*="language-"] {
   color: #c0edf6;
   text-decoration: underline;
 }
-
 .token.bold {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .token.italic {
@@ -278,7 +285,7 @@ pre[class*="language-"] {
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   padding: 5px 16px;
-  font-weight: 100;
+  font-weight: 300;
   margin-top: 8px;
   font-size: 14px;
 }
