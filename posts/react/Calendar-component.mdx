@@ -1,0 +1,607 @@
+---
+title: 라이브러리 없이 리액트 캘린더 컴포넌트 구현하기
+date: 2023-07-19
+description: 리액트로 캘린더 컴포넌트를 개발하는 방법을 알아보자.
+category: react
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. 캘린더 컴포넌트를 구현한 이유..
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 캘린더의 html의 구조 설명
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. 현재 month의 모든 날짜를 받아오기
+    </a>
+    <a href="#4" className="mokcha-container__list">
+      4. 받아온 모든 날짜로 실제 el를 생성
+    </a>
+    <a href="#5" className="mokcha-container__list">
+      5. el[]를 주간별로 자르기
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. 캘린더 컴포넌트를 구현한 이유..</div>
+</h2>
+
+<br></br>
+
+현재 저는 `JJAN`이라는 동네 술친구를 찾는 프로젝트에 참여 중입니다. 동네에서 만날 위치를 선정하고
+날짜를 입력받음으로써 작은 약속이 생성됩니다. 거기에서는 날짜를 입력받기 위해서 캘린더 방식을 채택했는데요.
+
+전에 캘린더를 구현해본 기억이 있기 때문에 제가 담당하게 되었습니다. 외부 라이브러리 사용을 최소화하는
+방식을 모든 프론트엔드 개발자분들이 동의했기 때문에 <b>외부 라이브러리 없이 순수 리액트 코드로 캘린더를 구현하는 방법</b>을 여러분들에게 소개해드리겠습니다.
+
+<b>요구 조건은</b> :
+
+해당 캘린더를 마운트했을 때 현재 month를 보여주며 prev 버튼과 next 버튼으로 앞뒤의 month를 이동할 수 있으며 약속 날짜는 딱 하루만을 잡을 수 있습니다. (연속 2일은 안 됨..)
+
+또한 캘린더 컴포넌트 외부에서 해당 날짜를 참조할 수 있어야 하며 props로 현재 보고 있는 달력에 앞뒤 월의 날짜를 일부분을 동적으로 볼 수가 있게 해야 합니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>캘린더의 앞뒤 날짜 👇</small>
+  <img
+    src="https://github.com/jjan-project/jjan_front_renewal/assets/75124028/200cc6c0-5c2f-4b39-a4b3-ea1e1a61197d"
+    width="50%"
+  />
+</div>
+
+이렇게 캘린더를 구현하기 위해서는 여러 단계를 거치는데요..
+
+<p> 1. 현재 month의 모든 날짜를 받아옵니다.</p>
+<p> 2. 받아온 모든 날짜를 기반으로 html el[]를 생성합니다. </p>
+<p> 3. el[]를 4개로 나눠줍니다. (4주) </p>
+<p>4. el[]를 실제로 렌더링합니다.</p>
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 캘린더의 html의 구조 설명</div>
+</h2>
+
+<br></br>
+
+그 전에 캘린더의 html의 기본 구조에 대해서 설명을 드리겠습니다.
+
+```ts showLineNumbers
+const Calendar = ({
+  selectedDay,
+  setSelectedDay,
+  isPrevMonth,
+  isNextMonth,
+}) => {
+  const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+
+  return (
+    <div className="calendar">
+      <div className="calendarNav">
+        <span className="calendarNav-title">
+          {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
+        </span>
+        <div className="calendarNav-button">
+          <button
+            data-testid="prevMonth"
+            onClick={prevCalendar}
+            className="prevMonth-button"
+          >
+            &lt; // < 를 의미합니다.
+          </button>
+          <button
+            data-testid="nextMonth"
+            onClick={nextCalendar}
+            className="nextMonth-button"
+          >
+            &gt; // > 를 의미합니다.
+          </button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            {daysOfWeek.map((day, i) => (
+              <th key={i} data-testid="calendarHead">
+                {day}
+              </th>
+            ))} // "일", "월", "화", "수", "목", "금", "토" 를 thead에 표시
+          </tr>
+        </thead>
+        <tbody>
+          {calendarRows.map((row: JSX.Element[], i: number) => (
+            <tr key={i}>{row}</tr>
+          ))} // 실제 날짜 cell을 보여줍니다.
+        </tbody>
+      </table>
+    </div>
+  );
+};
+```
+
+`currentMonth`는 현재 month의 Date 객체가 담겨있습니다. <b>calendarNav-title</b>에 현재의 연도와 현재의 month를 표시합니다. Date의 month는 0부터 시작하며 0은 1월을 의미하기 때문에 +1을 해줌으로써 현재의 month를 표시할 수 있습니다.
+
+`prevMonth`, `nextMonth` 버튼은 클릭 시 각각 prevCalendar, nextCalendar를 실행해서 currentMonth의 값을 해당하는 month로 <b>재 할당합니다.</b>
+
+`daysOfWeek`의 배열안에는 일요일부터 토요일까지의 문자열이 저장되어서 thead에 저희가 원하는
+순서대로 요일이 배치됩니다.
+
+`calendarRows`는 배열이며 그 안에는 또 6개의 배열이 존재합니다. 첫 번쨰와 마지막 배열은 각각 prev, next month의 날짜를 담고 있으며 중간의 1,2,3,4 배열은 현재 month의 날짜를 담고 있습니다.
+
+만약 prev, next month의 날짜를 표시하고 싶지 않으면 `isPrevMonth`, `isNextMonth` 같은 Boolean 값을 내려주지 않아야 하면 그렇게 될 경우 calendarRows는 4개의 배열을 가지게 됩니다.
+
+또한 `selectedDay`, `setSelectedDay`는 캘린더 컴포넌트 외부에서 클릭한 날짜 정보를 저장하기 위한 useState 입니다.
+
+여기까지가 캘린더 컴포넌트의 기본 html 구조입니다. 다음 목차부터 실제로 구현 과정을 설명하겠습니다.
+
+---
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. 현재 month의 모든 날짜를 받아오기</div>
+</h2>
+
+<br></br>
+
+우선 첫 번째로 현재 month에 해당하는 모든 날짜를 받아와야 합니다. 예를 들어서 7월이라면
+7월은 1일부터 31일까지의 date 정보를 가져와야 하며 또한 앞뒤 month도 가져와야 하기 때문에 6월은 25일부터 30일까지가 7월 달력에 포함되고 8월은 1일부터 5일까지가 7월 달력에 포함이 됩니다.
+
+```ts showLineNumbers
+const curMonthStartDate = new Date(
+  currentMonth.getFullYear(),
+  currentMonth.getMonth(),
+  1
+).getDay();
+
+const curMonthEndDate = new Date(
+  currentMonth.getFullYear(),
+  currentMonth.getMonth() + 1,
+  0
+);
+```
+
+`curMonthStartDate`: 현재 월의 시작 요일을 가져옵니다. getDay() 메서드를 사용하여 현재 월의 첫 번째 날짜의 요일을 0부터 6까지의 숫자로 반환합니다. (일요일부터 토요일까지 순서로 0부터 6까지의 값)
+이 값으로 prev month의 마지막 날짜들의 갯수를 알 수 있습니다.
+
+`curMonthEndDate`: 현재 월의 마지막 날짜를 가져옵니다.
+
+<br></br>
+
+```ts showLineNumbers
+const prevMonthEndDate = new Date(
+  currentMonth.getFullYear(),
+  currentMonth.getMonth(),
+  0
+);
+const nextMonthStartDate = new Date(
+  currentMonth.getFullYear(),
+  currentMonth.getMonth() + 1,
+  1
+);
+```
+
+`prevMonthEndDate`: 이전 월의 마지막 날짜를 가져옵니다. getMonth()에 0일을 지정하여 현재 월의 첫 번째 날짜의 이전 월의 마지막 날짜를 나타내는 Date 객체를 생성합니다.
+
+`nextMonthStartDate`: 다음 월의 첫 번째 날짜를 가져옵니다. getMonth()에 +1을 더하고, 1일을 지정하여 현재 월의 마지막 날짜의 다음 월의 첫 번째 날짜를 나타내는 Date 객체를 생성합니다.
+
+<br></br>
+
+```ts showLineNumbers
+const days: Date[] = Array.from({ length: curMonthStartDate }, (_, i) => {
+  return new Date(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth() - 1,
+    prevMonthEndDate.getDate() - i
+  );
+}).reverse();
+```
+
+days는 모든 날짜를 담는 배열로 우선 첫 번째로 이전 월의 마지막 날부터 현재 월의 첫 번째 요일까지의 날짜들을 담은 배열을 생성하는 역할을 합니다.
+
+<br></br>
+
+```ts showLineNumbers
+days.push(
+  ...Array.from(
+    { length: curMonthEndDate.getDate() },
+    (_, i) =>
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i + 1)
+  )
+);
+```
+
+위 코드는 현재 월의 첫 번째 날부터 마지막 날까지의 날짜들을 days 배열에 추가하는 역할을 합니다.
+
+<br></br>
+
+```ts showLineNumbers
+const remainingDays = 7 - (days.length % 7);
+if (remainingDays < 7) {
+  days.push(
+    ...Array.from(
+      { length: remainingDays },
+      (_, i) =>
+        new Date(
+          nextMonthStartDate.getFullYear(),
+          nextMonthStartDate.getMonth(),
+          i + 1
+        )
+    )
+  );
+}
+```
+
+위 코드는 days 배열의 길이를 7로 나눈 나머지를 계산하여, 남은 일 수를 구합니다. 만약 남은 일 수(remainingDays)가 7보다 작다면, 다음 달의 시작 날짜부터 remainingDays 개수만큼의 날짜들을 days 배열에 추가합니다.
+
+<br></br>
+
+```ts showLineNumbers
+const buildCalendarDays = () => {
+    ..
+    ..
+    ..
+    return days
+}
+const calendarDays = buildCalendarDays();
+```
+
+이제 위의 모든 코드들을 `buildCalendarDays` 함수안에 넣어준다음 days배열을 calendarDays에 할당합니다. 이제 모든 날짜를 구했습니다.
+
+---
+
+<h2 id="4" className={`dark:text-white text-center`}>
+  <div>4. 받아온 모든 날짜로 실제 el를 생성</div>
+</h2>
+
+<br></br>
+
+이제 모든 날짜를 받아왔으니 실제 el를 생성해야합니다.
+
+```ts showLineNumbers
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const buildCalendarTag = (calendarDays: Date[]) => {
+  return calendarDays.map((day: Date, i: number) => {
+    if (day.getMonth() < currentMonth.getMonth()) {
+      return (
+        <td key={i} className="prevMonthDay">
+          {isPrevMonth ? day.getDate() : ""}
+        </td>
+      );
+    }
+    if (day.getMonth() > currentMonth.getMonth()) {
+      return (
+        <td key={i} className="nextMonthDay">
+          {isNextMonth ? day.getDate() : ""}
+        </td>
+      );
+    }
+    if (day < today) {
+      return (
+        <td key={i} className="prevDay">
+          {day.getDate()}
+        </td>
+      );
+    }
+    return (
+      <td
+        key={i}
+        className={`futureDay ${isSameDay(day, selectedDay) && "choiceDay"}`}
+        onClick={() => onClickDay(day)}
+      >
+        {day.getDate()}
+      </td>
+    );
+  });
+};
+
+const calendarDays = buildCalendarDays();
+const calendarTags = buildCalendarTag(calendarDays);
+```
+
+받아온 days 배열을 buildCalendarTag 함수에 넘겨줍니다. 배열을 순회하면서 만약 현재 month와 해당 날짜의 month 값이 적거나 많다면 각각의 className에 해당 CSS class를 넘겨줌으로써 <b>스타일을 차별화합니다.</b> 또한 props 받은 isPrevMonth, isNextMonth로 실제로 렌더링할지 여부를 결정합니다.
+
+만약 현재 month와 일치하지만 이미 지나온 day(일) 일 경우에 CSS class에 prevDay를 적용합니다.
+여기서 today를 사용한 이유는 날짜를 비교할 때, <b>시간 요소를 고려하지 않고 날짜만을 비교하기 위해서입니다.</b>
+
+모든 사항에 해당이 되지 않으면 실제로 약속을 잡을 수 있는 날짜로 판명이 됩니다.
+
+<br></br>
+
+```ts showLineNumbers
+const isSameDay = (toDay: Date, compareDay?: Date | null) => {
+  if (
+    toDay.getFullYear() === compareDay?.getFullYear() &&
+    toDay.getMonth() === compareDay?.getMonth() &&
+    toDay.getDate() === compareDay?.getDate()
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const onClickDay = (day: Date) => {
+  if (isSameDay(day, selectedDay)) {
+    setSelectedDay(null);
+  } else {
+    setSelectedDay(day);
+  }
+};
+
+return (
+  <td
+    key={i}
+    className={`futureDay ${isSameDay(day, selectedDay) && "choiceDay"}`}
+    onClick={() => onClickDay(day)}
+  >
+    {day.getDate()}
+  </td>
+);
+```
+
+약속을 잡을 수 있는 cell을 더 자세히 알아보겠습니다. `onClickDay` 함수는 클릭을 통해서 선택된 날짜를 저장합니다. (약속은 딱 하루만 잡을 수 있음) 만약 클릭이 여러 번 발생하면 마지막으로 클릭한 날짜가 저장됩니다.
+
+`isSameDay` 함수는 두개의 날짜가 완전히 같은 날짜인지를 판단합니다.
+
+---
+
+<h2 id="5" className={`dark:text-white text-center`}>
+  <div>5. el[]를 주간별로 자르기</div>
+</h2>
+
+<br></br>
+
+여기서 문제는 calendarTags가 1차원 배열이기 때문에 실제로 페이지에서 렌더링하기 쉽게 <b>주간별로 나눠주는 작업이 필요합니다.</b>
+
+```ts showLineNumbers
+const divideWeek = (calendarTags: JSX.Element[]) => {
+  return calendarTags.reduce(
+    (acc: JSX.Element[][], day: JSX.Element, i: number) => {
+      if (i % 7 === 0) acc.push([day]);
+      else acc[acc.length - 1].push(day);
+      return acc;
+    },
+    []
+  );
+};
+const calendarTags = buildCalendarTag(calendarDays);
+const calendarRows = divideWeek(calendarTags);
+```
+
+<br></br>
+
+<div className={`flex justify-center`}>
+  <small>완성된 캘린더 👇</small>
+  <video
+    controls
+    width="60%"
+    src="https://github.com/jjan-project/jjan_front_renewal/assets/75124028/52d54f6b-a39d-46b0-828d-18280eb13fd4"
+  ></video>
+</div>
+
+참고로 전달, 다음달로 이동하기 위해서는 currentMonth값을 바꿔주면 됩니다.
+
+CSS 코드는 따로 설명하지 않겠습니다.
+
+<details>
+<summary>전체코드 접기/펼치기 🙋</summary>
+<div markdown="1">
+
+    ```ts showLineNumbers
+    // 필요한 라이브러리와 스타일시트를 import합니다.
+    import React, { useState } from "react";
+    import "./Calendar.css";
+
+    import type { CalendarProps } from "./types";
+
+    const Calendar = ({
+    selectedDay,
+    setSelectedDay,
+    isPrevMonth,
+    isNextMonth,
+    }: CalendarProps) => {
+    const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+    const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const isSameDay = (toDay: Date, compareDay?: Date | null) => {
+        if (
+        toDay.getFullYear() === compareDay?.getFullYear() &&
+        toDay.getMonth() === compareDay?.getMonth() &&
+        toDay.getDate() === compareDay?.getDate()
+        ) {
+        return true;
+        }
+        return false;
+    };
+
+    const onClickDay = (day: Date) => {
+        if (isSameDay(day, selectedDay)) {
+        setSelectedDay(null);
+        } else {
+        setSelectedDay(day);
+        }
+    };
+
+    const prevCalendar = () => {
+        setCurrentMonth(
+        new Date(
+            currentMonth.getFullYear(),
+            currentMonth.getMonth() - 1,
+            currentMonth.getDate()
+        )
+        );
+    };
+
+    const nextCalendar = () => {
+        setCurrentMonth(
+        new Date(
+            currentMonth.getFullYear(),
+            currentMonth.getMonth() + 1,
+            currentMonth.getDate()
+        )
+        );
+    };
+
+    const buildCalendarDays = () => {
+        const curMonthStartDate = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        1
+        ).getDay();
+        const curMonthEndDate = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth() + 1,
+        0
+        );
+        const prevMonthEndDate = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        0
+        );
+        const nextMonthStartDate = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth() + 1,
+        1
+        );
+        const days: Date[] = Array.from({ length: curMonthStartDate }, (_, i) => {
+        return new Date(
+            currentMonth.getFullYear(),
+            currentMonth.getMonth() - 1,
+            prevMonthEndDate.getDate() - i
+        );
+        }).reverse();
+
+        days.push(
+        ...Array.from(
+            { length: curMonthEndDate.getDate() },
+            (_, i) =>
+            new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i + 1)
+        )
+        );
+
+        const remainingDays = 7 - (days.length % 7);
+        if (remainingDays < 7) {
+        days.push(
+            ...Array.from(
+            { length: remainingDays },
+            (_, i) =>
+                new Date(
+                nextMonthStartDate.getFullYear(),
+                nextMonthStartDate.getMonth(),
+                i + 1
+                )
+            )
+        );
+        }
+        return days;
+    };
+
+    const buildCalendarTag = (calendarDays: Date[]) => {
+        return calendarDays.map((day: Date, i: number) => {
+        if (day.getMonth() < currentMonth.getMonth()) {
+            return (
+            <td key={i} className="prevMonthDay">
+                {isPrevMonth ? day.getDate() : ""}
+            </td>
+            );
+        }
+        if (day.getMonth() > currentMonth.getMonth()) {
+            return (
+            <td key={i} className="nextMonthDay">
+                {isNextMonth ? day.getDate() : ""}
+            </td>
+            );
+        }
+        if (day < today) {
+            return (
+            <td key={i} className="prevDay">
+                {day.getDate()}
+            </td>
+            );
+        }
+        return (
+            <td
+            key={i}
+            className={`futureDay ${isSameDay(day, selectedDay) && "choiceDay"}`}
+            onClick={() => onClickDay(day)}
+            >
+            {day.getDate()}
+            </td>
+        );
+        });
+    };
+
+    const divideWeek = (calendarTags: JSX.Element[]) => {
+        return calendarTags.reduce(
+        (acc: JSX.Element[][], day: JSX.Element, i: number) => {
+            if (i % 7 === 0) acc.push([day]);
+            else acc[acc.length - 1].push(day);
+            return acc;
+        },
+        []
+        );
+    };
+
+    const calendarDays = buildCalendarDays();
+    const calendarTags = buildCalendarTag(calendarDays);
+    const calendarRows = divideWeek(calendarTags);
+
+    return (
+        <div className="calendar">
+        <div className="calendarNav">
+            <span className="calendarNav-title">
+            {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
+            </span>
+            <div className="calendarNav-button">
+            <button
+                data-testid="prevMonth"
+                onClick={prevCalendar}
+                className="prevMonth-button"
+            >
+                &lt;
+            </button>
+            <button
+                data-testid="nextMonth"
+                onClick={nextCalendar}
+                className="nextMonth-button"
+            >
+                &gt;
+            </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                {daysOfWeek.map((day, i) => (
+                <th key={i} data-testid="calendarHead">
+                    {day}
+                </th>
+                ))}
+            </tr>
+            </thead>
+            <tbody>
+            {calendarRows.map((row: JSX.Element[], i: number) => (
+                <tr key={i}>{row}</tr>
+            ))}
+            </tbody>
+        </table>
+        </div>
+    );
+    };
+
+    export default Calendar;
+    ```
+
+</div>
+</details>
