@@ -1,0 +1,427 @@
+---
+title: React에서 IOS의 Picker를 대체하는 Picker 컴포넌트 만들기
+date: 2023-07-31
+description: IOS의 Picker와 동일한 기능을 제공하는 Picker 컴포넌트를 만드는 방법에 대해 자세히 알아봅니다.
+category: react
+---
+
+---
+
+<div className="mokcha">
+  <div className="mokcha-container">
+    <h2>INDEX</h2>
+    <a href="#1" className="mokcha-container__list">
+      1. IOS의 Picker는 무엇일까
+    </a>
+    <a href="#2" className="mokcha-container__list">
+      2. 우리가 원하는 Picker
+    </a>
+    <a href="#3" className="mokcha-container__list">
+      3. Picker의 html, css, 기본 변수
+    </a>
+    <a href="#4" className="mokcha-container__list">
+      4. 스크롤 중 선택된 항목을 수직 정렬
+    </a>
+  </div>
+</div>
+
+---
+
+<h2 id="1" className={`dark:text-white text-center`}>
+  <div>1. IOS의 Picker는 무엇일까</div>
+</h2>
+
+<b></b>
+
+안녕하세요, 오늘은 <b>iOS의 Picker</b>에 대해 알아보려고 합니다. iOS 개발에서 널리 사용되는 이 컴포넌트가 무엇이며, React에서 이와 같은 기능을 구현하려면 어떻게 해야 할지에 대해 이야기해보겠습니다.
+
+<b></b>
+<h3 className={`dark:text-white`}>Picker란?</h3>
+<b></b>
+
+Picker는 iOS 앱에서 여러 선택 옵션 중 하나를 선택하게 하는 데 사용되는 UI 컴포넌트입니다. 이것은 여러 선택 항목을 표시하고, 사용자가 원하는 항목을 선택할 수 있도록 회전시키는 UI 요소로 생각할 수 있습니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>ios의 picker 👇</small>
+  <video
+    controls
+    width="60%"
+    src="https://github.com/jjan-project/jjan_front_renewal/assets/75124028/e14bad8d-7931-4bb6-95b1-ea33ddb2b5fc"
+  ></video>
+</div>
+
+<b></b>
+<h3 className={`dark:text-white`}>React에서 사용하려면?</h3>
+<b></b>
+
+React에서는 제가 알기로는 Picker와 비슷한 라이브러리가 매우 적은 것으로 알고 있습니다. (필자는 못 찾음)
+
+물론 몇 년 전에 만들어진 것도 있지만 React 18과 호환이 되지 않거나 React Native 전용 라이브러리이기 때문에 React 18에서 사용하기 위해서 직접 만드는 방법을 소개해드리겠습니다.
+
+---
+
+<h2 id="2" className={`dark:text-white text-center`}>
+  <div>2. 우리가 원하는 Picker</div>
+</h2>
+
+<b></b>
+
+우선 우리가 원하는 picker의 기능에 대해서 설정하겠습니다.
+
+1. Picker 컴포넌트는 props로 <b>list</b>와 <b>onSelectedChange</b>를 받습니다. list는 해당 컴포넌트에서 보여줄 문자/숫자 배열이며 onSelectedChange는 Picker 컴포넌트 외부에서 선택된 값을 참조할 수 있게 해주는 함수입니다.
+
+2. 드래그, 스크롤 액션으로 위아래로 항목을 이동하며 문자/숫자를 선택을 할 수가 있습니다.
+
+3. 스크롤 중 선택이 된 항목은 자동으로 수직으로 정중앙으로 이동합니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>미리보는 최종본 👇</small>
+  <video
+    controls
+    width="60%"
+    src="https://github.com/jjan-project/jjan_front_renewal/assets/75124028/8f5f0045-2ef5-41de-a640-7fa852c752cd"
+  ></video>
+</div>
+
+<b></b>
+<h3 className={`dark:text-white`}>사용한 라이브러리</h3>
+<b></b>
+
+```json
+"react": "^18.2.0",
+"@emotion/react": "^11.11.1",
+"@emotion/styled": "^11.11.0",
+```
+
+---
+
+<h2 id="3" className={`dark:text-white text-center`}>
+  <div>3. Picker의 html, css, 기본 변수</div>
+</h2>
+
+<b></b>
+
+<h3 className={`dark:text-white`}>emotion 스타일링</h3>
+<b></b>
+
+```ts showLineNumbers
+import styled from "@emotion/styled";
+
+const List = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 150px;
+  overflow-y: scroll;
+  position: relative;
+
+  // For Chrome, Safari and Opera
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  // For Firefox
+  scrollbar-width: none;
+`;
+
+const ListCenter = styled.div`
+  box-sizing: border-box;
+  border-top: 1.3px solid black;
+  border-bottom: 1.3px solid black;
+  height: 50px;
+  position: sticky;
+  top: 50px;
+`;
+
+const ListItem = styled.li<{ isSelected: boolean }>`
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: ${({ isSelected }) => isSelected && "bold"};
+  opacity: ${({ isSelected }) => (isSelected ? 1 : 0.4)};
+`;
+```
+
+`emotion`을 사용해서 컴포넌트 스타일링을 구현했습니다.
+
+<b>List</b> : ul태그로 picker의 전체 container입니다. height를 150px로 설정했는데
+유동적인 height를 설정하시고 싶으신 분은 props로 height를 넘겨주시면 됩니다.
+
+<b>ListCenter</b> : picker의 정중앙에서 현재 선택될 항목의 틀을 보여주는 컴포넌트입니다.
+미리보는 최종본에서 선택된 값의 위, 아래 border 입니다.
+
+<b>ListItem</b> : list 안 각각의 항목들을 보여주는 li 태그입니다. props로 isSelected를
+받음으로써 선택된 항목은 특별한 스타일이 추가됩니다.
+
+<b></b>
+<h3 className={`dark:text-white`}>Picker의 기본 골격</h3>
+<b></b>
+
+```ts showLineNumbers
+interface ScrollPickerProps {
+  list: (string | number)[];
+  onSelectedChange?: (selected: string | number) => void;
+}
+```
+
+picker 컴포넌트가 받는 props로 문자/숫자를 받는 list와 <b>외부에서 선택항목을 참조</b>할 수 있게 해주는 onSelectedChange 함수를 받습니다.
+
+```ts showLineNumbers
+const Picker = ({ list, onSelectedChange }: ScrollPickerProps) => {
+const SCROLL_DEBOUNCE_TIME = 100; // 스크롤 이벤트의 디바운스 시간을 설정합니다
+
+const newList = ["", ...list, ""];
+const ref = useRef<HTMLUListElement>(null);
+const [selected, setSelected] = useState(1);
+const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+const timerRef = useRef<NodeJS.Timeout | null>(null);
+const ITEM_HEIGHT = 50;
+
+const handleScroll = () => {
+...
+}
+
+ useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTop = selected * ITEM_HEIGHT;
+    }
+  }, []);
+}
+```
+
+list의 <b>앞과 끝에 빈 문자열을 넣은 이유는</b> 스크롤 중인 항목이 정중앙에 와야지만 선택이 되기 때문에 선택되지 않는 빈문자열을 넣어서 앞과 끝의 문자가 선택되기 위함입니다.
+
+ref는 ul을 참조하며 itemRefs는 li를 timerRef는 스크롤 이벤트의 디바운스를 적용하기 위한 ref입니다.
+
+selected는 선택된 항목의 순서를 저장하고 있습니다. 1이 초깃값으로 설정된 이유는 list에 앞과 끝에 빈 문자열을 넣음으로써 빈 문자열 다음이 실제 첫 번째 값이기 때문에 첫 번째 값이 선택이 되어야하기떄문입니다.
+
+ITEM_HEIGHT는 각각의 항목의 height입니다. 저희가 List 스타일 컴포넌트를 150px로 설정했으면 picker는 최대 3개의 item을 보여주기 때문에 150 / 3 = 50입니다.
+
+handleScroll 함수는 실제로 스크롤 중 선택된 item을 정중앙으로 정렬해주는 스크롤 이벤트를 적용해주는 함수입니다. 밑에서 더 자세히 다루겠습니다.
+
+useEffect는 picker를 마운트시에 초기에 설정된 값이 정중앙에 올 수 있도록 scrollTop값을 설정합니다.
+
+<b></b>
+<h3 className={`dark:text-white`}>Picker의 html</h3>
+<b></b>
+
+```js showLineNumbers
+return (
+  <List ref={ref} onScroll={handleScroll}>
+    <ListCenter />
+    {newList.map((item, index) => (
+      <ListItem
+        key={index}
+        isSelected={index === selected}
+        ref={(el) => (itemRefs.current[index] = el)}
+      >
+        {item}
+      </ListItem>
+    ))}
+  </List>
+);
+```
+
+itemRef에 현재 선택된 item을 직접 넣어서 조작할 수 있게 설정했습니다.
+
+---
+
+<h2 id="4" className={`dark:text-white text-center`}>
+  <div>4. 스크롤 중 선택된 항목을 수직 정렬</div>
+</h2>
+
+<b></b>
+
+스크롤 중 선택된 항목을 수직으로 정렬하기 위해서 여러 가지 방법을 사용할 수 있지만 저는 `scrollIntoView`를 사용해서 해당 el로 이동하게 만들겠습니다. 위에서 간단히 설명한 handleScroll 함수를 더 자세히 설명하겠습니다.
+
+우선 어떤 항목을 선택할 것이냐가 중요합니다. 저희는 보여지는 총 높이 150px의 ul태그에 최대 3개를 보여주며 height가 50px인 li 태그를 가지고 있습니다. 정중앙의 height는 75px가 되기떄문에 75px와 겹쳐지는 li 태그가 선택이 되었다고 볼 수 있습니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>ul태그의 정중앙 👇</small>
+  <img
+    src="https://github.com/jjan-project/jjan_front_renewal/assets/75124028/9e982c3c-9db4-4106-9665-6716e28917c6"
+    width="70%"
+  />
+</div>
+
+그렇다면 무엇이 겹치는 li 태그임을 알 수가 있을까요?
+
+```js
+const index = Math.floor(
+    (ref.current!.scrollTop + ITEM_HEIGHT / 2) / ITEM_HEIGHT,
+);
+```
+
+ref가 ul을 참조함으로 초기의 값은 0이며 `0 + 50 / 2 = 25`입니다. 뭔가 이상하죠? 75px가 정중앙이라면서 왜 25가 나왔느냐고요 그 이유는 초기에 마운트시에 useEffect로 ref.current!.scrollTop 값을 50px로 설정했기 때문에 위 코드의 초깃값은 `50 + 50 / 2 = 75`가 됩니다. 해당 값에 각각의 li태그의 높이를 나눠주면 소수값이 나오는데 실제 인덱스는 정숫값이기 때문에 <b>내림</b>을 해주어서 실제 list의 index 값을 얻게 됩니다.
+
+<b></b>
+<h3 className={`dark:text-white`}>handleScroll 전체 코드</h3>
+<b></b>
+
+```js showLineNumbers
+ const handleScroll = () => {
+    if (ref.current) {
+      // 스크롤 이벤트가 발생할 때마다 이전에 설정된 디바운스 타이머를 초기화합니다.
+      clearTimeout(timerRef.current!);
+
+      // 스크롤 위치가 맨 앞의 빈 문자열을 가리키지 않게합니다.
+      if (ref.current.scrollTop < ITEM_HEIGHT) {
+        ref.current.scrollTop = ITEM_HEIGHT;
+      }
+
+      // 일정시간이 지난 후에 스크롤 위치를 계산 및 이동합니다.
+      timerRef.current = setTimeout(() => {
+        const index = Math.floor(
+          (ref.current!.scrollTop + ITEM_HEIGHT / 2) / ITEM_HEIGHT,
+        );
+
+        // 맨 앞, 뒤 값일 경우 무시
+        if (list[index] !== "") {
+          setSelected(index);
+          itemRefs.current[index]?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          onSelectedChange && onSelectedChange(newList[index]);
+        }
+      }, SCROLL_DEBOUNCE_TIME);
+    }
+  };
+```
+
+실제로 특정 item으로 scroll 해주기 위해서 scrollIntoView 메소드를 사용해서 수직 정렬을 수행합니다.
+
+behavior 값을 <b>smooth</b>로 설정해 천천히 이동을 원하지만 워낙에 각각의 item의 height가 작기 때문에 순간이동까지는 아니지만 꽤 빠른 속도로 scroll이 이루어집니다.
+
+추후에 CSS 애니메이션을 주는 방법을 추가해 더 부드럽게 만들 수도 있습니다.
+
+<div className={`flex flex-col items-center text-center`}>
+  <small>완성된 picker 👇</small>
+  <video
+    controls
+    width="60%"
+    src="https://github.com/jjan-project/jjan_front_renewal/assets/75124028/8f5f0045-2ef5-41de-a640-7fa852c752cd"
+  ></video>
+</div>
+
+<details>
+<summary>전체 코드 열기/펼치기 🙋</summary>
+<div markdown="1">
+
+```js showLineNumbers
+    import styled from "@emotion/styled";
+    import { useRef, useEffect, useState } from "react";
+
+    const List = styled.ul`
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 150px;
+    overflow-y: scroll;
+    position: relative;
+    `;
+
+    const ListCenter = styled.div`
+    box-sizing: border-box;
+    border-top: 1.3px solid black;
+    border-bottom: 1.3px solid black;
+    height: 50px;
+    position: sticky;
+    top: 50px;
+    `;
+
+    const ListItem = styled.li<{ isSelected: boolean }>`
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: ${({ isSelected }) => isSelected && "bold"};
+    opacity: ${({ isSelected }) => (isSelected ? 1 : 0.4)};
+    `;
+
+    interface ScrollPickerProps {
+    list: (string | number)[];
+    onSelectedChange?: (selected: string | number) => void;
+    }
+
+    const Picker = ({ list, onSelectedChange }: ScrollPickerProps) => {
+    const SCROLL_DEBOUNCE_TIME = 100;
+
+    const newList = ["", ...list, ""];
+    const ref = useRef<HTMLUListElement>(null);
+    const [selected, setSelected] = useState(1);
+    const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const ITEM_HEIGHT = 50;
+
+    const handleScroll = () => {
+        if (ref.current) {
+        clearTimeout(timerRef.current!);
+        if (ref.current.scrollTop < ITEM_HEIGHT) {
+            ref.current.scrollTop = ITEM_HEIGHT;
+        }
+        timerRef.current = setTimeout(() => {
+            const index = Math.floor(
+            (ref.current!.scrollTop + ITEM_HEIGHT / 2) / ITEM_HEIGHT,
+            );
+            if (list[index] !== "") {
+            setSelected(index);
+            itemRefs.current[index]?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+            onSelectedChange && onSelectedChange(newList[index]);
+            }
+        }, SCROLL_DEBOUNCE_TIME);
+        }
+    };
+
+    useEffect(() => {
+        if (ref.current) {
+        ref.current.scrollTop = selected * ITEM_HEIGHT;
+        }
+    }, []);
+
+    return (
+        <List ref={ref} onScroll={handleScroll}>
+        <ListCenter />
+        {newList.map((item, index) => (
+            <ListItem
+            key={index}
+            isSelected={index === selected}
+            ref={el => (itemRefs.current[index] = el)}
+            >
+            {item}
+            </ListItem>
+        ))}
+        </List>
+    );
+    };
+
+    export default Picker;
+```
+
+</div>
+</details>
+
+---
+
+<b></b>
+
+<b>참고 문서</b>
+
+<b></b>
+
+<a
+  className={`dark:text-white`}
+  target="_blank"
+  id="link"
+  href="https://developer.apple.com/design/human-interface-guidelines/pickers"
+>
+  https://developer.apple.com/design/human-interface-guidelines/pickers
+</a>
